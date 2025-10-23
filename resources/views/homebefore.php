@@ -458,7 +458,7 @@
                 <li><a class="active" onclick="showPage('home')">🏠 Home</a></li>
                 <li><a onclick="showPage('products')">📦 Produk</a></li>
                 <li><a onclick="showPage('services')">💼 Layanan</a></li>
-                <li><a onclick="showPage('about')">ℹ️ profile toko</a></li>
+
             </ul>
 
             <div class="nav-icons">
@@ -749,7 +749,7 @@
             document.getElementById('home-page').classList.add('hidden');
             document.getElementById('products-page').classList.add('hidden');
             document.getElementById('services-page').classList.add('hidden');
-            document.getElementById('about-page').classList.add('hidden');
+
             
             document.getElementById(page + '-page').classList.remove('hidden');
             
