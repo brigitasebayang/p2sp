@@ -15,3 +15,6 @@ Route::get('/homeLayanan', function () {
 });
 
 
+Route::get('/', function () {
+    return view('homebefore');
+});

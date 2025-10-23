@@ -692,7 +692,7 @@
     </footer>
 
     <script>
-        // Products Data
+        
         const products = [
             { id: 1, name: 'Royal Canin Dog Food', category: 'Makanan', price: 250000, stock: 25, image: '🐕' },
             { id: 2, name: 'Cat Litter Premium', category: 'Perlengkapan', price: 85000, stock: 40, image: '🐱' },
