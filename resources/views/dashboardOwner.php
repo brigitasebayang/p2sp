@@ -454,12 +454,14 @@
                 Kouvee Pet Shop
             </a>
             
-            <ul class="nav-links">
-                <li><a href="#" class="active" onclick="showPage('home')">🏠 Home</a></li>
-                <li><a href="#" onclick="showPage('products')">📦 Produk</a></li>
-                <li><a href="#" onclick="showPage('services')">💼 Layanan</a></li>
-                <li><a href="#" onclick="showPage('dashboard')">📊 Dashboard</a></li>
-            </ul>
+<ul class="nav-links">
+    <li><a href="#" class="active" onclick="showPage('home')">🏠 Home</a></li>
+    <li><a href="#" onclick="showPage('products')">📦 Produk</a></li>
+    <li><a href="#" onclick="showPage('services')">💼 layanan</a></li>
+    <li><a href="#" onclick="showPage('dashboard')">📊 Dashboard</a></li>
+    
+</ul>
+
 
             <div class="nav-icons">
                 <button>🛒</button>
@@ -643,12 +645,12 @@
 
             <!-- Action Buttons -->
             <div class="features-grid">
-                <div class="feature-card" style="text-align: left; cursor: pointer;">
+                <div class="feature-card" style="text-align: left; cursor: pointer;" onclick="window.location.href='/homeProduk'">
                     <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;">📦</div>
                     <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Kelola Produk</h3>
                     <p style="color: #4b5563; font-size: 0.875rem;">Tambah, edit, atau hapus produk</p>
                 </div>
-                <div class="feature-card" style="text-align: left; cursor: pointer;">
+                <div class="feature-card" style="text-align: left; cursor: pointer;" onclick="window.location.href='/homePegawai'">
                     <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;">👥</div>
                     <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Kelola Pegawai</h3>
                     <p style="color: #4b5563; font-size: 0.875rem;">Manajemen data pegawai</p>
@@ -657,6 +659,11 @@
                     <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;">📊</div>
                     <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Laporan Lengkap</h3>
                     <p style="color: #4b5563; font-size: 0.875rem;">Lihat & cetak laporan detail</p>
+                </div>
+                <div class="feature-card" style="text-align: left; cursor: pointer;" onclick="window.location.href='/homeLayanan'">
+                    <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;">!</div>
+                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Kelola layanan</h3>
+                    <p style="color: #4b5563; font-size: 0.875rem;">ubah detail layanan disini </p>
                 </div>
             </div>
         </div>
