@@ -65,7 +65,6 @@
             align-items: center;
             gap: 0.25rem;
             transition: color 0.3s;
-            cursor: pointer;
         }
 
         .nav-links a:hover,
@@ -224,7 +223,8 @@
         /* Products Section */
         .products-section {
             background: #fef3c7;
-            padding: 4rem 1rem;
+            min-height: 100vh;
+            padding: 2rem 1rem;
         }
 
         .container {
@@ -443,7 +443,7 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="#" class="nav-brand" onclick="showPage('home')">
+            <a href="#" class="nav-brand">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="4" r="2"/>
                     <circle cx="18" cy="8" r="2"/>
@@ -454,16 +454,18 @@
                 Kouvee Pet Shop
             </a>
             
-            <ul class="nav-links">
-                <li><a class="active" onclick="showPage('home')">🏠 Home</a></li>
-                <li><a onclick="showPage('products')">📦 Produk</a></li>
-                <li><a onclick="showPage('services')">💼 Layanan</a></li>
+<ul class="nav-links">
+    <li><a href="#" class="active" onclick="showPage('home')">🏠 Home</a></li>
+    <li><a href="#" onclick="showPage('products')">📦 Produk</a></li>
+    <li><a href="#" onclick="showPage('services')">💼 layanan</a></li>
+    <li><a href="#" onclick="showPage('dashboard')">📊 Dashboard</a></li>
+    
+</ul>
 
-            </ul>
 
             <div class="nav-icons">
-                <button onclick="alert('Silakan login terlebih dahulu')">🛒</button>
-                <button onclick="alert('Silakan login untuk mengakses akun Anda')">👤</button>
+                <button>🛒</button>
+                <button>👤</button>
             </div>
         </div>
     </nav>
@@ -539,6 +541,8 @@
                         <option value="name">Nama A-Z</option>
                         <option value="price-asc">Harga Terendah</option>
                         <option value="price-desc">Harga Tertinggi</option>
+                        <option value="stock-asc">Stok Terendah</option>
+                        <option value="stock-desc">Stok Tertinggi</option>
                     </select>
                 </div>
             </div>
@@ -550,146 +554,120 @@
         </div>
     </div>
 
-    <!-- Services Page -->
-    <div id="services-page" class="products-section hidden" style="background: #ffffff;">
-        <div class="container">
-            <h1 class="section-title">Daftar Layanan</h1>
+   <!-- Services Page -->
+<div id="services-page" class="services-section hidden">
+    <div class="container">
+        <h1 class="section-title">Daftar Layanan</h1>
 
-            <!-- Search and Sort -->
-            <div class="search-bar">
-                <div class="search-input-wrapper">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" id="searchServiceInput" placeholder="Cari layanan..." onkeyup="filterServices()">
+        <!-- Search and Sort -->
+        <div class="search-bar">
+            <div class="search-input-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchServiceInput" placeholder="Cari layanan..." onkeyup="filterServices()">
+            </div>
+            <div class="sort-wrapper">
+                <span>↕️</span>
+                <select id="sortServiceSelect" onchange="sortServices()">
+                    <option value="name">Nama A-Z</option>
+                    <option value="price-asc">Harga Terendah</option>
+                    <option value="price-desc">Harga Tertinggi</option>
+                    <option value="duration-asc">Durasi Terpendek</option>
+                    <option value="duration-desc">Durasi Terlama</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Services Grid -->
+        <div class="services-grid" id="servicesGrid">
+            <!-- Layanan akan dimunculkan oleh JavaScript -->
+        </div>
+    </div>
+</div>
+
+
+    <!-- Dashboard Page -->
+    <div id="dashboard-page" class="products-section hidden" style="background: #f9fafb;">
+        <div class="container">
+            <h1 class="section-title">Dashboard Owner</h1>
+            
+            <!-- Stats Cards -->
+            <div class="features-grid" style="margin-bottom: 2rem;">
+                <div class="feature-card" style="text-align: left;">
+                    <p style="color: #4b5563; margin-bottom: 0.5rem;">Pendapatan Hari Ini</p>
+                    <div style="font-size: 2rem; font-weight: bold; color: #1f2937;">Rp 2.5jt</div>
+                    <p style="color: #10b981; margin-top: 0.5rem;">↑ 12% dari kemarin</p>
                 </div>
-                <div class="sort-wrapper">
-                    <span>↕️</span>
-                    <select id="sortServiceSelect" onchange="sortServices()">
-                        <option value="name">Nama A-Z</option>
-                        <option value="price-asc">Harga Terendah</option>
-                        <option value="price-desc">Harga Tertinggi</option>
-                    </select>
+                <div class="feature-card" style="text-align: left;">
+                    <p style="color: #4b5563; margin-bottom: 0.5rem;">Pendapatan Bulan Ini</p>
+                    <div style="font-size: 2rem; font-weight: bold; color: #1f2937;">Rp 45jt</div>
+                    <p style="color: #10b981; margin-top: 0.5rem;">↑ 8% dari bulan lalu</p>
+                </div>
+                <div class="feature-card" style="text-align: left;">
+                    <p style="color: #4b5563; margin-bottom: 0.5rem;">Total Transaksi</p>
+                    <div style="font-size: 2rem; font-weight: bold; color: #1f2937;">156</div>
+                    <p style="color: #3b82f6; margin-top: 0.5rem;">Bulan ini</p>
                 </div>
             </div>
 
-            <!-- Services Grid -->
-            <div class="products-grid" id="servicesGrid">
-                <!-- Services will be rendered here by JavaScript -->
+            <!-- Popular Items -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                <div class="feature-card" style="text-align: left;">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Produk Terpopuler</h3>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span>Royal Canin Dog Food</span>
+                        <span style="color: #d97706; font-weight: bold;">45 terjual</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span>Cat Litter Premium</span>
+                        <span style="color: #d97706; font-weight: bold;">38 terjual</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Vitamin Kucing</span>
+                        <span style="color: #d97706; font-weight: bold;">32 terjual</span>
+                    </div>
+                </div>
+                <div class="feature-card" style="text-align: left;">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Layanan Terpopuler</h3>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span>Grooming Basic</span>
+                        <span style="color: #d97706; font-weight: bold;">28 booking</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span>Grooming Premium</span>
+                        <span style="color: #d97706; font-weight: bold;">22 booking</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Penitipan Harian</span>
+                        <span style="color: #d97706; font-weight: bold;">18 booking</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="features-grid">
+                <div class="feature-card" style="text-align: left; cursor: pointer;" onclick="window.location.href='/homeProduk'">
+                    <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;">📦</div>
+                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Kelola Produk</h3>
+                    <p style="color: #4b5563; font-size: 0.875rem;">Tambah, edit, atau hapus produk</p>
+                </div>
+                <div class="feature-card" style="text-align: left; cursor: pointer;" onclick="window.location.href='/homePegawai'">
+                    <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;">👥</div>
+                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Kelola Pegawai</h3>
+                    <p style="color: #4b5563; font-size: 0.875rem;">Manajemen data pegawai</p>
+                </div>
+                <div class="feature-card" style="text-align: left; cursor: pointer;">
+                    <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;">📊</div>
+                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Laporan Lengkap</h3>
+                    <p style="color: #4b5563; font-size: 0.875rem;">Lihat & cetak laporan detail</p>
+                </div>
+                <div class="feature-card" style="text-align: left; cursor: pointer;" onclick="window.location.href='/homeLayanan'">
+                    <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;">!</div>
+                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Kelola layanan</h3>
+                    <p style="color: #4b5563; font-size: 0.875rem;">ubah detail layanan disini </p>
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- About Page -->
-    <div id="about-page" class="products-section hidden" style="background: #f9fafb;">
-        <div class="container">
-            <h1 class="section-title">Tentang Kami</h1>
-            
-            <!-- Profile Toko -->
-            <div class="feature-card" style="max-width: 800px; margin: 0 auto 3rem; text-align: left;">
-                <div style="text-align: center; margin-bottom: 2rem;">
-                    <div style="font-size: 5rem; margin-bottom: 1rem;">🐾</div>
-                    <h2 style="font-size: 2rem; color: #1f2937; margin-bottom: 0.5rem;">Kouvee Pet Shop</h2>
-                    <p style="color: #d97706; font-weight: 600;">Toko Hewan Terpercaya di Yogyakarta</p>
-                </div>
-                
-                <div style="margin-bottom: 2rem;">
-                    <h3 style="font-size: 1.5rem; color: #1f2937; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                        📖 Tentang Kami
-                    </h3>
-                    <p style="color: #4b5563; line-height: 1.8; margin-bottom: 1rem;">
-                        Kouvee Pet Shop adalah toko hewan peliharaan terpercaya yang telah melayani masyarakat Yogyakarta sejak tahun 2023. 
-                        Kami berkomitmen untuk menyediakan produk berkualitas tinggi dan layanan profesional untuk hewan kesayangan Anda.
-                    </p>
-                    <p style="color: #4b5563; line-height: 1.8;">
-                        Dengan tim yang berpengalaman dan fasilitas yang lengkap, kami siap membantu memenuhi segala kebutuhan 
-                        hewan peliharaan Anda, mulai dari makanan, aksesoris, hingga layanan grooming dan penitipan.
-                    </p>
-                </div>
-
-                <div style="margin-bottom: 2rem;">
-                    <h3 style="font-size: 1.5rem; color: #1f2937; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                        🎯 Visi & Misi
-                    </h3>
-                    <div style="background: #fef3c7; padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 1rem;">
-                        <h4 style="color: #d97706; font-weight: 600; margin-bottom: 0.5rem;">Visi</h4>
-                        <p style="color: #4b5563; line-height: 1.8;">
-                            Menjadi toko hewan peliharaan terkemuka di Yogyakarta yang menyediakan produk dan layanan terbaik 
-                            untuk meningkatkan kesejahteraan hewan peliharaan.
-                        </p>
-                    </div>
-                    <div style="background: #fef3c7; padding: 1.5rem; border-radius: 0.5rem;">
-                        <h4 style="color: #d97706; font-weight: 600; margin-bottom: 0.5rem;">Misi</h4>
-                        <ul style="color: #4b5563; line-height: 1.8; padding-left: 1.5rem;">
-                            <li>Menyediakan produk berkualitas dengan harga terjangkau</li>
-                            <li>Memberikan layanan profesional dan ramah</li>
-                            <li>Mengedukasi pemilik hewan tentang perawatan yang tepat</li>
-                            <li>Menciptakan lingkungan yang aman dan nyaman untuk hewan peliharaan</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div style="margin-bottom: 2rem;">
-                    <h3 style="font-size: 1.5rem; color: #1f2937; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                        📍 Informasi Kontak
-                    </h3>
-                    <div style="display: grid; gap: 1rem;">
-                        <div style="display: flex; align-items: start; gap: 1rem;">
-                            <span style="font-size: 1.5rem;">📍</span>
-                            <div>
-                                <h4 style="color: #1f2937; font-weight: 600; margin-bottom: 0.25rem;">Alamat</h4>
-                                <p style="color: #4b5563;">Yogyakarta, Indonesia</p>
-                            </div>
-                        </div>
-                        <div style="display: flex; align-items: start; gap: 1rem;">
-                            <span style="font-size: 1.5rem;">📞</span>
-                            <div>
-                                <h4 style="color: #1f2937; font-weight: 600; margin-bottom: 0.25rem;">Telepon</h4>
-                                <p style="color: #4b5563;">(+62) 123-456</p>
-                            </div>
-                        </div>
-                        <div style="display: flex; align-items: start; gap: 1rem;">
-                            <span style="font-size: 1.5rem;">✉️</span>
-                            <div>
-                                <h4 style="color: #1f2937; font-weight: 600; margin-bottom: 0.25rem;">Email</h4>
-                                <p style="color: #4b5563;">info@kouveepetshop.com</p>
-                            </div>
-                        </div>
-                        <div style="display: flex; align-items: start; gap: 1rem;">
-                            <span style="font-size: 1.5rem;">🕒</span>
-                            <div>
-                                <h4 style="color: #1f2937; font-weight: 600; margin-bottom: 0.25rem;">Jam Operasional</h4>
-                                <p style="color: #4b5563;">Senin - Sabtu: 09.00 - 20.00</p>
-                                <p style="color: #4b5563;">Minggu: 10.00 - 18.00</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 style="font-size: 1.5rem; color: #1f2937; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                        ⭐ Mengapa Memilih Kami?
-                    </h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                        <div style="background: #ffffff; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">✅</div>
-                            <h4 style="color: #1f2937; font-weight: 600; margin-bottom: 0.5rem;">Produk Terjamin</h4>
-                            <p style="color: #6b7280; font-size: 0.875rem;">Semua produk original dan berkualitas</p>
-                        </div>
-                        
-                        <div style="background: #ffffff; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">💰</div>
-                            <h4 style="color: #1f2937; font-weight: 600; margin-bottom: 0.5rem;">Harga Bersaing</h4>
-                            <p style="color: #6b7280; font-size: 0.875rem;">Harga terjangkau dengan kualitas terbaik</p>
-                        </div>
-                        <div style="background: #ffffff; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏆</div>
-                            <h4 style="color: #1f2937; font-weight: 600; margin-bottom: 0.5rem;">Layanan Prima</h4>
-                            <p style="color: #6b7280; font-size: 0.875rem;">Pelayanan ramah dan memuaskan</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        
 
     <!-- Footer -->
     <footer class="footer">
@@ -721,7 +699,7 @@
     </footer>
 
     <script>
-        // Products Data
+        
         const products = [
             { id: 1, name: 'Royal Canin Dog Food', category: 'Makanan', price: 250000, stock: 25, image: '🐕' },
             { id: 2, name: 'Cat Litter Premium', category: 'Perlengkapan', price: 85000, stock: 40, image: '🐱' },
@@ -731,25 +709,14 @@
             { id: 6, name: 'Shampoo Anti Kutu', category: 'Perawatan', price: 95000, stock: 35, image: '🧴' },
         ];
 
-        // Services Data
-        const services = [
-            { id: 1, name: 'Grooming Basic', category: 'Grooming', price: 50000, duration: '1-2 jam', image: '✂️', description: 'Mandi, sisir, potong kuku' },
-            { id: 2, name: 'Grooming Premium', category: 'Grooming', price: 100000, duration: '2-3 jam', image: '💆', description: 'Full grooming + spa treatment' },
-            { id: 3, name: 'Penitipan Harian', category: 'Penitipan', price: 75000, duration: '1 hari', image: '🏠', description: 'Penitipan hewan per hari' },
-            { id: 4, name: 'Penitipan Mingguan', category: 'Penitipan', price: 450000, duration: '7 hari', image: '📅', description: 'Paket penitipan seminggu' },
-            { id: 5, name: 'Konsultasi Dokter Hewan', category: 'Kesehatan', price: 150000, duration: '30-60 menit', image: '🩺', description: 'Pemeriksaan kesehatan hewan' },
-            { id: 6, name: 'Vaksinasi', category: 'Kesehatan', price: 200000, duration: '15-30 menit', image: '💉', description: 'Vaksinasi lengkap untuk hewan' },
-        ];
-
         let filteredProducts = [...products];
-        let filteredServices = [...services];
 
         // Page Navigation
         function showPage(page) {
             document.getElementById('home-page').classList.add('hidden');
             document.getElementById('products-page').classList.add('hidden');
             document.getElementById('services-page').classList.add('hidden');
-
+            document.getElementById('dashboard-page').classList.add('hidden');
             
             document.getElementById(page + '-page').classList.remove('hidden');
             
@@ -760,8 +727,6 @@
             
             if (page === 'products') {
                 renderProducts();
-            } else if (page === 'services') {
-                renderServices();
             }
         }
 
@@ -779,31 +744,9 @@
                             <h3 class="product-name">${product.name}</h3>
                             <div class="product-details">
                                 <span class="product-price">Rp ${product.price.toLocaleString('id-ID')}</span>
+                                <span class="product-stock">Stok: ${product.stock}</span>
                             </div>
-                        </div>
-                    </div>
-                `;
-                grid.innerHTML += card;
-            });
-        }
-
-        // Render Services
-        function renderServices() {
-            const grid = document.getElementById('servicesGrid');
-            grid.innerHTML = '';
-            
-            filteredServices.forEach(service => {
-                const card = `
-                    <div class="product-card">
-                        <div class="product-image">${service.image}</div>
-                        <div class="product-info">
-                            <div class="product-category">${service.category}</div>
-                            <h3 class="product-name">${service.name}</h3>
-                            <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 0.5rem;">${service.description}</p>
-                            <div class="product-details">
-                                <span class="product-price">Rp ${service.price.toLocaleString('id-ID')}</span>
-                                <span class="product-stock">⏱️ ${service.duration}</span>
-                            </div>
+                            <button class="add-to-cart" onclick="addToCart(${product.id})">Tambah ke Keranjang</button>
                         </div>
                     </div>
                 `;
@@ -815,8 +758,7 @@
         function filterProducts() {
             const searchValue = document.getElementById('searchInput').value.toLowerCase();
             filteredProducts = products.filter(product => 
-                product.name.toLowerCase().includes(searchValue) ||
-                product.category.toLowerCase().includes(searchValue)
+                product.name.toLowerCase().includes(searchValue)
             );
             sortProducts();
         }
@@ -831,6 +773,10 @@
                         return a.price - b.price;
                     case 'price-desc':
                         return b.price - a.price;
+                    case 'stock-asc':
+                        return a.stock - b.stock;
+                    case 'stock-desc':
+                        return b.stock - a.stock;
                     default:
                         return a.name.localeCompare(b.name);
                 }
@@ -839,39 +785,14 @@
             renderProducts();
         }
 
-        // Filter Services
-        function filterServices() {
-            const searchValue = document.getElementById('searchServiceInput').value.toLowerCase();
-            filteredServices = services.filter(service => 
-                service.name.toLowerCase().includes(searchValue) ||
-                service.category.toLowerCase().includes(searchValue)
-            );
-            sortServices();
-        }
-
-        // Sort Services
-        function sortServices() {
-            const sortValue = document.getElementById('sortServiceSelect').value;
-            
-            filteredServices.sort((a, b) => {
-                switch(sortValue) {
-                    case 'price-asc':
-                        return a.price - b.price;
-                    case 'price-desc':
-                        return b.price - a.price;
-                    default:
-                        return a.name.localeCompare(b.name);
-                }
-            });
-            
-            renderServices();
+        // Add to Cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            alert(`${product.name} ditambahkan ke keranjang!`);
         }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             renderProducts();
-            renderServices();
         });
     </script>
-</body>
-</html>

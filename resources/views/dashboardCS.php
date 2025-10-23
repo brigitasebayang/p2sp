@@ -454,12 +454,14 @@
                 Kouvee Pet Shop
             </a>
             
-            <ul class="nav-links">
-                <li><a href="#" class="active" onclick="showPage('home')">🏠 Home</a></li>
-                <li><a href="#" onclick="showPage('products')">📦 Produk</a></li>
-                <li><a href="#" onclick="showPage('services')">💼 Layanan</a></li>
-                <li><a href="#" onclick="showPage('dashboard')">📊 Dashboard</a></li>
-            </ul>
+<ul class="nav-links">
+    <li><a href="#" class="active" onclick="showPage('home')">🏠 Home</a></li>
+    <li><a href="#" onclick="showPage('products')">📦 Produk</a></li>
+    <li><a href="#" onclick="showPage('services')">💼 layanan</a></li>
+    <li><a href="#" onclick="showPage('dashboard')">📊 Dashboard</a></li>
+    
+</ul>
+
 
             <div class="nav-icons">
                 <button>🛒</button>
@@ -586,26 +588,8 @@
     <!-- Dashboard Page -->
     <div id="dashboard-page" class="products-section hidden" style="background: #f9fafb;">
         <div class="container">
-            <h1 class="section-title">Dashboard Owner</h1>
+            <h1 class="section-title">Dashboard Customer Service</h1>
             
-            <!-- Stats Cards -->
-            <div class="features-grid" style="margin-bottom: 2rem;">
-                <div class="feature-card" style="text-align: left;">
-                    <p style="color: #4b5563; margin-bottom: 0.5rem;">Pendapatan Hari Ini</p>
-                    <div style="font-size: 2rem; font-weight: bold; color: #1f2937;">Rp 2.5jt</div>
-                    <p style="color: #10b981; margin-top: 0.5rem;">↑ 12% dari kemarin</p>
-                </div>
-                <div class="feature-card" style="text-align: left;">
-                    <p style="color: #4b5563; margin-bottom: 0.5rem;">Pendapatan Bulan Ini</p>
-                    <div style="font-size: 2rem; font-weight: bold; color: #1f2937;">Rp 45jt</div>
-                    <p style="color: #10b981; margin-top: 0.5rem;">↑ 8% dari bulan lalu</p>
-                </div>
-                <div class="feature-card" style="text-align: left;">
-                    <p style="color: #4b5563; margin-bottom: 0.5rem;">Total Transaksi</p>
-                    <div style="font-size: 2rem; font-weight: bold; color: #1f2937;">156</div>
-                    <p style="color: #3b82f6; margin-top: 0.5rem;">Bulan ini</p>
-                </div>
-            </div>
 
             <!-- Popular Items -->
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
@@ -643,20 +627,15 @@
 
             <!-- Action Buttons -->
             <div class="features-grid">
-                <div class="feature-card" style="text-align: left; cursor: pointer;">
-                    <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;">📦</div>
-                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Kelola Produk</h3>
-                    <p style="color: #4b5563; font-size: 0.875rem;">Tambah, edit, atau hapus produk</p>
-                </div>
-                <div class="feature-card" style="text-align: left; cursor: pointer;">
+                <div class="feature-card" style="text-align: left; cursor: pointer;" onclick="window.location.href='/homeCustomer'">
                     <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;">👥</div>
-                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Kelola Pegawai</h3>
-                    <p style="color: #4b5563; font-size: 0.875rem;">Manajemen data pegawai</p>
+                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Kelola Customer</h3>
+                    <p style="color: #4b5563; font-size: 0.875rem;">Manajemen Data Customer</p>
                 </div>
-                <div class="feature-card" style="text-align: left; cursor: pointer;">
-                    <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;">📊</div>
-                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Laporan Lengkap</h3>
-                    <p style="color: #4b5563; font-size: 0.875rem;">Lihat & cetak laporan detail</p>
+                <div class="feature-card" style="text-align: left; cursor: pointer;" onclick="window.location.href='/homeHewan'">
+                    <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;">🐾</div>
+                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Kelola Hewan</h3>
+                    <p style="color: #4b5563; font-size: 0.875rem;">Manajemen Data Hewan</p>
                 </div>
             </div>
         </div>
@@ -692,7 +671,7 @@
     </footer>
 
     <script>
-        
+        // Products Data
         const products = [
             { id: 1, name: 'Royal Canin Dog Food', category: 'Makanan', price: 250000, stock: 25, image: '🐕' },
             { id: 2, name: 'Cat Litter Premium', category: 'Perlengkapan', price: 85000, stock: 40, image: '🐱' },
