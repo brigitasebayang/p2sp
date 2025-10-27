@@ -1,246 +1,179 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kouvee Pet Shop - Hewan</title>
+    <title>Kelola Customer - Kouvee Pet Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS yang sudah ada (disingkat) */
+        /* Variabel CSS (Disesuaikan untuk konsistensi Kouvee) */
+        :root {
+            --primary-color: #d97706;
+            /* Emas/Jingga */
+            --primary-hover: #b45309;
+            --secondary-color: #1f2937;
+            /* Biru Gelap/Hitam */
+            --bg-light: #fef3c7;
+            /* Latar Belakang sangat terang */
+            --bg-dark: #ffffff;
+            --border-color: #e5e7eb;
+            --success-color: #10b981;
+            /* Hijau untuk Aktif */
+            --danger-color: #ef4444;
+            /* Merah untuk Tidak Aktif */
+        }
+
+        /* RESET & Dasar */
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            color: #1f2937;
-            background: #ffffff;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-light);
+            color: var(--secondary-color);
+            line-height: 1.6;
+            min-height: 100vh;
         }
 
-        /* Navigation */
-        .navbar {
-            background: #ffffff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+        /* CONTAINER UTAMA */
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
 
-        .nav-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 1rem;
+        /* HEADER */
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 64px;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
         }
 
-        .nav-brand {
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* SEARCH BAR */
+        .search-container {
+            margin-bottom: 25px;
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #1f2937;
-            text-decoration: none;
+            justify-content: flex-end;
         }
 
-        .nav-brand svg {
-            width: 32px;
-            height: 32px;
-            color: #d97706;
+        #searchInput {
+            width: 300px;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
+        #searchInput:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
         }
 
-        .nav-links a {
-            color: #4b5563;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            transition: color 0.3s;
+
+        /* FORM STYLING */
+        #customerForm {
+            background: var(--bg-dark);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 40px;
+            /* Layout Form 2 kolom */
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
 
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: #d97706;
+        #customerForm h2 {
+            grid-column: 1 / -1;
+            /* Judul membentang di semua kolom */
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+            /* Jarak sudah diatur oleh gap grid */
+        }
+
+        /* Input yang harus mencakup 2 kolom */
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            font-size: 1rem;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
+        }
+
+        /* BUTTON STYLING */
+        .btn-action-container {
+            grid-column: 1 / -1;
+            text-align: right;
         }
 
         .btn {
-            padding: 0.75rem 2rem;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
+            padding: 10px 20px;
             border: none;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
         }
 
         .btn-primary {
-            background: #d97706;
+            background: var(--primary-color);
             color: white;
+            /* margin-top: 15px; */
         }
 
         .btn-primary:hover {
-            background: #b45309;
-        }
-
-        .btn-secondary {
-            background: #1f2937;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #111827;
-        }
-
-        .products-section {
-            background: #fef3c7;
-            min-height: 100vh;
-            padding: 2rem 1rem;
-        }
-
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #1f2937;
-            margin-bottom: 2rem;
-        }
-
-        .search-bar {
-            background: white;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: space-between; /* Agar elemen di dalamnya merata */
-            align-items: center;
-        }
-
-        .search-input-wrapper {
-            flex: 1;
-            position: relative;
-            min-width: 200px;
-        }
-
-        .search-input-wrapper input {
-            width: 100%;
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-        }
-
-        .search-input-wrapper input:focus {
-            outline: none;
-            border-color: #d97706;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 0.75rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #9ca3af;
-        }
-
-        .sort-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .sort-wrapper select {
-            padding: 0.75rem 1rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-
-        .sort-wrapper select:focus {
-            outline: none;
-            border-color: #d97706;
-        }
-
-        /* Services Grid Styling */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .service-card {
-            background: white;
-            border-radius: 1rem;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .service-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-        }
-        
-        .service-info {
-            padding: 1.5rem;
-        }
-
-        .service-name {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #1f2937;
-            margin-bottom: 0.5rem;
-        }
-
-        .service-price {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #d97706;
-            margin-bottom: 0.5rem;
-        }
-        
-        .service-details {
-            font-size: 0.9rem;
-            color: #4b5563;
-            margin-bottom: 1rem;
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .btn-edit, .btn-delete {
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-            transition: background 0.3s;
+            background: var(--primary-hover);
+            box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);
         }
 
         .btn-edit {
-            background: #3b82f6; /* Biru untuk edit */
+            background: #3b82f6;
+            /* Biru */
             color: white;
         }
 
@@ -249,7 +182,8 @@
         }
 
         .btn-delete {
-            background: #ef4444; /* Merah untuk delete */
+            background: var(--danger-color);
+            /* Merah */
             color: white;
         }
 
@@ -257,416 +191,291 @@
             background: #dc2626;
         }
 
-        .hidden {
-            display: none;
+        /* TABLE STYLING */
+        .table-wrapper {
+            background: var(--bg-dark);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow-x: auto;
         }
 
-        /* Modal Styling (for Add/Edit Form) */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
+        table {
             width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
+            border-collapse: separate;
+            border-spacing: 0;
         }
 
-        .modal-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 1rem;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .modal-content h2 {
-            margin-bottom: 1.5rem;
-            color: #d97706;
-            text-align: center;
+        th {
+            background: #f3f4f6;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            color: #6b7280;
         }
 
-        .form-group {
-            margin-bottom: 1rem;
+        tbody tr:nth-child(even) {
+            background-color: #f9fafb;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-            color: #1f2937;
+        tbody tr:hover {
+            background-color: #fefcf3;
         }
 
-        .form-group input, .form-group textarea, .form-group select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.5rem;
-            font-size: 1rem;
+        .action-cell {
+            white-space: nowrap;
         }
 
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-            margin-top: 2rem;
+        .action-cell .btn {
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            margin-right: 5px;
         }
 
-        /* Footer */
-        .footer {
-            background: #1f2937;
-            color: white;
-            padding: 2rem 1rem;
+        /* Badge Status */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: capitalize;
         }
 
-        .footer-container {
-            max-width: 1280px;
-            margin: 0 auto;
+        .badge-aktif {
+            background-color: #d1fae5;
+            color: var(--success-color);
         }
 
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
+        .badge-tidak-aktif {
+            background-color: #fee2e2;
+            color: var(--danger-color);
         }
 
-        .footer h4 {
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-
-        .footer p {
-            color: #9ca3af;
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid #374151;
-            padding-top: 2rem;
-            text-align: center;
-            color: #9ca3af;
-        }
-
+        /* Responsive adjustments */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            .services-grid {
+            #customerForm {
                 grid-template-columns: 1fr;
+            }
+
+            .action-cell .btn {
+                display: block;
+                width: 100%;
+                margin-bottom: 5px;
+                margin-right: 0;
             }
         }
     </style>
 </head>
+
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="#" class="nav-brand">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="4" r="2"/>
-                    <circle cx="18" cy="8" r="2"/>
-                    <path d="M21 16v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/>
-                    <path d="M11 6v10"/>
-                    <path d="M8 12h6"/>
-                </svg>
-                Kouvee Pet Shop
-            </a>
-            
-            <ul class="nav-links">
-                <li><a href="#" onclick="showPage('home')">🏠 Home</a></li>
-                <li><a href="#" onclick="showPage('products')">📦 Produk</a></li>
-                <li><a href="#" class="active" onclick="showPage('services')">💼 Layanan</a></li>
-                <li><a href="#" onclick="showPage('dashboard')">📊 Dashboard</a></li>
-            </ul>
 
-            <div class="nav-icons">
-                <button>🛒</button>
-                <button>👤</button>
-            </div>
+    <div class="container">
+        <div class="header">
+            <h1>🧑‍💻 Kelola Customer Kouvee Pet Shop</h1>
         </div>
-    </nav>
 
-    <div id="home-page" class="hidden"></div>
-    <div id="products-page" class="hidden"></div>
-    <div id="dashboard-page" class="hidden"></div>
+        <!-- 🔍 SEARCH BAR -->
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="🔍 Cari Customer" onkeyup="searchCustomer()">
+        </div>
 
-    <div id="services-page" class="products-section">
-        <div class="container">
-            <h1 class="section-title">Kelola Hewan Kouvee Pet Shop</h1>
+        <form id="customerForm" onsubmit="handleSubmit(event)">
+            <h2>Tambah/Edit Data Customer</h2>
+            <input type="hidden" id="index" value="">
 
-            <div class="search-bar">
-                <div class="search-input-wrapper">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" id="searchServiceInput" placeholder="Cari nama layanan..." onkeyup="filterServices()">
-                </div>
-                <div class="sort-wrapper">
-                    <button class="btn btn-primary" onclick="openServiceModal()">➕ Tambah Produk Baru</button>
-                </div>
-                <div class="sort-wrapper">
-                    <span>↕️ Sortir: </span>
-                    <select id="sortServiceSelect" onchange="sortServices()">
-                        <option value="name-asc">Nama A-Z</option>
-                        <option value="name-desc">Nama Z-A</option>
-                        <option value="price-asc">Harga Termurah</option>
-                        <option value="price-desc">Harga Termahal</option>
-                    </select>
-                </div>
+            <div class="form-group">
+                <label for="nama">Nama Customer *</label>
+                <input type="text" id="nama" required placeholder="Masukkan Nama">
             </div>
 
-            <div class="services-grid" id="servicesGrid">
-                </div>
-        </div>
-    </div>
-    
-    <div id="serviceModal" class="modal hidden">
-        <div class="modal-content">
-            <h2 id="modalTitle">Tambah ustomer Baru</h2>
-            <form id="serviceForm">
-                <input type="hidden" id="serviceId" value="">
+            <div class="form-group">
+                <label for="nama">Alamat *</label>
+                <input type="text" id="alamat" required placeholder="Masukkan Alamat">
+            </div>
 
-                <div class="form-group">
-                    <label for="serviceName">Nama Hewan</label>
-                    <input type="text" id="serviceName" required>
-                </div>
+            <div class="form-group">
+                <label for="jabatan">Tanggal Lahir *</label>
+                <input type="text" id="tanggalLahir" required placeholder="Masukan Tanggal Lahir">
+            </div>
 
-                <div class="form-group">
-                    <label for="servicePrice">Tanggal Lahir</label>
-                    <input type="number" id="servicePrice" required min="1000">
-                </div>
-                
-                <div class="form-group">
-                    <label for="serviceDuration">Jenis Hewan</label>
-                    <input type="number" id="serviceDuration" required min="5">
-                </div>
+            <div class="form-group">
+                <label for="gaji">Nomor Telpon *</label>
+                <input type="number" id="noTelp" required placeholder="Masukkan Nomor Telpon">
+            </div>
 
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeServiceModal()">Batal</button>
-                    <button type="submit" class="btn btn-primary" id="submitButton">Simpan Produk</button>
-                </div>
-            </form>
+            <div class="btn-action-container">
+                <button type="submit" class="btn btn-primary" id="submitButton">💾 Simpan Customer</button>
+            </div>
+        </form>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Alamat</th>
+                        <th>Tanggal Lahir</th>
+                        <th>Nomor Telpon</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="customerTable">
+                </tbody>
+            </table>
         </div>
     </div>
-
-
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-grid">
-                <div>
-                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
-                        <span style="font-size: 1.5rem;">🐾</span>
-                        <h4>Kouvee Pet Shop</h4>
-                    </div>
-                    <p>Toko hewan terpercaya sejak 2023 di Yogyakarta</p>
-                </div>
-                <div>
-                    <h4>Kontak</h4>
-                    <p>📍 Yogyakarta, Indonesia</p>
-                    <p>📞 (+62) 123-456</p>
-                    <p>✉️ info@kouveepetshop.com</p>
-                </div>
-                <div>
-                    <h4>Jam Operasional</h4>
-                    <p>Senin - Sabtu: 09.00 - 20.00</p>
-                    <p>Minggu: 10.00 - 18.00</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Kouvee Pet Shop. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
 
     <script>
-        // Data Layanan (Model)
-        let services = [
-            { id: 1, name: 'Grooming Basic Kucing', price: 60000, duration: 45, description: 'Mandi, pengeringan, potong kuku, dan bersih telinga.' },
-            { id: 2, name: 'Grooming Premium Anjing', price: 150000, duration: 90, description: 'Grooming lengkap + treatment anti kutu/jamur, parfume eksklusif.' },
-            { id: 3, name: 'Penitipan Harian', price: 50000, duration: 1440, description: 'Perawatan dan pengawasan harian di lingkungan yang aman.' },
-            { id: 4, name: 'Cukur Rambut (Non-Grooming)', price: 40000, duration: 30, description: 'Layanan cukur cepat tanpa proses mandi.' },
+        // Data awal untuk demonstrasi (Model Customer)
+        let customerData = [{
+                nama: 'Dini Fitriana',
+                alamat: 'Jl. Kaliurang No 45, Yogyakarta',
+                tanggalLahir: '2003-10-10',
+                noTelp: '087726472367'
+            },
+            {
+                nama: 'Rizki Adi',
+                alamat: 'Jl. Tambak Bayan, Yogyakarta',
+                tanggalLahir: '1998-01-23',
+                noTelp: '08937424618'
+            },
+            {
+                nama: 'Siska Dewi',
+                alamat: 'Jl. Babarsari No 13, Yogyakarta',
+                tanggalLahir: '1999-08-10',
+                noTelp: '087391283274'
+            }
         ];
 
-        let nextServiceId = services.length > 0 ? Math.max(...services.map(s => s.id)) + 1 : 1;
-        let filteredServices = [...services];
+        function handleSubmit(event) {
+            event.preventDefault();
 
-        // --- Navigasi Halaman (untuk simulasi) ---
-        function showPage(pageId) {
-            document.querySelectorAll('div[id$="-page"]').forEach(page => {
-                page.classList.add('hidden');
-            });
-            document.getElementById(pageId + '-page').classList.remove('hidden');
+            const index = document.getElementById('index').value;
+            const nama = document.getElementById('nama').value.trim();
+            const alamat = document.getElementById('alamat').value.trim();
+            const tanggalLahir = document.getElementById('tanggalLahir').value.trim();
+            const noTelp = document.getElementById('noTelp').value.trim();
 
-            // Update active nav link
-            document.querySelectorAll('.nav-links a').forEach(link => {
-                link.classList.remove('active');
-            });
-            document.querySelector(`.nav-links a[onclick*="'${pageId}'"]`).classList.add('active');
-
-            if (pageId === 'services') {
-                renderServices(); // Pastikan data layanan di-refresh
-            }
-        }
-        
-        // --- READ: Render Services ---
-        function renderServices() {
-            const grid = document.getElementById('servicesGrid');
-            grid.innerHTML = '';
-
-            if (filteredServices.length === 0) {
-                grid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #4b5563;">Tidak ada layanan yang ditemukan.</p>';
+            if (nama === '' || alamat === '' || tanggalLahir === '' || noTelp === '') {
+                alert('Semua field wajib diisi!');
                 return;
             }
-            
-            filteredServices.forEach(service => {
-                const card = `
-                    <div class="service-card">
-                        <div class="service-info">
-                            <h3 class="service-name">${service.name}</h3>
-                            <p class="service-price">Rp ${service.price.toLocaleString('id-ID')}</p>
-                            <p class="service-details">Durasi: ${service.duration} Menit</p>
-                            <p class="service-details">${service.description}</p>
-                            <div class="card-actions">
-                                <button class="btn-edit" onclick="editService(${service.id})">✏️ Edit</button>
-                                <button class="btn-delete" onclick="deleteService(${service.id})">🗑️ Hapus</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                grid.innerHTML += card;
+
+            const customer = {
+                nama,
+                alamat,
+                tanggalLahir,
+                noTelp
+            };
+
+            if (index === '') {
+                // Tambah baru
+                customerData.push(customer);
+            } else {
+                // Edit
+                customerData[index] = customer;
+            }
+
+            document.getElementById('customerForm').reset();
+            document.getElementById('index').value = '';
+            document.getElementById('submitButton').textContent = '💾 Simpan Customer';
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('customerTable');
+            tbody.innerHTML = '';
+            if (customerData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #6b7280;">Belum ada data customer. Tambahkan yang baru!</td></tr>';
+                return;
+            }
+
+            customerData.forEach((item, i) => {
+                const statusClass = item.status === 'Aktif' ? 'badge-aktif' : 'badge-tidak-aktif';
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                <td>${i+1}</td>
+                <td>${item.nama}</td>
+                <td>${item.alamat}</td>
+                <td>${item.tanggalLahir}</td>
+                <td>${item.noTelp}</td>
+                <td><span class="badge ${statusClass}">${item.status}</span></td>
+                <td class="action-cell">
+                    <button class="btn btn-edit" onclick="editData(${i})">✏️ Edit</button>
+                    <button class="btn btn-delete" onclick="deleteData(${i})">🗑️ Hapus</button>
+                </td>
+            `;
+                tbody.appendChild(row);
             });
         }
 
-        // --- CRUD Functionality ---
+        function editData(i) {
+            document.getElementById('index').value = i;
+            document.getElementById('nama').value = customerData[i].nama;
+            document.getElementById('alamat').value = customerData[i].alamat;
+            document.getElementById('tanggalLahir').value = customerData[i].tanggalLahir;
+            document.getElementById('noTelp').value = customerData[i].noTelp;
+            document.getElementById('status').value = customerData[i].status;
 
-        // Open Modal (for Create or Update)
-        function openServiceModal(service = null) {
-            const modal = document.getElementById('serviceModal');
-            const form = document.getElementById('serviceForm');
-            const modalTitle = document.getElementById('modalTitle');
-            const submitButton = document.getElementById('submitButton');
-            
-            form.reset();
-            document.getElementById('serviceId').value = '';
+            // Ubah teks tombol menjadi "Simpan Perubahan"
+            document.getElementById('submitButton').textContent = '✅ Simpan Perubahan';
 
-            if (service) {
-                // UPDATE mode
-                modalTitle.textContent = 'Edit Layanan: ' + service.name;
-                submitButton.textContent = 'Simpan Perubahan';
-                document.getElementById('serviceId').value = service.id;
-                document.getElementById('serviceName').value = service.name;
-                document.getElementById('servicePrice').value = service.price;
-                document.getElementById('serviceDuration').value = service.duration;
-                document.getElementById('serviceDescription').value = service.description;
-            } else {
-                // CREATE mode
-                modalTitle.textContent = 'Tambah Layanan Baru';
-                submitButton.textContent = 'Tambah Layanan';
-            }
-            
-            modal.classList.remove('hidden');
+            // Scroll ke atas agar form terlihat
+            document.getElementById('customerForm').scrollIntoView({
+                behavior: 'smooth'
+            });
         }
 
-        // Close Modal
-        function closeServiceModal() {
-            document.getElementById('serviceModal').classList.add('hidden');
-        }
-
-        // Handle Form Submission (Create or Update)
-        document.getElementById('serviceForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const id = document.getElementById('serviceId').value;
-            const name = document.getElementById('serviceName').value;
-            const price = parseInt(document.getElementById('servicePrice').value);
-            const duration = parseInt(document.getElementById('serviceDuration').value);
-            const description = document.getElementById('serviceDescription').value;
-
-            if (id) {
-                // UPDATE (Edit)
-                const index = services.findIndex(s => s.id == id);
-                if (index !== -1) {
-                    services[index] = { id: parseInt(id), name, price, duration, description };
-                    alert(`Layanan "${name}" berhasil diubah!`);
-                }
-            } else {
-                // CREATE (Tambah)
-                const newService = {
-                    id: nextServiceId++,
-                    name,
-                    price,
-                    duration,
-                    description
-                };
-                services.push(newService);
-                alert(`Layanan "${name}" berhasil ditambahkan!`);
-            }
-
-            closeServiceModal();
-            // Re-render, filter, and sort the list
-            filterServices();
-        });
-
-        // EDIT (Bagian 1: Buka Modal)
-        function editService(id) {
-            const serviceToEdit = services.find(s => s.id === id);
-            if (serviceToEdit) {
-                openServiceModal(serviceToEdit);
+        function deleteData(i) {
+            if (confirm(`Yakin ingin menghapus data customer "${customerData[i].nama}"?`)) {
+                customerData.splice(i, 1);
+                renderTable();
             }
         }
 
-        // DELETE
-        function deleteService(id) {
-            const serviceToDelete = services.find(s => s.id === id);
-            if (confirm(`Yakin ingin menghapus layanan: "${serviceToDelete.name}"?`)) {
-                services = services.filter(s => s.id !== id);
-                alert(`Layanan "${serviceToDelete.name}" berhasil dihapus.`);
-                // Re-render, filter, and sort the list
-                filterServices();
-            }
-        }
+        // Render awal saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', renderTable);
 
-        // Filter Services
-        function filterServices() {
-            const searchValue = document.getElementById('searchServiceInput').value.toLowerCase();
-            filteredServices = services.filter(service => 
-                service.name.toLowerCase().includes(searchValue) ||
-                service.description.toLowerCase().includes(searchValue)
+        function searchCustomer() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            const tbody = document.getElementById('customerTable');
+            tbody.innerHTML = '';
+
+            const filteredData = customerData.filter(item =>
+                item.nama.toLowerCase().includes(keyword)
             );
-            sortServices(); // Panggil fungsi sort setelah filter
-        }
 
-        // Sort Services
-        function sortServices() {
-            const sortValue = document.getElementById('sortServiceSelect').value;
-            
-            filteredServices.sort((a, b) => {
-                switch(sortValue) {
-                    case 'name-asc':
-                        return a.name.localeCompare(b.name);
-                    case 'name-desc':
-                        return b.name.localeCompare(a.name);
-                    case 'price-asc':
-                        return a.price - b.price;
-                    case 'price-desc':
-                        return b.price - a.price;
-                    default:
-                        return 0;
-                }
+            if (filteredData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px; color:#6b7280;">Customer tidak ditemukan.</td></tr>';
+                return;
+            }
+
+            filteredData.forEach((item, i) => {
+                const statusClass = item.status === 'Aktif' ? 'badge-aktif' : 'badge-tidak-aktif';
+                const row = document.createElement('tr');
+                row.innerHTML = `
+            <td>${i + 1}</td>
+            <td>${item.nama}</td>
+            <td>${item.alamat}</td>
+            <td>${item.tanggalLahir}</td>
+            <td>${item.noTelp}</td>
+            <td class="action-cell">
+                <button class="btn btn-edit" onclick="editData(${customerData.indexOf(item)})">✏️ Edit</button>
+                <button class="btn btn-delete" onclick="deleteData(${customerData.indexOf(item)})">🗑️ Hapus</button>
+            </td>
+        `;
+                tbody.appendChild(row);
             });
-            
-            renderServices();
         }
-
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            // Tampilkan halaman layanan secara default
-            showPage('services'); 
-            filterServices(); // Render awal dengan sort default
-        });
     </script>
 </body>
 </html>
