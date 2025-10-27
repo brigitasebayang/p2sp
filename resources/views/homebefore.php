@@ -643,7 +643,7 @@
 
             <div class="nav-icons">
                 <button onclick="alert('Silakan login terlebih dahulu')">🛒</button>
-                <button onclick="alert('Silakan login untuk mengakses akun Anda')">👤</button>
+                <button onclick="window.location.href='/login'">👤</button>
             </div>
         </div>
     </nav>

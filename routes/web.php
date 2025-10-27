@@ -10,6 +10,11 @@ Route::get('/homebefore', function () {
     return view('homebefore');
 });
 
+Route::get('/login', function () {
+    return view('login');
+});
+
+
 Route::get('/homeLayanan', function () {
     return view('homeLayanan');
 });
