@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,14 +9,19 @@
     <style>
         /* Variabel CSS (Disesuaikan untuk konsistensi Kouvee) */
         :root {
-            --primary-color: #d97706; /* Emas/Jingga */
+            --primary-color: #d97706;
+            /* Emas/Jingga */
             --primary-hover: #b45309;
-            --secondary-color: #1f2937; /* Biru Gelap/Hitam */
-            --bg-light: #fef3c7; /* Latar Belakang sangat terang */
+            --secondary-color: #1f2937;
+            /* Biru Gelap/Hitam */
+            --bg-light: #fef3c7;
+            /* Latar Belakang sangat terang */
             --bg-dark: #ffffff;
             --border-color: #e5e7eb;
-            --success-color: #10b981; /* Hijau untuk Aktif */
-            --danger-color: #ef4444; /* Merah untuk Tidak Aktif */
+            --success-color: #10b981;
+            /* Hijau untuk Aktif */
+            --danger-color: #ef4444;
+            /* Merah untuk Tidak Aktif */
         }
 
         /* RESET & Dasar */
@@ -27,12 +33,12 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--bg-light); 
+            background: var(--bg-light);
             color: var(--secondary-color);
             line-height: 1.6;
             min-height: 100vh;
         }
-        
+
         /* CONTAINER UTAMA */
         .container {
             max-width: 1100px;
@@ -56,12 +62,35 @@
             color: var(--primary-color);
         }
 
+        /* SEARCH BAR */
+        .search-container {
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        #searchInput {
+            width: 300px;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        #searchInput:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
+        }
+
+
         /* FORM STYLING */
         #pegawaiForm {
             background: var(--bg-dark);
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             margin-bottom: 40px;
             /* Layout Form 2 kolom */
             display: grid;
@@ -70,19 +99,21 @@
         }
 
         #pegawaiForm h2 {
-            grid-column: 1 / -1; /* Judul membentang di semua kolom */
+            grid-column: 1 / -1;
+            /* Judul membentang di semua kolom */
             margin-bottom: 10px;
         }
 
         .form-group {
-            margin-bottom: 0; /* Jarak sudah diatur oleh gap grid */
+            margin-bottom: 0;
+            /* Jarak sudah diatur oleh gap grid */
         }
 
         /* Input yang harus mencakup 2 kolom */
         .full-width {
             grid-column: 1 / -1;
         }
-        
+
         label {
             display: block;
             margin-bottom: 5px;
@@ -91,8 +122,8 @@
             font-size: 0.9rem;
         }
 
-        input[type="text"], 
-        input[type="number"], 
+        input[type="text"],
+        input[type="number"],
         select {
             width: 100%;
             padding: 12px;
@@ -102,7 +133,8 @@
             font-size: 1rem;
         }
 
-        input:focus, select:focus {
+        input:focus,
+        select:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
@@ -113,7 +145,7 @@
             grid-column: 1 / -1;
             text-align: right;
         }
-        
+
         .btn {
             padding: 10px 20px;
             border: none;
@@ -140,16 +172,21 @@
         }
 
         .btn-edit {
-            background: #3b82f6; /* Biru */
+            background: #3b82f6;
+            /* Biru */
             color: white;
         }
+
         .btn-edit:hover {
             background: #2563eb;
         }
+
         .btn-delete {
-            background: var(--danger-color); /* Merah */
+            background: var(--danger-color);
+            /* Merah */
             color: white;
         }
+
         .btn-delete:hover {
             background: #dc2626;
         }
@@ -158,8 +195,8 @@
         .table-wrapper {
             background: var(--bg-dark);
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            overflow-x: auto; 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow-x: auto;
         }
 
         table {
@@ -168,7 +205,8 @@
             border-spacing: 0;
         }
 
-        th, td {
+        th,
+        td {
             padding: 15px;
             text-align: left;
             border-bottom: 1px solid var(--border-color);
@@ -185,11 +223,11 @@
         tbody tr:nth-child(even) {
             background-color: #f9fafb;
         }
-        
+
         tbody tr:hover {
-            background-color: #fefcf3; 
+            background-color: #fefcf3;
         }
-        
+
         .action-cell {
             white-space: nowrap;
         }
@@ -214,6 +252,7 @@
             background-color: #d1fae5;
             color: var(--success-color);
         }
+
         .badge-tidak-aktif {
             background-color: #fee2e2;
             color: var(--danger-color);
@@ -224,6 +263,7 @@
             #pegawaiForm {
                 grid-template-columns: 1fr;
             }
+
             .action-cell .btn {
                 display: block;
                 width: 100%;
@@ -233,152 +273,224 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1>🧑‍💻 Kelola Pegawai Kouvee Pet Shop</h1>
-    </div>
-
-    <form id="pegawaiForm" onsubmit="handleSubmit(event)">
-        <h2>Tambah/Edit Data Pegawai</h2>
-        <input type="hidden" id="index" value="">
-        
-        <div class="form-group">
-            <label for="nama">Nama Pegawai *</label>
-            <input type="text" id="nama" required placeholder="Contoh: Budi Santoso">
+    <div class="container">
+        <div class="header">
+            <h1>🧑‍💻 Kelola Pegawai Kouvee Pet Shop</h1>
         </div>
 
-        <div class="form-group">
-            <label for="jabatan">Jabatan *</label>
-            <input type="text" id="jabatan" required placeholder="Contoh: Pet Groomer Senior">
+        <!-- 🔍 SEARCH BAR -->
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="🔍 Cari Pegawai" onkeyup="searchPegawai()">
         </div>
 
-        <div class="form-group">
-            <label for="gaji">Gaji (Rp) *</label>
-            <input type="number" id="gaji" required min="1000000" placeholder="Contoh: 3500000">
-        </div>
+        <form id="pegawaiForm" onsubmit="handleSubmit(event)">
+            <h2>Tambah/Edit Data Pegawai</h2>
+            <input type="hidden" id="index" value="">
 
-        <div class="form-group">
-            <label for="status">Status Kerja *</label>
-            <select id="status" required>
-                <option value="Aktif">Aktif</option>
-                <option value="Tidak Aktif">Tidak Aktif</option>
-            </select>
-        </div>
+            <div class="form-group">
+                <label for="nama">Nama Pegawai *</label>
+                <input type="text" id="nama" required placeholder="Masukkan Nama">
+            </div>
 
-        <div class="btn-action-container">
-            <button type="submit" class="btn btn-primary" id="submitButton">💾 Simpan Pegawai</button>
-        </div>
-    </form>
+            <div class="form-group">
+                <label for="nama">Alamat *</label>
+                <input type="text" id="alamat" required placeholder="Masukkan Alamat">
+            </div>
 
-    <div class="table-wrapper">
-        <table>
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama Pegawai</th>
-                    <th>Jabatan</th>
-                    <th>Gaji</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody id="pegawaiTable">
+            <div class="form-group">
+                <label for="jabatan">Tanggal Lahir *</label>
+                <input type="text" id="tanggalLahir" required placeholder="Masukan Tanggal Lahir">
+            </div>
+
+            <div class="form-group">
+                <label for="gaji">Nomor Telpon *</label>
+                <input type="number" id="noTelp" required placeholder="Masukkan Nomor Telpon">
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status Kerja *</label>
+                <select id="status" required>
+                    <option value="Aktif">Aktif</option>
+                    <option value="Tidak Aktif">Tidak Aktif</option>
+                </select>
+            </div>
+
+            <div class="btn-action-container">
+                <button type="submit" class="btn btn-primary" id="submitButton">💾 Simpan Pegawai</button>
+            </div>
+        </form>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Alamat</th>
+                        <th>Tanggal Lahir</th>
+                        <th>Nomor Telpon</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="pegawaiTable">
                 </tbody>
-        </table>
+            </table>
+        </div>
     </div>
-</div>
 
-<script>
-    // Data awal untuk demonstrasi (Model Pegawai)
-    let pegawaiData = [
-        { nama: 'Dini Fitriana', jabatan: 'Manajer Toko', gaji: 5000000, status: 'Aktif' },
-        { nama: 'Rizki Adi', jabatan: 'Kasir', gaji: 2800000, status: 'Aktif' },
-        { nama: 'Siska Dewi', jabatan: 'Pet Groomer', gaji: 3200000, status: 'Tidak Aktif' }
-    ];
+    <script>
+        // Data awal untuk demonstrasi (Model Pegawai)
+        let pegawaiData = [{
+                nama: 'Dini Fitriana',
+                alamat: 'Jl. Kaliurang No 45, Yogyakarta',
+                tanggalLahir: '2003-10-10',
+                noTelp: '087726472367',
+                status: 'Aktif'
+            },
+            {
+                nama: 'Rizki Adi',
+                alamat: 'Jl. Tambak Bayan, Yogyakarta',
+                tanggalLahir: '1998-01-23',
+                noTelp: '08937424618',
+                status: 'Aktif'
+            },
+            {
+                nama: 'Siska Dewi',
+                alamat: 'Jl. Babarsari No 13, Yogyakarta',
+                tanggalLahir: '1999-08-10',
+                noTelp: '087391283274',
+                status: 'Aktif'
+            }
+        ];
 
-    function handleSubmit(event) {
-        event.preventDefault();
-        
-        const index = document.getElementById('index').value;
-        const nama = document.getElementById('nama').value.trim();
-        const jabatan = document.getElementById('jabatan').value.trim();
-        const gaji = document.getElementById('gaji').value.trim();
-        const status = document.getElementById('status').value;
+        function handleSubmit(event) {
+            event.preventDefault();
 
-        if(nama === '' || jabatan === '' || gaji === '') {
-            alert('Semua field wajib diisi!');
-            return;
+            const index = document.getElementById('index').value;
+            const nama = document.getElementById('nama').value.trim();
+            const alamat = document.getElementById('alamat').value.trim();
+            const tanggalLahir = document.getElementById('tanggalLahir').value.trim();
+            const noTelp = document.getElementById('noTelp').value.trim();
+            const status = document.getElementById('status').value;
+
+            if (nama === '' || alamat === '' || tanggalLahir === '' || noTelp === '' || status === '') {
+                alert('Semua field wajib diisi!');
+                return;
+            }
+
+            const pegawai = {
+                nama,
+                alamat,
+                tanggalLahir,
+                noTelp,
+                status
+            };
+
+            if (index === '') {
+                // Tambah baru
+                pegawaiData.push(pegawai);
+            } else {
+                // Edit
+                pegawaiData[index] = pegawai;
+            }
+
+            document.getElementById('pegawaiForm').reset();
+            document.getElementById('index').value = '';
+            document.getElementById('submitButton').textContent = '💾 Simpan Pegawai';
+            renderTable();
         }
 
-        const pegawai = { nama, jabatan, gaji: parseInt(gaji), status };
+        function renderTable() {
+            const tbody = document.getElementById('pegawaiTable');
+            tbody.innerHTML = '';
+            if (pegawaiData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #6b7280;">Belum ada data pegawai. Tambahkan yang baru!</td></tr>';
+                return;
+            }
 
-        if(index === '') {
-            // Tambah baru
-            pegawaiData.push(pegawai);
-        } else {
-            // Edit
-            pegawaiData[index] = pegawai;
-        }
+            pegawaiData.forEach((item, i) => {
+                const statusClass = item.status === 'Aktif' ? 'badge-aktif' : 'badge-tidak-aktif';
 
-        document.getElementById('pegawaiForm').reset();
-        document.getElementById('index').value = '';
-        document.getElementById('submitButton').textContent = '💾 Simpan Pegawai';
-        renderTable();
-    }
-
-    function renderTable() {
-        const tbody = document.getElementById('pegawaiTable');
-        tbody.innerHTML = '';
-        if (pegawaiData.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #6b7280;">Belum ada data pegawai. Tambahkan yang baru!</td></tr>';
-            return;
-        }
-        
-        pegawaiData.forEach((item, i) => {
-            const statusClass = item.status === 'Aktif' ? 'badge-aktif' : 'badge-tidak-aktif';
-            
-            const row = document.createElement('tr');
-            row.innerHTML = `
+                const row = document.createElement('tr');
+                row.innerHTML = `
                 <td>${i+1}</td>
                 <td>${item.nama}</td>
-                <td>${item.jabatan}</td>
-                <td>Rp ${Number(item.gaji).toLocaleString('id-ID')}</td>
+                <td>${item.alamat}</td>
+                <td>${item.tanggalLahir}</td>
+                <td>${item.noTelp}</td>
                 <td><span class="badge ${statusClass}">${item.status}</span></td>
                 <td class="action-cell">
                     <button class="btn btn-edit" onclick="editData(${i})">✏️ Edit</button>
                     <button class="btn btn-delete" onclick="deleteData(${i})">🗑️ Hapus</button>
                 </td>
             `;
-            tbody.appendChild(row);
-        });
-    }
-
-    function editData(i) {
-        document.getElementById('index').value = i;
-        document.getElementById('nama').value = pegawaiData[i].nama;
-        document.getElementById('jabatan').value = pegawaiData[i].jabatan;
-        document.getElementById('gaji').value = pegawaiData[i].gaji;
-        document.getElementById('status').value = pegawaiData[i].status;
-        
-        // Ubah teks tombol menjadi "Simpan Perubahan"
-        document.getElementById('submitButton').textContent = '✅ Simpan Perubahan';
-
-        // Scroll ke atas agar form terlihat
-        document.getElementById('pegawaiForm').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function deleteData(i) {
-        if(confirm(`Yakin ingin menghapus data pegawai "${pegawaiData[i].nama}"?`)) {
-            pegawaiData.splice(i, 1);
-            renderTable();
+                tbody.appendChild(row);
+            });
         }
-    }
 
-    // Render awal saat halaman dimuat
-    document.addEventListener('DOMContentLoaded', renderTable);
-</script>
+        function editData(i) {
+            document.getElementById('index').value = i;
+            document.getElementById('nama').value = pegawaiData[i].nama;
+            document.getElementById('alamat').value = pegawaiData[i].alamat;
+            document.getElementById('tanggalLahir').value = pegawaiData[i].tanggalLahir;
+            document.getElementById('noTelp').value = pegawaiData[i].noTelp;
+            document.getElementById('status').value = pegawaiData[i].status;
 
+            // Ubah teks tombol menjadi "Simpan Perubahan"
+            document.getElementById('submitButton').textContent = '✅ Simpan Perubahan';
+
+            // Scroll ke atas agar form terlihat
+            document.getElementById('pegawaiForm').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        function deleteData(i) {
+            if (confirm(`Yakin ingin menghapus data pegawai "${pegawaiData[i].nama}"?`)) {
+                pegawaiData.splice(i, 1);
+                renderTable();
+            }
+        }
+
+        // Render awal saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', renderTable);
+
+        function searchPegawai() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            const tbody = document.getElementById('pegawaiTable');
+            tbody.innerHTML = '';
+
+            const filteredData = pegawaiData.filter(item =>
+                item.nama.toLowerCase().includes(keyword)
+            );
+
+            if (filteredData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px; color:#6b7280;">Pegawai tidak ditemukan.</td></tr>';
+                return;
+            }
+
+            filteredData.forEach((item, i) => {
+                const statusClass = item.status === 'Aktif' ? 'badge-aktif' : 'badge-tidak-aktif';
+                const row = document.createElement('tr');
+                row.innerHTML = `
+            <td>${i + 1}</td>
+            <td>${item.nama}</td>
+            <td>${item.alamat}</td>
+            <td>${item.tanggalLahir}</td>
+            <td>${item.noTelp}</td>
+            <td><span class="badge ${statusClass}">${item.status}</span></td>
+            <td class="action-cell">
+                <button class="btn btn-edit" onclick="editData(${pegawaiData.indexOf(item)})">✏️ Edit</button>
+                <button class="btn btn-delete" onclick="deleteData(${pegawaiData.indexOf(item)})">🗑️ Hapus</button>
+            </td>
+        `;
+                tbody.appendChild(row);
+            });
+        }
+    </script>
 </body>
 </html>
