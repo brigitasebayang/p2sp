@@ -650,6 +650,11 @@
                     <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Kelola Produk</h3>
                     <p style="color: #4b5563; font-size: 0.875rem;">Tambah, edit, atau hapus produk</p>
                 </div>
+                <div class="feature-card" style="text-align: left; cursor: pointer;" onclick="window.location.href='/homeCustomer'">
+                    <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;">👥</div>
+                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Kelola Customer</h3>
+                    <p style="color: #4b5563; font-size: 0.875rem;">Tambah, edit, atau hapus Customer</p>
+                </div>
                 <div class="feature-card" style="text-align: left; cursor: pointer;" onclick="window.location.href='/homePegawai'">
                     <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;">👥</div>
                     <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Kelola Pegawai</h3>
