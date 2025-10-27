@@ -296,18 +296,23 @@
             </div>
 
             <div class="form-group">
+                <label for="jabatan">Jabatan *</label>
+                <input type="text" id="jabatan" required placeholder="Masukkan Jabatan">
+            </div>
+
+            <div class="form-group">
                 <label for="nama">Alamat *</label>
                 <input type="text" id="alamat" required placeholder="Masukkan Alamat">
             </div>
 
             <div class="form-group">
-                <label for="jabatan">Tanggal Lahir *</label>
-                <input type="text" id="tanggalLahir" required placeholder="Masukan Tanggal Lahir">
+                <label for="tanggalLahir">Tanggal Lahir *</label>
+                <input type="date" id="tanggalLahir" required placeholder="Masukan Tanggal Lahir">
             </div>
 
             <div class="form-group">
-                <label for="gaji">Nomor Telpon *</label>
-                <input type="number" id="noTelp" required placeholder="Masukkan Nomor Telpon">
+                <label for="noTelp">Nomor Telpon *</label>
+                <input type="text" id="noTelp" required placeholder="Masukkan Nomor Telpon">
             </div>
 
             <div class="form-group">
@@ -329,6 +334,7 @@
                     <tr>
                         <th>No</th>
                         <th>Nama</th>
+                        <th>Jabatan</th>
                         <th>Alamat</th>
                         <th>Tanggal Lahir</th>
                         <th>Nomor Telpon</th>
@@ -344,46 +350,27 @@
 
     <script>
         // Data awal untuk demonstrasi (Model Pegawai)
-        let pegawaiData = [{
-                nama: 'Dini Fitriana',
-                alamat: 'Jl. Kaliurang No 45, Yogyakarta',
-                tanggalLahir: '2003-10-10',
-                noTelp: '087726472367',
-                status: 'Aktif'
-            },
-            {
-                nama: 'Rizki Adi',
-                alamat: 'Jl. Tambak Bayan, Yogyakarta',
-                tanggalLahir: '1998-01-23',
-                noTelp: '08937424618',
-                status: 'Aktif'
-            },
-            {
-                nama: 'Siska Dewi',
-                alamat: 'Jl. Babarsari No 13, Yogyakarta',
-                tanggalLahir: '1999-08-10',
-                noTelp: '087391283274',
-                status: 'Aktif'
-            }
-        ];
+        let pegawaiData = [];
 
         function handleSubmit(event) {
             event.preventDefault();
 
             const index = document.getElementById('index').value;
             const nama = document.getElementById('nama').value.trim();
+            const jabatan = document.getElementById('jabatan').value.trim();
             const alamat = document.getElementById('alamat').value.trim();
             const tanggalLahir = document.getElementById('tanggalLahir').value.trim();
             const noTelp = document.getElementById('noTelp').value.trim();
             const status = document.getElementById('status').value;
 
-            if (nama === '' || alamat === '' || tanggalLahir === '' || noTelp === '' || status === '') {
+            if (nama === '' || jabatan === '' || alamat === '' || tanggalLahir === '' || noTelp === '' || status === '') {
                 alert('Semua field wajib diisi!');
                 return;
             }
 
             const pegawai = {
                 nama,
+                jabatan,
                 alamat,
                 tanggalLahir,
                 noTelp,
@@ -408,7 +395,7 @@
             const tbody = document.getElementById('pegawaiTable');
             tbody.innerHTML = '';
             if (pegawaiData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #6b7280;">Belum ada data pegawai. Tambahkan yang baru!</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #6b7280;">Belum ada data pegawai</td></tr>';
                 return;
             }
 
@@ -419,6 +406,7 @@
                 row.innerHTML = `
                 <td>${i+1}</td>
                 <td>${item.nama}</td>
+                <td>${item.jabatan}</td>
                 <td>${item.alamat}</td>
                 <td>${item.tanggalLahir}</td>
                 <td>${item.noTelp}</td>
@@ -435,6 +423,7 @@
         function editData(i) {
             document.getElementById('index').value = i;
             document.getElementById('nama').value = pegawaiData[i].nama;
+            document.getElementById('jabatan').value = pegawaiData[i].jabatan;
             document.getElementById('alamat').value = pegawaiData[i].alamat;
             document.getElementById('tanggalLahir').value = pegawaiData[i].tanggalLahir;
             document.getElementById('noTelp').value = pegawaiData[i].noTelp;
@@ -464,9 +453,12 @@
             const tbody = document.getElementById('pegawaiTable');
             tbody.innerHTML = '';
 
-            const filteredData = pegawaiData.filter(item =>
-                item.nama.toLowerCase().includes(keyword)
+            const filteredData = customerData.filter(item =>
+                item.nama.toLowerCase().includes(keyword.toLowerCase()) ||
+                item.alamat.toLowerCase().includes(keyword.toLowerCase()) ||
+                item.jabatan.toLowerCase().includes(keyword.toLowerCase())
             );
+
 
             if (filteredData.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px; color:#6b7280;">Pegawai tidak ditemukan.</td></tr>';
@@ -479,6 +471,7 @@
                 row.innerHTML = `
             <td>${i + 1}</td>
             <td>${item.nama}</td>
+            <td>${item.jabatan}</td>
             <td>${item.alamat}</td>
             <td>${item.tanggalLahir}</td>
             <td>${item.noTelp}</td>

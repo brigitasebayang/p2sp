@@ -296,18 +296,18 @@
             </div>
 
             <div class="form-group">
-                <label for="nama">Alamat *</label>
+                <label for="alamat">Alamat *</label>
                 <input type="text" id="alamat" required placeholder="Masukkan Alamat">
             </div>
 
             <div class="form-group">
-                <label for="jabatan">Tanggal Lahir *</label>
-                <input type="text" id="tanggalLahir" required placeholder="Masukan Tanggal Lahir">
+                <label for="tanggalLahir">Tanggal Lahir *</label>
+                <input type="date" id="tanggalLahir" required placeholder="Masukan Tanggal Lahir">
             </div>
 
             <div class="form-group">
-                <label for="gaji">Nomor Telpon *</label>
-                <input type="number" id="noTelp" required placeholder="Masukkan Nomor Telpon">
+                <label for="noTelp">Nomor Telpon *</label>
+                <input type="text" id="noTelp" required placeholder="Masukkan Nomor Telpon">
             </div>
 
             <div class="btn-action-container">
@@ -335,25 +335,7 @@
 
     <script>
         // Data awal untuk demonstrasi (Model Customer)
-        let customerData = [{
-                nama: 'Dini Fitriana',
-                alamat: 'Jl. Kaliurang No 45, Yogyakarta',
-                tanggalLahir: '2003-10-10',
-                noTelp: '087726472367'
-            },
-            {
-                nama: 'Rizki Adi',
-                alamat: 'Jl. Tambak Bayan, Yogyakarta',
-                tanggalLahir: '1998-01-23',
-                noTelp: '08937424618'
-            },
-            {
-                nama: 'Siska Dewi',
-                alamat: 'Jl. Babarsari No 13, Yogyakarta',
-                tanggalLahir: '1999-08-10',
-                noTelp: '087391283274'
-            }
-        ];
+        let customerData = [];
 
         function handleSubmit(event) {
             event.preventDefault();
@@ -394,7 +376,7 @@
             const tbody = document.getElementById('customerTable');
             tbody.innerHTML = '';
             if (customerData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #6b7280;">Belum ada data customer. Tambahkan yang baru!</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #6b7280;">Belum ada data customer</td></tr>';
                 return;
             }
 
@@ -451,8 +433,10 @@
             tbody.innerHTML = '';
 
             const filteredData = customerData.filter(item =>
-                item.nama.toLowerCase().includes(keyword)
+                item.nama.toLowerCase().includes(keyword.toLowerCase()) ||
+                item.alamat.toLowerCase().includes(keyword.toLowerCase())
             );
+
 
             if (filteredData.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px; color:#6b7280;">Customer tidak ditemukan.</td></tr>';
