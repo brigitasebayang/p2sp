@@ -1,691 +1,318 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelola Produk - Kouvee Pet Shop</title>
-    <style>
-        /* Variabel CSS (Menggunakan variabel dari file sebelumnya) */
-        :root {
-            --primary-color: #d97706; /* Emas/Jingga */
-            --primary-hover: #b45309;
-            --secondary-color: #1f2937; /* Biru Gelap/Hitam */
-            --bg-light: #fef3c7; /* Latar Belakang sangat terang */
-            --bg-dark: #ffffff;
-            --border-color: #e5e7eb;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kelola Produk - Kouvee Pet Shop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #d97706;
+      --primary-hover: #b45309;
+      --secondary-color: #1f2937;
+      --bg-light: #fef3c7;
+      --bg-dark: #ffffff;
+      --border-color: #e5e7eb;
+      --danger-color: #ef4444;
+    }
 
-        /* CSS yang sudah ada (disingkat) */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            color: var(--secondary-color);
-            background: var(--bg-dark);
-        }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-light);
+      color: var(--secondary-color);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
 
-        /* Navigation */
-        .navbar {
-            background: var(--bg-dark);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+    .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
 
-        .nav-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 64px;
-        }
+    .header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 30px; padding-bottom: 10px; border-bottom: 2px solid var(--primary-color);
+    }
 
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--secondary-color);
-            text-decoration: none;
-        }
+    .header h1 { font-size: 2rem; font-weight: 700; color: var(--primary-color); }
 
-        .nav-brand svg {
-            width: 32px;
-            height: 32px;
-            color: var(--primary-color);
-        }
+    .search-container { margin-bottom: 25px; display: flex; justify-content: flex-end; }
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
+    #searchInput {
+      width: 300px; padding: 10px 15px; border: 1px solid var(--border-color);
+      border-radius: 8px; font-size: 1rem;
+    }
 
-        .nav-links a {
-            color: #4b5563;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            transition: color 0.3s;
-        }
+    #productForm {
+      background: var(--bg-dark);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      margin-bottom: 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
 
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: var(--primary-color);
-        }
+    #productForm h2 {
+      grid-column: 1 / -1;
+      margin-bottom: 10px;
+      color: var(--primary-color);
+    }
 
-        .btn {
-            padding: 0.75rem 2rem;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
+    label { display: block; margin-bottom: 5px; font-weight: 600; }
 
-        .btn-primary {
-            background: var(--primary-color);
-            color: white;
-        }
+    input[type="text"], input[type="number"], input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 1rem;
+    }
 
-        .btn-primary:hover {
-            background: var(--primary-hover);
-        }
+    input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(217,119,6,0.2);
+    }
 
-        .btn-secondary {
-            background: var(--secondary-color);
-            color: white;
-        }
+    .error-msg {
+      color: var(--danger-color);
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
 
-        .btn-secondary:hover {
-            background: #111827;
-        }
+    .full-width { grid-column: 1 / -1; }
 
-        .products-section {
-            background: var(--bg-light); /* Latar belakang cerah */
-            min-height: 100vh;
-            padding: 2rem 1rem;
-        }
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
 
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-        }
+    .btn-primary { background: var(--primary-color); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-edit { background: #3b82f6; color: white; }
+    .btn-delete { background: var(--danger-color); color: white; }
 
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--secondary-color);
-            margin-bottom: 2rem;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--bg-dark);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
 
-        .search-bar {
-            background: white;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-        }
+    th, td { text-align: left; padding: 12px 16px; }
+    th { background: var(--primary-color); color: white; font-weight: 600; }
+    tr:nth-child(even) { background: #f9fafb; }
+    tr:hover { background: #fef3c7; }
 
-        .search-input-wrapper {
-            flex: 1;
-            position: relative;
-            min-width: 200px;
-        }
-
-        .search-input-wrapper input {
-            width: 100%;
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            font-size: 1rem;
-        }
-
-        .search-input-wrapper input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 0.75rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #9ca3af;
-        }
-
-        .sort-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .sort-wrapper select {
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-
-        .sort-wrapper select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        /* Products Grid Styling (Menggunakan nama class layanan yang sudah ada) */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Sedikit lebih kecil untuk produk */
-            gap: 1.5rem;
-        }
-
-        .service-card {
-            background: white;
-            border-radius: 1rem;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .service-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-        }
-
-        .product-image-container {
-            height: 200px;
-            overflow: hidden;
-            position: relative;
-            background: #f7f7f7;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .product-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
-
-        .service-info {
-            padding: 1.5rem;
-        }
-
-        .service-name {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: var(--secondary-color);
-            margin-bottom: 0.5rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .service-price {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-        
-        .product-stock {
-            font-size: 0.9rem;
-            color: #4b5563;
-            margin-bottom: 1rem;
-            font-weight: 500;
-        }
-        
-        .stock-available {
-            color: var(--success-color, #10b981);
-        }
-
-        .stock-low {
-            color: var(--danger-color, #ef4444);
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .btn-edit, .btn-delete {
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-            transition: background 0.3s;
-        }
-
-        .btn-edit {
-            background: #3b82f6; 
-            color: white;
-        }
-
-        .btn-edit:hover {
-            background: #2563eb;
-        }
-
-        .btn-delete {
-            background: #ef4444; 
-            color: white;
-        }
-
-        .btn-delete:hover {
-            background: #dc2626;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        /* Modal Styling */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 1rem;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .modal-content h2 {
-            margin-bottom: 1.5rem;
-            color: var(--primary-color);
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-            color: var(--secondary-color);
-        }
-
-        .form-group input, .form-group textarea, .form-group select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            font-size: 1rem;
-        }
-
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        /* Footer styling kept the same */
-    </style>
+    .actions { display: flex; gap: 10px; }
+  </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="#" class="nav-brand">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="4" r="2"/>
-                    <circle cx="18" cy="8" r="2"/>
-                    <path d="M21 16v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/>
-                    <path d="M11 6v10"/>
-                    <path d="M8 12h6"/>
-                </svg>
-                Kouvee Pet Shop
-            </a>
-            
-            <ul class="nav-links">
-                <li><a href="#" onclick="showPage('home')">🏠 Home</a></li>
-                <li><a href="#" class="active" onclick="showPage('products')">📦 Produk</a></li>
-                <li><a href="#" onclick="showPage('services')">💼 Layanan</a></li>
-                <li><a href="#" onclick="showPage('dashboard')">📊 Dashboard</a></li>
-            </ul>
-
-            <div class="nav-icons">
-                <button>🛒</button>
-                <button>👤</button>
-            </div>
-        </div>
-    </nav>
-
-    <div id="home-page" class="hidden"></div>
-    <div id="services-page" class="hidden"></div>
-    <div id="dashboard-page" class="hidden"></div>
-
-    <div id="products-page" class="products-section">
-        <div class="container">
-            <h1 class="section-title">Kelola Produk Kouvee Pet Shop</h1>
-
-            <div class="search-bar">
-                <div class="search-input-wrapper">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" id="searchProductInput" placeholder="Cari nama produk..." onkeyup="filterProducts()">
-                </div>
-                <div class="sort-wrapper">
-                    <button class="btn btn-primary" onclick="openProductModal()">➕ Tambah Produk Baru</button>
-                </div>
-                <div class="sort-wrapper">
-                    <span>↕️ Sortir: </span>
-                    <select id="sortProductSelect" onchange="sortProducts()">
-                        <option value="name-asc">Nama A-Z</option>
-                        <option value="name-desc">Nama Z-A</option>
-                        <option value="price-asc">Harga Termurah</option>
-                        <option value="price-desc">Harga Termahal</option>
-                        <option value="stock-asc">Stok Tersedikit</option>
-                        <option value="stock-desc">Stok Terbanyak</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="services-grid" id="productsGrid">
-                </div>
-        </div>
-    </div>
-    
-    <div id="productModal" class="modal hidden">
-        <div class="modal-content">
-            <h2 id="modalTitle">Tambah Produk Baru</h2>
-            <form id="productForm">
-                <input type="hidden" id="productId" value="">
-
-                <div class="form-group">
-                    <label for="productName">Nama Produk *</label>
-                    <input type="text" id="productName" required placeholder="Contoh: Royal Canin Kitten 2Kg">
-                </div>
-
-                <div class="form-group">
-                    <label for="productPrice">Harga (Rp) *</label>
-                    <input type="number" id="productPrice" required min="1000" placeholder="Contoh: 185000">
-                </div>
-                
-                <div class="form-group">
-                    <label for="productStock">Stok *</label>
-                    <input type="number" id="productStock" required min="0" placeholder="Contoh: 15">
-                </div>
-
-                <div class="form-group">
-                    <label for="productImage">URL Gambar (Opsional)</label>
-                    <input type="text" id="productImage" placeholder="Contoh: https://linkgambar.com/makanan.jpg">
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeProductModal()">Batal</button>
-                    <button type="submit" class="btn btn-primary" id="submitButton">Simpan Produk</button>
-                </div>
-            </form>
-        </div>
+  <div class="container">
+    <div class="header">
+      <h1>Kelola Produk Kouvee Pet Shop</h1>
     </div>
 
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Cari nama produk..." onkeyup="filterProducts()">
+    </div>
 
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-grid">
-                <div>
-                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
-                        <span style="font-size: 1.5rem;">🐾</span>
-                        <h4>Kouvee Pet Shop</h4>
-                    </div>
-                    <p>Toko hewan terpercaya sejak 2023 di Yogyakarta</p>
-                </div>
-                <div>
-                    <h4>Kontak</h4>
-                    <p>📍 Yogyakarta, Indonesia</p>
-                    <p>📞 (+62) 123-456</p>
-                    <p>✉️ info@kouveepetshop.com</p>
-                </div>
-                <div>
-                    <h4>Jam Operasional</h4>
-                    <p>Senin - Sabtu: 09.00 - 20.00</p>
-                    <p>Minggu: 10.00 - 18.00</p>
-                </div>
+    <!-- FORM -->
+    <form id="productForm" novalidate>
+      <h2>Form Produk</h2>
+      <input type="hidden" id="productId">
+
+      <div>
+        <label for="productName">Nama Produk</label>
+        <input type="text" id="productName" required placeholder="Contoh: Royal Canin Kitten 2Kg">
+        <div class="error-msg" id="errorName"></div>
+      </div>
+
+      <div>
+        <label for="productPrice">Harga (Rp)</label>
+        <input type="number" id="productPrice" required min="1000" placeholder="Contoh: 185000">
+        <div class="error-msg" id="errorPrice"></div>
+      </div>
+
+      <div>
+        <label for="productStock">Stok</label>
+        <input type="number" id="productStock" required min="1" placeholder="Contoh: 10">
+        <div class="error-msg" id="errorStock"></div>
+      </div>
+
+      <div class="full-width">
+        <label for="productImage">Upload Gambar</label>
+        <input type="file" id="productImage" accept="image/*" required>
+        <div class="error-msg" id="errorImage"></div>
+      </div>
+
+      <div class="full-width" style="text-align:right;">
+        <button type="submit" class="btn btn-primary">💾 Simpan</button>
+      </div>
+    </form>
+
+    <!-- TABLE -->
+    <table id="productTable">
+      <thead>
+        <tr>
+          <th>ID</th><th>Nama Produk</th><th>Harga</th><th>Stok</th><th>Gambar</th><th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    let products = [];
+    let nextId = 1;
+    let filtered = [];
+
+    const tbody = document.querySelector("#productTable tbody");
+
+    function renderProducts() {
+      tbody.innerHTML = "";
+      if (filtered.length === 0) {
+  tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Tidak ada produk ditemukan.</td></tr>`;
+  return;
+}
+      filtered.forEach(prod => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${prod.id}</td>
+          <td>${prod.name}</td>
+          <td>Rp ${prod.price.toLocaleString("id-ID")}</td>
+          <td>${prod.stock}</td>
+          <td><img src="${prod.image}" width="60" height="60" style="object-fit:cover;border-radius:6px;"></td>
+          <td>
+            <div class="actions">
+              <button class="btn btn-edit" onclick="editProduct(${prod.id})">✏</button>
+              <button class="btn btn-delete" onclick="deleteProduct(${prod.id})">🗑</button>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Kouvee Pet Shop. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+          </td>`;
+        tbody.appendChild(row);
+      });
+    }
 
-    <script>
-        // Data Produk (Model)
-        let products = [
-            { id: 101, name: 'Royal Canin Kitten 2Kg', price: 185000, stock: 15, image_url: 'https://images.unsplash.com/photo-1628185852504-2b7e5e1e35d2?q=80&w=600&h=400&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-            { id: 102, name: 'Mainan Tikus Berbulu', price: 15000, stock: 4, image_url: 'https://images.unsplash.com/photo-1549410118-2495b6c936cc?q=80&w=600&h=400&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-            { id: 103, name: 'Sampo Anjing Anti Kutu 500ml', price: 55000, stock: 28, image_url: 'https://images.unsplash.com/photo-1627916692795-3507d9b9a4c5?q=80&w=600&h=400&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-            { id: 104, name: 'Tempat Minum Otomatis', price: 120000, stock: 0, image_url: 'https://images.unsplash.com/photo-1616782298288-51f618a80479?q=80&w=600&h=400&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-        ];
+    function filterProducts() {
+      const keyword = document.getElementById("searchInput").value.toLowerCase();
+      filtered = products.filter(p => p.name.toLowerCase().includes(keyword));
+      renderProducts();
+    }
 
-        let nextProductId = products.length > 0 ? Math.max(...products.map(s => s.id)) + 1 : 101;
-        let filteredProducts = [...products];
-        const defaultImageUrl = 'https://images.unsplash.com/photo-1583594916819-74d6f8303d32?q=80&w=600&h=400&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; // Gambar placeholder
+    document.getElementById("productForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-        // --- Navigasi Halaman (untuk simulasi) ---
-        function showPage(pageId) {
-            document.querySelectorAll('div[id$="-page"]').forEach(page => {
-                page.classList.add('hidden');
-            });
-            document.getElementById(pageId + '-page').classList.remove('hidden');
+      // ambil elemen input
+      const nameInput = document.getElementById("productName");
+      const priceInput = document.getElementById("productPrice");
+      const stockInput = document.getElementById("productStock");
+      const imageInput = document.getElementById("productImage");
 
-            // Update active nav link
-            document.querySelectorAll('.nav-links a').forEach(link => {
-                link.classList.remove('active');
-            });
-            document.querySelector(`.nav-links a[onclick*="'${pageId}'"]`).classList.add('active');
+      // validasi manual
+      let valid = true;
+      clearErrors();
 
-            if (pageId === 'products') {
-                renderProducts(); // Pastikan data produk di-refresh
-            }
-        }
-        
-        // --- READ: Render Products ---
-        function renderProducts() {
-            const grid = document.getElementById('productsGrid');
-            grid.innerHTML = '';
+      if (nameInput.value.trim() === "") {
+        showError("errorName", "Nama produk wajib diisi!");
+        valid = false;
+      }
+      if (priceInput.value.trim() === "" || priceInput.value <= 0) {
+        showError("errorPrice", "Harga harus diisi dan lebih dari 0!");
+        valid = false;
+      }
+      if (stockInput.value.trim() === "" || stockInput.value <= 0) {
+        showError("errorStock", "Stok harus diisi dan minimal 1!");
+        valid = false;
+      }
 
-            if (filteredProducts.length === 0) {
-                grid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #4b5563;">Tidak ada produk yang ditemukan.</p>';
-                return;
-            }
-            
-            filteredProducts.forEach(product => {
-                const stockClass = product.stock <= 5 && product.stock > 0 ? 'stock-low' : (product.stock > 5 ? 'stock-available' : 'stock-low');
-                const stockText = product.stock > 0 ? `Stok: ${product.stock} unit` : '🚫 Stok Habis';
-                const imageUrl = product.image_url && product.image_url.trim() !== '' ? product.image_url : defaultImageUrl;
+      const id = document.getElementById("productId").value;
+      let imageBase64 = "";
+      if (imageInput.files.length === 0 && !id) {
+        showError("errorImage", "Silakan unggah gambar produk!");
+        valid = false;
+      }
 
-                const card = `
-                    <div class="service-card">
-                        <div class="product-image-container">
-                            <img src="${imageUrl}" alt="Gambar Produk ${product.name}" class="product-image" onerror="this.onerror=null; this.src='${defaultImageUrl}'">
-                        </div>
-                        <div class="service-info">
-                            <h3 class="service-name" title="${product.name}">${product.name}</h3>
-                            <p class="service-price">Rp ${product.price.toLocaleString('id-ID')}</p>
-                            <p class="product-stock ${stockClass}">
-                                ${stockText}
-                            </p>
-                            <div class="card-actions">
-                                <button class="btn-edit" onclick="editProduct(${product.id})">✏️ Edit</button>
-                                <button class="btn-delete" onclick="deleteProduct(${product.id})">🗑️ Hapus</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                grid.innerHTML += card;
-            });
-        }
+      if (!valid) {
+        alert("⚠ Mohon lengkapi semua data dengan benar sebelum menyimpan!");
+        return;
+      }
 
-        // --- CRUD Functionality ---
+      // convert gambar ke base64
+      if (imageInput.files.length > 0) {
+        imageBase64 = await toBase64(imageInput.files[0]);
+      } else if (id) {
+        imageBase64 = products.find(p => p.id == id).image;
+      }
 
-        // Open Modal (for Create or Update)
-        function openProductModal(product = null) {
-            const modal = document.getElementById('productModal');
-            const form = document.getElementById('productForm');
-            const modalTitle = document.getElementById('modalTitle');
-            const submitButton = document.getElementById('submitButton');
-            
-            form.reset();
-            document.getElementById('productId').value = '';
+      const product = {
+        id: id ? parseInt(id) : nextId++,
+        name: nameInput.value.trim(),
+        price: parseInt(priceInput.value),
+        stock: parseInt(stockInput.value),
+        image: imageBase64
+      };
 
-            if (product) {
-                // UPDATE mode
-                modalTitle.textContent = 'Edit Produk: ' + product.name;
-                submitButton.textContent = 'Simpan Perubahan';
-                document.getElementById('productId').value = product.id;
-                document.getElementById('productName').value = product.name;
-                document.getElementById('productPrice').value = product.price;
-                document.getElementById('productStock').value = product.stock;
-                document.getElementById('productImage').value = product.image_url;
-            } else {
-                // CREATE mode
-                modalTitle.textContent = 'Tambah Produk Baru';
-                submitButton.textContent = 'Tambah Produk';
-            }
-            
-            modal.classList.remove('hidden');
-        }
+      if (id) {
+        const idx = products.findIndex(p => p.id == id);
+        products[idx] = product;
+        alert("✅ Produk berhasil diperbarui!");
+      } else {
+        products.push(product);
+        alert("✅ Produk baru berhasil ditambahkan!");
+      }
 
-        // Close Modal
-        function closeProductModal() {
-            document.getElementById('productModal').classList.add('hidden');
-        }
+      filtered = [...products];
+      renderProducts();
+      e.target.reset();
+      document.getElementById("productId").value = "";
+      clearErrors();
+    });
 
-        // Handle Form Submission (Create or Update)
-        document.getElementById('productForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const id = document.getElementById('productId').value;
-            const name = document.getElementById('productName').value.trim();
-            const price = parseInt(document.getElementById('productPrice').value);
-            const stock = parseInt(document.getElementById('productStock').value);
-            const image_url = document.getElementById('productImage').value.trim();
+    function showError(id, message) {
+      document.getElementById(id).textContent = message;
+    }
 
-            if (name === '' || isNaN(price) || isNaN(stock)) {
-                alert('Nama, Harga, dan Stok wajib diisi dengan nilai yang benar!');
-                return;
-            }
+    function clearErrors() {
+      document.querySelectorAll(".error-msg").forEach(el => el.textContent = "");
+    }
 
-            const newProductData = { name, price, stock, image_url };
+    function toBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    }
 
-            if (id) {
-                // UPDATE (Edit)
-                const index = products.findIndex(p => p.id == id);
-                if (index !== -1) {
-                    products[index] = { id: parseInt(id), ...newProductData };
-                    alert(`Produk "${name}" berhasil diubah!`);
-                }
-            } else {
-                // CREATE (Tambah)
-                const newProduct = {
-                    id: nextProductId++,
-                    ...newProductData
-                };
-                products.push(newProduct);
-                alert(`Produk "${name}" berhasil ditambahkan!`);
-            }
+    function editProduct(id) {
+      const p = products.find(prod => prod.id === id);
+      if (!p) return;
+      document.getElementById("productId").value = p.id;
+      document.getElementById("productName").value = p.name;
+      document.getElementById("productPrice").value = p.price;
+      document.getElementById("productStock").value = p.stock;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
-            closeProductModal();
-            // Re-render, filter, and sort the list
-            filterProducts();
-        });
+    function deleteProduct(id) {
+      const p = products.find(prod => prod.id === id);
+      if (confirm(`Yakin ingin menghapus data produk "${p.name}"?`)) {
+        products = products.filter(prod => prod.id !== id);
+        filtered = [...products];
+        renderProducts();
+      }
+    }
 
-        // EDIT (Bagian 1: Buka Modal)
-        function editProduct(id) {
-            const productToEdit = products.find(p => p.id === id);
-            if (productToEdit) {
-                openProductModal(productToEdit);
-            }
-        }
-
-        // DELETE
-        function deleteProduct(id) {
-            const productToDelete = products.find(p => p.id === id);
-            if (confirm(`Yakin ingin menghapus produk: "${productToDelete.name}"?`)) {
-                products = products.filter(p => p.id !== id);
-                alert(`Produk "${productToDelete.name}" berhasil dihapus.`);
-                // Re-render, filter, and sort the list
-                filterProducts();
-            }
-        }
-
-        // Filter Products
-        function filterProducts() {
-            const searchValue = document.getElementById('searchProductInput').value.toLowerCase();
-            filteredProducts = products.filter(product => 
-                product.name.toLowerCase().includes(searchValue)
-            );
-            sortProducts(); // Panggil fungsi sort setelah filter
-        }
-
-        // Sort Products
-        function sortProducts() {
-            const sortValue = document.getElementById('sortProductSelect').value;
-            
-            filteredProducts.sort((a, b) => {
-                switch(sortValue) {
-                    case 'name-asc':
-                        return a.name.localeCompare(b.name);
-                    case 'name-desc':
-                        return b.name.localeCompare(a.name);
-                    case 'price-asc':
-                        return a.price - b.price;
-                    case 'price-desc':
-                        return b.price - a.price;
-                    case 'stock-asc':
-                        return a.stock - b.stock;
-                    case 'stock-desc':
-                        return b.stock - a.stock;
-                    default:
-                        return 0;
-                }
-            });
-            
-            renderProducts();
-        }
-
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            // Tampilkan halaman produk secara default
-            document.getElementById('products-page').classList.remove('hidden');
-            filterProducts(); // Render awal dengan sort default
-        });
-    </script>
+    renderProducts();
+  </script>
 </body>
 </html>
