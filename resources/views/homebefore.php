@@ -378,6 +378,182 @@
             background: #b45309;
         }
 
+        /* Profile Section Styling */
+        .profile-section {
+            background: #f9fafb;
+            padding: 4rem 1rem;
+        }
+
+        .profile-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .profile-header {
+            background: white;
+            padding: 3rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-logo {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        .profile-name {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-tagline {
+            font-size: 1.1rem;
+            color: #d97706;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .profile-description {
+            color: #4b5563;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .profile-section-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .profile-section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .vision-mission-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .vision-box, .mission-box {
+            background: #fef3c7;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border-left: 4px solid #d97706;
+        }
+
+        .vision-box h4, .mission-box h4 {
+            color: #d97706;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .vision-box p, .mission-box p {
+            color: #4b5563;
+            line-height: 1.8;
+        }
+
+        .mission-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .mission-list li {
+            color: #4b5563;
+            line-height: 1.8;
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+
+        .mission-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #d97706;
+            font-weight: bold;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .contact-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 0.75rem;
+        }
+
+        .contact-icon {
+            font-size: 1.75rem;
+            flex-shrink: 0;
+        }
+
+        .contact-info h4 {
+            color: #1f2937;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .contact-info p {
+            color: #4b5563;
+            font-size: 0.95rem;
+        }
+
+        .why-choose-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .why-choose-card {
+            background: #fef3c7;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            border: 2px solid #fde68a;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .why-choose-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(217, 119, 6, 0.15);
+        }
+
+        .why-choose-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .why-choose-card h4 {
+            color: #1f2937;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .why-choose-card p {
+            color: #4b5563;
+            font-size: 0.875rem;
+        }
+
         /* Footer */
         .footer {
             background: #1f2937;
@@ -436,6 +612,14 @@
             .products-grid {
                 grid-template-columns: 1fr;
             }
+
+            .profile-header {
+                padding: 2rem;
+            }
+
+            .profile-name {
+                font-size: 1.75rem;
+            }
         }
     </style>
 </head>
@@ -455,10 +639,10 @@
             </a>
             
             <ul class="nav-links">
-                <li><a class="active" onclick="showPage('home')">🏠 Home</a></li>
-                <li><a onclick="showPage('products')">📦 Produk</a></li>
-                <li><a onclick="showPage('services')">💼 Layanan</a></li>
-
+                <li><a class="active" onclick="showPage('home')">Home</a></li>
+                <li><a onclick="showPage('products')">Produk</a></li>
+                <li><a onclick="showPage('services')">Layanan</a></li>
+                <li><a onclick="showPage('profile')">Profil Toko</a></li>
             </ul>
 
             <div class="nav-icons">
@@ -578,118 +762,93 @@
         </div>
     </div>
 
-    <!-- About Page -->
-    <div id="about-page" class="products-section hidden" style="background: #f9fafb;">
+    <!-- Profile Page -->
+   <div id="profile-page" class="profile-section hidden">
         <div class="container">
-            <h1 class="section-title">Tentang Kami</h1>
+            <h1 class="section-title">Profil Toko</h1>
             
-            <!-- Profile Toko -->
-            <div class="feature-card" style="max-width: 800px; margin: 0 auto 3rem; text-align: left;">
-                <div style="text-align: center; margin-bottom: 2rem;">
-                    <div style="font-size: 5rem; margin-bottom: 1rem;">🐾</div>
-                    <h2 style="font-size: 2rem; color: #1f2937; margin-bottom: 0.5rem;">Kouvee Pet Shop</h2>
-                    <p style="color: #d97706; font-weight: 600;">Toko Hewan Terpercaya di Yogyakarta</p>
+            <div class="profile-header">
+                <div class="profile-info">
+                    <h2>Kouvee Pet Shop</h2>
+                    <p><strong>Alamat:</strong> Jl. Malioboro No. 123, Yogyakarta 55271</p>
+                    <p><strong>Telepon:</strong> (+62) 274-123-456</p>
+                    <p><strong>Email:</strong> info@kouveepetshop.com</p>
+                    <p><strong>Website:</strong> www.kouveepetshop.com</p>
+                    <p><strong>Jam Operasional:</strong></p>
+                    <p style="margin-left: 1rem;">Senin - Sabtu: 09.00 - 20.00</p>
+                    <p style="margin-left: 1rem;">Minggu: 10.00 - 18.00</p>
                 </div>
-                
-                <div style="margin-bottom: 2rem;">
-                    <h3 style="font-size: 1.5rem; color: #1f2937; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                        📖 Tentang Kami
-                    </h3>
-                    <p style="color: #4b5563; line-height: 1.8; margin-bottom: 1rem;">
-                        Kouvee Pet Shop adalah toko hewan peliharaan terpercaya yang telah melayani masyarakat Yogyakarta sejak tahun 2023. 
-                        Kami berkomitmen untuk menyediakan produk berkualitas tinggi dan layanan profesional untuk hewan kesayangan Anda.
-                    </p>
-                    <p style="color: #4b5563; line-height: 1.8;">
-                        Dengan tim yang berpengalaman dan fasilitas yang lengkap, kami siap membantu memenuhi segala kebutuhan 
-                        hewan peliharaan Anda, mulai dari makanan, aksesoris, hingga layanan grooming dan penitipan.
-                    </p>
-                </div>
-
-                <div style="margin-bottom: 2rem;">
-                    <h3 style="font-size: 1.5rem; color: #1f2937; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                        🎯 Visi & Misi
-                    </h3>
-                    <div style="background: #fef3c7; padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 1rem;">
-                        <h4 style="color: #d97706; font-weight: 600; margin-bottom: 0.5rem;">Visi</h4>
-                        <p style="color: #4b5563; line-height: 1.8;">
-                            Menjadi toko hewan peliharaan terkemuka di Yogyakarta yang menyediakan produk dan layanan terbaik 
-                            untuk meningkatkan kesejahteraan hewan peliharaan.
-                        </p>
+                <div class="profile-stats">
+                    <div class="stat-card">
+                        <div class="number">2+</div>
+                        <div class="label">Tahun Berpengalaman</div>
                     </div>
-                    <div style="background: #fef3c7; padding: 1.5rem; border-radius: 0.5rem;">
-                        <h4 style="color: #d97706; font-weight: 600; margin-bottom: 0.5rem;">Misi</h4>
-                        <ul style="color: #4b5563; line-height: 1.8; padding-left: 1.5rem;">
-                            <li>Menyediakan produk berkualitas dengan harga terjangkau</li>
-                            <li>Memberikan layanan profesional dan ramah</li>
-                            <li>Mengedukasi pemilik hewan tentang perawatan yang tepat</li>
-                            <li>Menciptakan lingkungan yang aman dan nyaman untuk hewan peliharaan</li>
-                        </ul>
+                    <div class="stat-card">
+                        <div class="number">50+</div>
+                        <div class="label">Konsumen Tetap</div>
                     </div>
-                </div>
-
-                <div style="margin-bottom: 2rem;">
-                    <h3 style="font-size: 1.5rem; color: #1f2937; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                        📍 Informasi Kontak
-                    </h3>
-                    <div style="display: grid; gap: 1rem;">
-                        <div style="display: flex; align-items: start; gap: 1rem;">
-                            <span style="font-size: 1.5rem;">📍</span>
-                            <div>
-                                <h4 style="color: #1f2937; font-weight: 600; margin-bottom: 0.25rem;">Alamat</h4>
-                                <p style="color: #4b5563;">Yogyakarta, Indonesia</p>
-                            </div>
-                        </div>
-                        <div style="display: flex; align-items: start; gap: 1rem;">
-                            <span style="font-size: 1.5rem;">📞</span>
-                            <div>
-                                <h4 style="color: #1f2937; font-weight: 600; margin-bottom: 0.25rem;">Telepon</h4>
-                                <p style="color: #4b5563;">(+62) 123-456</p>
-                            </div>
-                        </div>
-                        <div style="display: flex; align-items: start; gap: 1rem;">
-                            <span style="font-size: 1.5rem;">✉️</span>
-                            <div>
-                                <h4 style="color: #1f2937; font-weight: 600; margin-bottom: 0.25rem;">Email</h4>
-                                <p style="color: #4b5563;">info@kouveepetshop.com</p>
-                            </div>
-                        </div>
-                        <div style="display: flex; align-items: start; gap: 1rem;">
-                            <span style="font-size: 1.5rem;">🕒</span>
-                            <div>
-                                <h4 style="color: #1f2937; font-weight: 600; margin-bottom: 0.25rem;">Jam Operasional</h4>
-                                <p style="color: #4b5563;">Senin - Sabtu: 09.00 - 20.00</p>
-                                <p style="color: #4b5563;">Minggu: 10.00 - 18.00</p>
-                            </div>
-                        </div>
+                    <div class="stat-card">
+                        <div class="number">15+</div>
+                        <div class="label">Tim Profesional</div>
                     </div>
-                </div>
-
-                <div>
-                    <h3 style="font-size: 1.5rem; color: #1f2937; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                        ⭐ Mengapa Memilih Kami?
-                    </h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                        <div style="background: #ffffff; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">✅</div>
-                            <h4 style="color: #1f2937; font-weight: 600; margin-bottom: 0.5rem;">Produk Terjamin</h4>
-                            <p style="color: #6b7280; font-size: 0.875rem;">Semua produk original dan berkualitas</p>
-                        </div>
-                        
-                        <div style="background: #ffffff; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">💰</div>
-                            <h4 style="color: #1f2937; font-weight: 600; margin-bottom: 0.5rem;">Harga Bersaing</h4>
-                            <p style="color: #6b7280; font-size: 0.875rem;">Harga terjangkau dengan kualitas terbaik</p>
-                        </div>
-                        <div style="background: #ffffff; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏆</div>
-                            <h4 style="color: #1f2937; font-weight: 600; margin-bottom: 0.5rem;">Layanan Prima</h4>
-                            <p style="color: #6b7280; font-size: 0.875rem;">Pelayanan ramah dan memuaskan</p>
-                        </div>
+                    <div class="stat-card">
+                        <div class="number">100+</div>
+                        <div class="label">Produk Tersedia</div>
                     </div>
                 </div>
             </div>
 
-        
+            <div style="margin-top: 3rem;">
+                <h2 style="font-size: 1.5rem; font-weight: bold; color: #1f2937; margin-bottom: 1.5rem;">Visi & Misi</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3 style="font-size: 1.125rem; margin-bottom: 1rem;">Visi</h3>
+                        <p>Menjadi toko hewan peliharaan terpercaya dan terdepan di Yogyakarta dengan memberikan pelayanan terbaik dan produk berkualitas tinggi.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3 style="font-size: 1.125rem; margin-bottom: 1rem;">Misi</h3>
+                        <p>Menyediakan produk dan layanan terbaik untuk kesehatan dan kebahagiaan hewan peliharaan Anda dengan harga yang kompetitif.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 style="font-size: 1.5rem; font-weight: bold; color: #1f2937; margin-bottom: 1.5rem;">Mengapa Memilih Kami?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">✅</div>
+                        <h3>Produk Berkualitas</h3>
+                        <p>Semua produk dipilih dengan cermat dari supplier terpercaya</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👨‍⚕️</div>
+                        <h3>Tim Profesional</h3>
+                        <p>Tim berpengalaman siap membantu kebutuhan hewan Anda</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💰</div>
+                        <h3>Harga Kompetitif</h3>
+                        <p>Harga terjangkau tanpa mengorbankan kualitas</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🚚</div>
+                        <h3>Pengiriman Cepat</h3>
+                        <p>Layanan pengiriman tersedia untuk area Yogyakarta</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🏆</div>
+                        <h3>Garansi Kepuasan</h3>
+                        <p>Kepuasan pelanggan adalah prioritas utama kami</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📞</div>
+                        <h3>Layanan Konsultasi</h3>
+                        <p>Konsultasi gratis untuk perawatan hewan peliharaan</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -704,8 +863,8 @@
                 </div>
                 <div>
                     <h4>Kontak</h4>
-                    <p>📍 Yogyakarta, Indonesia</p>
-                    <p>📞 (+62) 123-456</p>
+                    <p>📍 Jl. Malioboro No. 123, Yogyakarta</p>
+                    <p>📞 (+62) 274-123-456</p>
                     <p>✉️ info@kouveepetshop.com</p>
                 </div>
                 <div>
@@ -749,8 +908,8 @@
             document.getElementById('home-page').classList.add('hidden');
             document.getElementById('products-page').classList.add('hidden');
             document.getElementById('services-page').classList.add('hidden');
+            document.getElementById('profile-page').classList.add('hidden');
 
-            
             document.getElementById(page + '-page').classList.remove('hidden');
             
             // Update active nav link
