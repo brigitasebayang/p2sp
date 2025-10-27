@@ -890,18 +890,18 @@
 
         // Services Data
         const services = [
-            { id: 1, name: 'Grooming Basic', category: 'Grooming', price: 150000, duration: '1 jam', description: 'Mandi, potong kuku, dan pembersihan telinga', image: '✂️' },
-            { id: 2, name: 'Grooming Premium', category: 'Grooming', price: 250000, duration: '2 jam', description: 'Grooming lengkap dengan styling dan perawatan khusus', image: '✨' },
-            { id: 3, name: 'Penitipan Harian', category: 'Penitipan', price: 100000, duration: '1 hari', description: 'Penitipan hewan dengan makanan dan minuman', image: '🏠' },
-            { id: 4, name: 'Penitipan Menginap', category: 'Penitipan', price: 200000, duration: '1 malam', description: 'Penitipan dengan fasilitas lengkap dan monitoring 24 jam', image: '🛏️' },
-            { id: 5, name: 'Vaksinasi', category: 'Kesehatan', price: 300000, duration: '30 menit', description: 'Vaksinasi lengkap untuk anjing dan kucing', image: '💉' },
-            { id: 6, name: 'Pemeriksaan Kesehatan', category: 'Kesehatan', price: 200000, duration: '45 menit', description: 'Pemeriksaan kesehatan menyeluruh oleh dokter hewan', image: '🩺' },
-            { id: 7, name: 'Pelatihan Dasar', category: 'Pelatihan', price: 500000, duration: '4 minggu', description: 'Program pelatihan dasar untuk anjing muda', image: '🎓' },
-            { id: 8, name: 'Pelatihan Lanjutan', category: 'Pelatihan', price: 800000, duration: '8 minggu', description: 'Program pelatihan lanjutan dengan teknik profesional', image: '🏅' },
-            { id: 9, name: 'Konsultasi Nutrisi', category: 'Konsultasi', price: 150000, duration: '1 jam', description: 'Konsultasi tentang nutrisi dan diet hewan peliharaan', image: '🥗' },
-            { id: 10, name: 'Konsultasi Perilaku', category: 'Konsultasi', price: 200000, duration: '1.5 jam', description: 'Konsultasi tentang perilaku dan masalah tingkah laku', image: '🧠' },
-            { id: 11, name: 'Grooming Spa', category: 'Grooming', price: 350000, duration: '3 jam', description: 'Grooming premium dengan spa dan aromaterapi', image: '🧖' },
-            { id: 12, name: 'Perawatan Gigi', category: 'Kesehatan', price: 250000, duration: '1 jam', description: 'Pembersihan dan perawatan gigi profesional', image: '🦷' },
+            { id: 1, name: 'Grooming Basic', category: 'Grooming', price: 150000, description: 'Mandi, potong kuku, dan pembersihan telinga', image: '✂️' },
+            { id: 2, name: 'Grooming Premium', category: 'Grooming', price: 250000, description: 'Grooming lengkap dengan styling dan perawatan khusus', image: '✨' },
+            { id: 3, name: 'Penitipan Harian', category: 'Penitipan', price: 100000, description: 'Penitipan hewan dengan makanan dan minuman', image: '🏠' },
+            { id: 4, name: 'Penitipan Menginap', category: 'Penitipan', price: 200000, description: 'Penitipan dengan fasilitas lengkap dan monitoring 24 jam', image: '🛏️' },
+            { id: 5, name: 'Vaksinasi', category: 'Kesehatan', price: 300000, description: 'Vaksinasi lengkap untuk anjing dan kucing', image: '💉' },
+            { id: 6, name: 'Pemeriksaan Kesehatan', category: 'Kesehatan', price: 200000,  description: 'Pemeriksaan kesehatan menyeluruh oleh dokter hewan', image: '🩺' },
+            { id: 7, name: 'Pelatihan Dasar', category: 'Pelatihan', price: 500000, description: 'Program pelatihan dasar untuk anjing muda', image: '🎓' },
+            { id: 8, name: 'Pelatihan Lanjutan', category: 'Pelatihan', price: 800000,  description: 'Program pelatihan lanjutan dengan teknik profesional', image: '🏅' },
+            { id: 9, name: 'Konsultasi Nutrisi', category: 'Konsultasi', price: 150000,  description: 'Konsultasi tentang nutrisi dan diet hewan peliharaan', image: '🥗' },
+            { id: 10, name: 'Konsultasi Perilaku', category: 'Konsultasi', price: 200000,  description: 'Konsultasi tentang perilaku dan masalah tingkah laku', image: '🧠' },
+            { id: 11, name: 'Grooming Spa', category: 'Grooming', price: 350000,  description: 'Grooming premium dengan spa dan aromaterapi', image: '🧖' },
+            { id: 12, name: 'Perawatan Gigi', category: 'Kesehatan', price: 250000,  description: 'Pembersihan dan perawatan gigi profesional', image: '🦷' },
         ];
 
         let filteredServices = [...services];
@@ -1004,7 +1004,7 @@
                             <p class="service-description">${service.description}</p>
                             <div class="service-details">
                                 <span class="service-price">Rp ${service.price.toLocaleString('id-ID')}</span>
-                                <span class="service-duration">⏱️ ${service.duration}</span>
+                                
                             </div>
                             <button class="book-service" onclick="bookService(${service.id})">Pesan Layanan</button>
                         </div>

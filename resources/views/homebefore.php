@@ -380,65 +380,61 @@
 
         /* Profile Section Styling */
         .profile-section {
-            background: #f9fafb;
-            padding: 4rem 1rem;
-        }
-
-        .profile-container {
-            max-width: 1000px;
-            margin: 0 auto;
+            background: #fef3c7;
+            min-height: 100vh;
+            padding: 2rem 1rem;
         }
 
         .profile-header {
             background: white;
-            padding: 3rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .profile-logo {
-            font-size: 5rem;
-            margin-bottom: 1rem;
-        }
-
-        .profile-name {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #1f2937;
-            margin-bottom: 0.5rem;
-        }
-
-        .profile-tagline {
-            font-size: 1.1rem;
-            color: #d97706;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .profile-description {
-            color: #4b5563;
-            line-height: 1.8;
-            font-size: 1rem;
-        }
-
-        .profile-section-box {
-            background: white;
             padding: 2rem;
             border-radius: 1rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
         }
 
-        .profile-section-title {
-            font-size: 1.5rem;
+        .profile-info h2 {
+            font-size: 1.75rem;
             font-weight: bold;
             color: #1f2937;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .profile-info p {
+            color: #4b5563;
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+
+        .profile-info strong {
+            color: #1f2937;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+         .stat-card {
+            background: #f3f4f6;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #d97706;
+        }
+
+        .stat-card .label {
+            color: #4b5563;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
         }
 
         .vision-mission-grid {
@@ -763,7 +759,7 @@
     </div>
 
     <!-- Profile Page -->
-   <div id="profile-page" class="profile-section hidden">
+  <div id="profile-page" class="profile-section hidden">
         <div class="container">
             <h1 class="section-title">Profil Toko</h1>
             
@@ -892,12 +888,12 @@
 
         // Services Data
         const services = [
-            { id: 1, name: 'Grooming Basic', category: 'Grooming', price: 50000, duration: '1-2 jam', image: '✂️', description: 'Mandi, sisir, potong kuku' },
-            { id: 2, name: 'Grooming Premium', category: 'Grooming', price: 100000, duration: '2-3 jam', image: '💆', description: 'Full grooming + spa treatment' },
-            { id: 3, name: 'Penitipan Harian', category: 'Penitipan', price: 75000, duration: '1 hari', image: '🏠', description: 'Penitipan hewan per hari' },
-            { id: 4, name: 'Penitipan Mingguan', category: 'Penitipan', price: 450000, duration: '7 hari', image: '📅', description: 'Paket penitipan seminggu' },
-            { id: 5, name: 'Konsultasi Dokter Hewan', category: 'Kesehatan', price: 150000, duration: '30-60 menit', image: '🩺', description: 'Pemeriksaan kesehatan hewan' },
-            { id: 6, name: 'Vaksinasi', category: 'Kesehatan', price: 200000, duration: '15-30 menit', image: '💉', description: 'Vaksinasi lengkap untuk hewan' },
+            { id: 1, name: 'Grooming Basic', category: 'Grooming', price: 50000,  image: '✂️', description: 'Mandi, sisir, potong kuku' },
+            { id: 2, name: 'Grooming Premium', category: 'Grooming', price: 100000, image: '💆', description: 'Full grooming + spa treatment' },
+            { id: 3, name: 'Penitipan Harian', category: 'Penitipan', price: 75000,  image: '🏠', description: 'Penitipan hewan per hari' },
+            { id: 4, name: 'Penitipan Mingguan', category: 'Penitipan', price: 450000,  image: '📅', description: 'Paket penitipan seminggu' },
+            { id: 5, name: 'Konsultasi Dokter Hewan', category: 'Kesehatan', price: 150000,  image: '🩺', description: 'Pemeriksaan kesehatan hewan' },
+            { id: 6, name: 'Vaksinasi', category: 'Kesehatan', price: 200000,  image: '💉', description: 'Vaksinasi lengkap untuk hewan' },
         ];
 
         let filteredProducts = [...products];
@@ -938,6 +934,7 @@
                             <h3 class="product-name">${product.name}</h3>
                             <div class="product-details">
                                 <span class="product-price">Rp ${product.price.toLocaleString('id-ID')}</span>
+                                  <span class="product-stock">Stok: ${product.stock}</span>
                             </div>
                         </div>
                     </div>
@@ -961,7 +958,7 @@
                             <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 0.5rem;">${service.description}</p>
                             <div class="product-details">
                                 <span class="product-price">Rp ${service.price.toLocaleString('id-ID')}</span>
-                                <span class="product-stock">⏱️ ${service.duration}</span>
+                                
                             </div>
                         </div>
                     </div>
