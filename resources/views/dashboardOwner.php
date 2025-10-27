@@ -239,6 +239,156 @@
             margin-bottom: 2rem;
         }
 
+        /* Add styles for profile section */
+        .profile-section {
+            background: #fef3c7;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .profile-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .profile-info h2 {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .profile-info p {
+            color: #4b5563;
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+
+        .profile-info strong {
+            color: #1f2937;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: #f3f4f6;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #d97706;
+        }
+
+        .stat-card .label {
+            color: #4b5563;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Add styles for services grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .service-image {
+            height: 180px;
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+        }
+
+        .service-info {
+            padding: 1.5rem;
+        }
+
+        .service-category {
+            font-size: 0.875rem;
+            color: #d97706;
+            margin-bottom: 0.25rem;
+        }
+
+        .service-name {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-description {
+            color: #4b5563;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .service-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .service-price {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .service-duration {
+            font-size: 0.875rem;
+            color: #4b5563;
+        }
+
+        .book-service {
+            width: 100%;
+            padding: 0.75rem;
+            background: #d97706;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .book-service:hover {
+            background: #b45309;
+        }
+
         /* Search and Sort */
         .search-bar {
             background: white;
@@ -456,6 +606,7 @@
             
 <ul class="nav-links">
     <li><a href="#" class="active" onclick="showPage('home')">🏠 Home</a></li>
+    <li><a href="#" onclick="showPage('profile')">💬 Profile</a></li>
     <li><a href="#" onclick="showPage('products')">📦 Produk</a></li>
     <li><a href="#" onclick="showPage('services')">💼 layanan</a></li>
     <li><a href="#" onclick="showPage('dashboard')">📊 Dashboard</a></li>
@@ -554,8 +705,12 @@
         </div>
     </div>
 
+    <!-- PROFIL TOKO -->
+
+
+
    <!-- Services Page -->
-<div id="services-page" class="services-section hidden">
+<div id="services-page" class="products-section hidden">
     <div class="container">
         <h1 class="section-title">Daftar Layanan</h1>
 
@@ -579,7 +734,7 @@
 
         <!-- Services Grid -->
         <div class="services-grid" id="servicesGrid">
-            <!-- Layanan akan dimunculkan oleh JavaScript -->
+            <!-- Services will be rendered here by JavaScript -->
         </div>
     </div>
 </div>
@@ -590,58 +745,11 @@
         <div class="container">
             <h1 class="section-title">Dashboard Owner</h1>
             
-            <!-- Stats Cards -->
-            <div class="features-grid" style="margin-bottom: 2rem;">
-                <div class="feature-card" style="text-align: left;">
-                    <p style="color: #4b5563; margin-bottom: 0.5rem;">Pendapatan Hari Ini</p>
-                    <div style="font-size: 2rem; font-weight: bold; color: #1f2937;">Rp 2.5jt</div>
-                    <p style="color: #10b981; margin-top: 0.5rem;">↑ 12% dari kemarin</p>
-                </div>
-                <div class="feature-card" style="text-align: left;">
-                    <p style="color: #4b5563; margin-bottom: 0.5rem;">Pendapatan Bulan Ini</p>
-                    <div style="font-size: 2rem; font-weight: bold; color: #1f2937;">Rp 45jt</div>
-                    <p style="color: #10b981; margin-top: 0.5rem;">↑ 8% dari bulan lalu</p>
-                </div>
-                <div class="feature-card" style="text-align: left;">
-                    <p style="color: #4b5563; margin-bottom: 0.5rem;">Total Transaksi</p>
-                    <div style="font-size: 2rem; font-weight: bold; color: #1f2937;">156</div>
-                    <p style="color: #3b82f6; margin-top: 0.5rem;">Bulan ini</p>
-                </div>
+           
             </div>
 
-            <!-- Popular Items -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-                <div class="feature-card" style="text-align: left;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Produk Terpopuler</h3>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
-                        <span>Royal Canin Dog Food</span>
-                        <span style="color: #d97706; font-weight: bold;">45 terjual</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
-                        <span>Cat Litter Premium</span>
-                        <span style="color: #d97706; font-weight: bold;">38 terjual</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span>Vitamin Kucing</span>
-                        <span style="color: #d97706; font-weight: bold;">32 terjual</span>
-                    </div>
-                </div>
-                <div class="feature-card" style="text-align: left;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Layanan Terpopuler</h3>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
-                        <span>Grooming Basic</span>
-                        <span style="color: #d97706; font-weight: bold;">28 booking</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
-                        <span>Grooming Premium</span>
-                        <span style="color: #d97706; font-weight: bold;">22 booking</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span>Penitipan Harian</span>
-                        <span style="color: #d97706; font-weight: bold;">18 booking</span>
-                    </div>
-                </div>
-            </div>
+           
+
 
             <!-- Action Buttons -->
             <div class="features-grid">
@@ -666,9 +774,97 @@
                     <p style="color: #4b5563; font-size: 0.875rem;">Lihat & cetak laporan detail</p>
                 </div>
                 <div class="feature-card" style="text-align: left; cursor: pointer;" onclick="window.location.href='/homeLayanan'">
-                    <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;">!</div>
-                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Kelola layanan</h3>
-                    <p style="color: #4b5563; font-size: 0.875rem;">ubah detail layanan disini </p>
+                    <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;">💼</div>
+                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Kelola Layanan</h3>
+                    <p style="color: #4b5563; font-size: 0.875rem;">Ubah detail layanan disini</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Profile Page -->
+    <div id="profile-page" class="profile-section hidden">
+        <div class="container">
+            <h1 class="section-title">Profil Toko</h1>
+            
+            <div class="profile-header">
+                <div class="profile-info">
+                    <h2>Kouvee Pet Shop</h2>
+                    <p><strong>Alamat:</strong> Jl. Malioboro No. 123, Yogyakarta 55271</p>
+                    <p><strong>Telepon:</strong> (+62) 274-123-456</p>
+                    <p><strong>Email:</strong> info@kouveepetshop.com</p>
+                    <p><strong>Website:</strong> www.kouveepetshop.com</p>
+                    <p><strong>Jam Operasional:</strong></p>
+                    <p style="margin-left: 1rem;">Senin - Sabtu: 09.00 - 20.00</p>
+                    <p style="margin-left: 1rem;">Minggu: 10.00 - 18.00</p>
+                </div>
+                <div class="profile-stats">
+                    <div class="stat-card">
+                        <div class="number">2+</div>
+                        <div class="label">Tahun Berpengalaman</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">50+</div>
+                        <div class="label">Konsumen Tetap</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">15+</div>
+                        <div class="label">Tim Profesional</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">100+</div>
+                        <div class="label">Produk Tersedia</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 style="font-size: 1.5rem; font-weight: bold; color: #1f2937; margin-bottom: 1.5rem;">Visi & Misi</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3 style="font-size: 1.125rem; margin-bottom: 1rem;">Visi</h3>
+                        <p>Menjadi toko hewan peliharaan terpercaya dan terdepan di Yogyakarta dengan memberikan pelayanan terbaik dan produk berkualitas tinggi.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3 style="font-size: 1.125rem; margin-bottom: 1rem;">Misi</h3>
+                        <p>Menyediakan produk dan layanan terbaik untuk kesehatan dan kebahagiaan hewan peliharaan Anda dengan harga yang kompetitif.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 style="font-size: 1.5rem; font-weight: bold; color: #1f2937; margin-bottom: 1.5rem;">Mengapa Memilih Kami?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">✅</div>
+                        <h3>Produk Berkualitas</h3>
+                        <p>Semua produk dipilih dengan cermat dari supplier terpercaya</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👨‍⚕️</div>
+                        <h3>Tim Profesional</h3>
+                        <p>Tim berpengalaman siap membantu kebutuhan hewan Anda</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💰</div>
+                        <h3>Harga Kompetitif</h3>
+                        <p>Harga terjangkau tanpa mengorbankan kualitas</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🚚</div>
+                        <h3>Pengiriman Cepat</h3>
+                        <p>Layanan pengiriman tersedia untuk area Yogyakarta</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🏆</div>
+                        <h3>Garansi Kepuasan</h3>
+                        <p>Kepuasan pelanggan adalah prioritas utama kami</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📞</div>
+                        <h3>Layanan Konsultasi</h3>
+                        <p>Konsultasi gratis untuk perawatan hewan peliharaan</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -704,7 +900,6 @@
     </footer>
 
     <script>
-        
         const products = [
             { id: 1, name: 'Royal Canin Dog Food', category: 'Makanan', price: 250000, stock: 25, image: '🐕' },
             { id: 2, name: 'Cat Litter Premium', category: 'Perlengkapan', price: 85000, stock: 40, image: '🐱' },
@@ -715,12 +910,88 @@
         ];
 
         let filteredProducts = [...products];
+        const services = [
+            { id: 1, name: 'Grooming Basic', category: 'Grooming', price: 150000, duration: '1 jam', description: 'Mandi, potong kuku, dan pembersihan telinga', image: '✂️' },
+            { id: 2, name: 'Grooming Premium', category: 'Grooming', price: 250000, duration: '2 jam', description: 'Grooming lengkap dengan styling dan perawatan khusus', image: '✨' },
+            { id: 3, name: 'Penitipan Harian', category: 'Penitipan', price: 100000, duration: '1 hari', description: 'Penitipan hewan dengan makanan dan minuman', image: '🏠' },
+            { id: 4, name: 'Penitipan Menginap', category: 'Penitipan', price: 200000, duration: '1 malam', description: 'Penitipan dengan fasilitas lengkap dan monitoring 24 jam', image: '🛏️' },
+            { id: 5, name: 'Vaksinasi', category: 'Kesehatan', price: 300000, duration: '30 menit', description: 'Vaksinasi lengkap untuk anjing dan kucing', image: '💉' },
+            { id: 6, name: 'Pemeriksaan Kesehatan', category: 'Kesehatan', price: 200000, duration: '45 menit', description: 'Pemeriksaan kesehatan menyeluruh oleh dokter hewan', image: '🩺' },
+            { id: 7, name: 'Pelatihan Dasar', category: 'Pelatihan', price: 500000, duration: '4 minggu', description: 'Program pelatihan dasar untuk anjing muda', image: '🎓' },
+            { id: 8, name: 'Pelatihan Lanjutan', category: 'Pelatihan', price: 800000, duration: '8 minggu', description: 'Program pelatihan lanjutan dengan teknik profesional', image: '🏅' },
+            { id: 9, name: 'Konsultasi Nutrisi', category: 'Konsultasi', price: 150000, duration: '1 jam', description: 'Konsultasi tentang nutrisi dan diet hewan peliharaan', image: '🥗' },
+            { id: 10, name: 'Konsultasi Perilaku', category: 'Konsultasi', price: 200000, duration: '1.5 jam', description: 'Konsultasi tentang perilaku dan masalah tingkah laku', image: '🧠' },
+            { id: 11, name: 'Grooming Spa', category: 'Grooming', price: 350000, duration: '3 jam', description: 'Grooming premium dengan spa dan aromaterapi', image: '🧖' },
+            { id: 12, name: 'Perawatan Gigi', category: 'Kesehatan', price: 250000, duration: '1 jam', description: 'Pembersihan dan perawatan gigi profesional', image: '🦷' },
+        ];
+
+        let filteredServices = [...services];
+
+        function renderServices() {
+            const grid = document.getElementById('servicesGrid');
+            grid.innerHTML = '';
+            
+            filteredServices.forEach(service => {
+                const card = `
+                    <div class="service-card">
+                        <div class="service-image">${service.image}</div>
+                        <div class="service-info">
+                            <div class="service-category">${service.category}</div>
+                            <h3 class="service-name">${service.name}</h3>
+                            <p class="service-description">${service.description}</p>
+                            <div class="service-details">
+                                <span class="service-price">Rp ${service.price.toLocaleString('id-ID')}</span>
+                                <span class="service-duration">⏱️ ${service.duration}</span>
+                            </div>
+                            <button class="book-service" onclick="bookService(${service.id})">Pesan Layanan</button>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+        }
+
+        function filterServices() {
+            const searchValue = document.getElementById('searchServiceInput').value.toLowerCase();
+            filteredServices = services.filter(service => 
+                service.name.toLowerCase().includes(searchValue) ||
+                service.category.toLowerCase().includes(searchValue)
+            );
+            sortServices();
+        }
+
+        function sortServices() {
+            const sortValue = document.getElementById('sortServiceSelect').value;
+            
+            filteredServices.sort((a, b) => {
+                switch(sortValue) {
+                    case 'price-asc':
+                        return a.price - b.price;
+                    case 'price-desc':
+                        return b.price - a.price;
+                    case 'duration-asc':
+                        return parseInt(a.duration) - parseInt(b.duration);
+                    case 'duration-desc':
+                        return parseInt(b.duration) - parseInt(a.duration);
+                    default:
+                        return a.name.localeCompare(b.name);
+                }
+            });
+            
+            renderServices();
+        }
+
+        function bookService(serviceId) {
+            const service = services.find(s => s.id === serviceId);
+            alert(`${service.name} berhasil dipesan! Hubungi kami untuk konfirmasi.`);
+        }
 
         // Page Navigation
         function showPage(page) {
             document.getElementById('home-page').classList.add('hidden');
             document.getElementById('products-page').classList.add('hidden');
             document.getElementById('services-page').classList.add('hidden');
+            document.getElementById('profile-page').classList.add('hidden');
             document.getElementById('dashboard-page').classList.add('hidden');
             
             document.getElementById(page + '-page').classList.remove('hidden');
@@ -732,6 +1003,8 @@
             
             if (page === 'products') {
                 renderProducts();
+            } else if (page === 'services') {
+                renderServices();
             }
         }
 
@@ -799,5 +1072,10 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             renderProducts();
+            renderServices();
         });
     </script>
+
+
+</body>
+</html>
