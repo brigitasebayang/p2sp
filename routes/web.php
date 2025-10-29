@@ -2,11 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
+Route::get('/owner', function () {
     return view('dashboardOwner');
 });
 
-Route::get('/homebefore', function () {
+Route::get('/', function () {
     return view('homebefore');
 });
 
