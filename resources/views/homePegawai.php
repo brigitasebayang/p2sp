@@ -84,7 +84,6 @@
             box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
         }
 
-
         /* FORM STYLING */
         #pegawaiForm {
             background: var(--bg-dark);
@@ -124,6 +123,7 @@
 
         input[type="text"],
         input[type="number"],
+        input[type="date"],
         select {
             width: 100%;
             padding: 12px;
@@ -144,6 +144,9 @@
         .btn-action-container {
             grid-column: 1 / -1;
             text-align: right;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
         }
 
         .btn {
@@ -163,12 +166,20 @@
         .btn-primary {
             background: var(--primary-color);
             color: white;
-            /* margin-top: 15px; */
         }
 
         .btn-primary:hover {
             background: var(--primary-hover);
             box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
         }
 
         .btn-edit {
@@ -258,6 +269,30 @@
             color: var(--danger-color);
         }
 
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
+        }
+
+        .error-message {
+            background-color: #fee2e2;
+            color: var(--danger-color);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message {
+            background-color: #d1fae5;
+            color: var(--success-color);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             #pegawaiForm {
@@ -281,6 +316,10 @@
             <h1>🧑‍💻 Kelola Pegawai Kouvee Pet Shop</h1>
         </div>
 
+        <!-- Add success and error message containers -->
+        <div id="successMessage" class="success-message"></div>
+        <div id="errorMessage" class="error-message"></div>
+
         <!-- 🔍 SEARCH BAR -->
         <div class="search-container">
             <input type="text" id="searchInput" placeholder="🔍 Cari Pegawai" onkeyup="searchPegawai()">
@@ -288,7 +327,7 @@
 
         <form id="pegawaiForm" onsubmit="handleSubmit(event)">
             <h2>Tambah/Edit Data Pegawai</h2>
-            <input type="hidden" id="index" value="">
+            <input type="hidden" id="pegawaiId" value="">
 
             <div class="form-group">
                 <label for="nama">Nama Pegawai *</label>
@@ -297,17 +336,23 @@
 
             <div class="form-group">
                 <label for="jabatan">Jabatan *</label>
-                <input type="text" id="jabatan" required placeholder="Masukkan Jabatan">
+                <select id="jabatan" required>
+                    <option value="" disabled selected>Pilih Jabatan</option>
+                    <option value="owner">Owner</option>
+                    <option value="cs">Customer Service</option>
+                    <option value="kasir">Kasir</option>
+                </select>
             </div>
 
+
             <div class="form-group">
-                <label for="nama">Alamat *</label>
+                <label for="alamat">Alamat *</label>
                 <input type="text" id="alamat" required placeholder="Masukkan Alamat">
             </div>
 
             <div class="form-group">
                 <label for="tanggalLahir">Tanggal Lahir *</label>
-                <input type="date" id="tanggalLahir" required placeholder="Masukan Tanggal Lahir">
+                <input type="date" id="tanggalLahir" required>
             </div>
 
             <div class="form-group">
@@ -316,14 +361,17 @@
             </div>
 
             <div class="form-group">
-                <label for="status">Status Kerja *</label>
-                <select id="status" required>
-                    <option value="Aktif">Aktif</option>
-                    <option value="Tidak Aktif">Tidak Aktif</option>
-                </select>
+                <label for="username">Username *</label>
+                <input type="text" id="username" required placeholder="Masukkan Username">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password *</label>
+                <input type="text" id="password" required placeholder="Masukkan Password">
             </div>
 
             <div class="btn-action-container">
+                <button type="button" class="btn btn-secondary" id="resetButton" onclick="resetForm()" style="display: none;">↺ Reset</button>
                 <button type="submit" class="btn btn-primary" id="submitButton">💾 Simpan Pegawai</button>
             </div>
         </form>
@@ -338,152 +386,269 @@
                         <th>Alamat</th>
                         <th>Tanggal Lahir</th>
                         <th>Nomor Telpon</th>
-                        <th>Status</th>
+                        <th>Username</th>
+                        <th>Password</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="pegawaiTable">
+                    <tr><td colspan="8" class="loading">Memuat data...</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
+    <!-- Inline API Client untuk menghindari loading issue -->
     <script>
-        // Data awal untuk demonstrasi (Model Pegawai)
-        let pegawaiData = [];
+        const API_BASE_URL = "http://localhost:8000/api";
 
-        function handleSubmit(event) {
+        class ApiClient {
+            constructor(baseURL = API_BASE_URL) {
+                this.baseURL = baseURL;
+            }
+
+            async request(endpoint, options = {}) {
+                const url = `${this.baseURL}${endpoint}`;
+                const defaultOptions = {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    },
+                };
+
+                const config = { ...defaultOptions, ...options };
+
+                try {
+                    const response = await fetch(url, config);
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || `HTTP Error: ${response.status}`);
+                    }
+
+                    return await response.json();
+                } catch (error) {
+                    console.error("[v0] API Error:", error);
+                    throw error;
+                }
+            }
+
+            async getPegawaiList() {
+                return this.request("/pegawai");
+            }
+
+            async getPegawaiById(id) {
+                return this.request(`/pegawai/${id}`);
+            }
+
+            async createPegawai(data) {
+                return this.request("/pegawai", {
+                    method: "POST",
+                    body: JSON.stringify(data),
+                });
+            }
+
+            async updatePegawai(id, data) {
+                return this.request(`/pegawai/${id}`, {
+                    method: "PUT",
+                    body: JSON.stringify(data),
+                });
+            }
+
+            async deletePegawai(id) {
+                return this.request(`/pegawai/${id}`, {
+                    method: "DELETE",
+                });
+            }
+        }
+
+        const apiClient = new ApiClient();
+    </script>
+
+    <script>
+        let pegawaiData = [];
+        let filteredData = [];
+        let isEditing = false;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadPegawaiData();
+        });
+
+        async function loadPegawaiData() {
+            try {
+                showLoading();
+                console.log("[v0] Loading pegawai data...");
+                const response = await apiClient.getPegawaiList();
+                console.log("[v0] Response received:", response);
+                pegawaiData = response.data || response;
+                filteredData = pegawaiData;
+                renderTable();
+                hideMessage();
+            } catch (error) {
+                showError('Gagal memuat data pegawai: ' + error.message);
+                console.error("[v0] Error loading data:", error);
+            }
+        }
+
+        async function handleSubmit(event) {
             event.preventDefault();
 
-            const index = document.getElementById('index').value;
+            const pegawaiId = document.getElementById('pegawaiId').value;
             const nama = document.getElementById('nama').value.trim();
             const jabatan = document.getElementById('jabatan').value.trim();
             const alamat = document.getElementById('alamat').value.trim();
             const tanggalLahir = document.getElementById('tanggalLahir').value.trim();
             const noTelp = document.getElementById('noTelp').value.trim();
-            const status = document.getElementById('status').value;
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
 
-            if (nama === '' || jabatan === '' || alamat === '' || tanggalLahir === '' || noTelp === '' || status === '') {
-                alert('Semua field wajib diisi!');
+            if (!nama || !jabatan || !alamat || !tanggalLahir || !noTelp || !username || !password) {
+                showError('Semua field wajib diisi!');
                 return;
             }
 
-            const pegawai = {
+            const pegawaiDataPayload = {
                 nama,
                 jabatan,
                 alamat,
-                tanggalLahir,
-                noTelp,
-                status
+                tanggal_lahir: tanggalLahir,
+                no_telp: noTelp,
+                username,
+                password
             };
 
-            if (index === '') {
-                // Tambah baru
-                pegawaiData.push(pegawai);
-            } else {
-                // Edit
-                pegawaiData[index] = pegawai;
+            try {
+                if (pegawaiId) {
+                    await apiClient.updatePegawai(pegawaiId, pegawaiDataPayload);
+                    showSuccess('Data pegawai berhasil diperbarui!');
+                } else {
+                    await apiClient.createPegawai(pegawaiDataPayload);
+                    showSuccess('Data pegawai berhasil ditambahkan!');
+                }
+                resetForm();
+                await loadPegawaiData();
+            } catch (error) {
+                showError('Gagal menyimpan data: ' + error.message);
+                console.error("[v0] Error saving data:", error);
             }
-
-            document.getElementById('pegawaiForm').reset();
-            document.getElementById('index').value = '';
-            document.getElementById('submitButton').textContent = '💾 Simpan Pegawai';
-            renderTable();
         }
 
         function renderTable() {
             const tbody = document.getElementById('pegawaiTable');
             tbody.innerHTML = '';
-            if (pegawaiData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #6b7280;">Belum ada data pegawai</td></tr>';
+
+            if (filteredData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px; color: #6b7280;">Belum ada data pegawai</td></tr>';
                 return;
             }
 
-            pegawaiData.forEach((item, i) => {
+            filteredData.forEach((item, index) => {
                 const statusClass = item.status === 'Aktif' ? 'badge-aktif' : 'badge-tidak-aktif';
-
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                <td>${i+1}</td>
-                <td>${item.nama}</td>
-                <td>${item.jabatan}</td>
-                <td>${item.alamat}</td>
-                <td>${item.tanggalLahir}</td>
-                <td>${item.noTelp}</td>
-                <td><span class="badge ${statusClass}">${item.status}</span></td>
-                <td class="action-cell">
-                    <button class="btn btn-edit" onclick="editData(${i})">✏️ Edit</button>
-                    <button class="btn btn-delete" onclick="deleteData(${i})">🗑️ Hapus</button>
-                </td>
-            `;
+                    <td>${item.id_pegawai}</td>
+                    <td>${item.nama}</td>
+                    <td>${item.jabatan}</td>
+                    <td>${item.alamat}</td>
+                    <td>${item.tanggal_lahir || item.tanggalLahir}</td>
+                    <td>${item.no_telp || item.noTelp}</td>
+                    <td>${item.username || item.username}</td>
+                    <td>${item.password || item.password}</td>
+                    <td class="action-cell">
+                        <button class="btn btn-edit" onclick="editData(${item.id_pegawai})">✏️ Edit</button>
+                        <button class="btn btn-delete" onclick="deleteData(${item.id_pegawai})">🗑️ Hapus</button>
+                    </td>
+                `;
                 tbody.appendChild(row);
             });
         }
 
-        function editData(i) {
-            document.getElementById('index').value = i;
-            document.getElementById('nama').value = pegawaiData[i].nama;
-            document.getElementById('jabatan').value = pegawaiData[i].jabatan;
-            document.getElementById('alamat').value = pegawaiData[i].alamat;
-            document.getElementById('tanggalLahir').value = pegawaiData[i].tanggalLahir;
-            document.getElementById('noTelp').value = pegawaiData[i].noTelp;
-            document.getElementById('status').value = pegawaiData[i].status;
+        async function editData(id) {
+            try {
+                const pegawai = pegawaiData.find(p => p.id_pegawai === id);
+                if (!pegawai) {
+                    showError('Data pegawai tidak ditemukan');
+                    return;
+                }
 
-            // Ubah teks tombol menjadi "Simpan Perubahan"
-            document.getElementById('submitButton').textContent = '✅ Simpan Perubahan';
+                document.getElementById('pegawaiId').value = pegawai.id_pegawai;
+                document.getElementById('nama').value = pegawai.nama;
+                document.getElementById('jabatan').value = pegawai.jabatan;
+                document.getElementById('alamat').value = pegawai.alamat;
+                document.getElementById('tanggalLahir').value = pegawai.tanggal_lahir || pegawai.tanggalLahir;
+                document.getElementById('noTelp').value = pegawai.no_telp || pegawai.noTelp;
+                document.getElementById('username').value = pegawai.username || pegawai.username;
+                document.getElementById('password').value = pegawai.password || pegawai.password;
 
-            // Scroll ke atas agar form terlihat
-            document.getElementById('pegawaiForm').scrollIntoView({
-                behavior: 'smooth'
-            });
-        }
+                document.getElementById('submitButton').textContent = '✅ Simpan Perubahan';
+                document.getElementById('resetButton').style.display = 'inline-flex';
+                isEditing = true;
 
-        function deleteData(i) {
-            if (confirm(`Yakin ingin menghapus data pegawai "${pegawaiData[i].nama}"?`)) {
-                pegawaiData.splice(i, 1);
-                renderTable();
+                document.getElementById('pegawaiForm').scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                showError('Gagal memuat data: ' + error.message);
             }
         }
 
-        // Render awal saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', renderTable);
+        async function deleteData(id) {
+            if (confirm('Yakin ingin menghapus data pegawai ini?')) {
+                try {
+                    await apiClient.deletePegawai(id);
+                    showSuccess('Data pegawai berhasil dihapus!');
+                    await loadPegawaiData();
+                } catch (error) {
+                    showError('Gagal menghapus data: ' + error.message);
+                    console.error("[v0] Error deleting data:", error);
+                }
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('pegawaiForm').reset();
+            document.getElementById('pegawaiId').value = '';
+            document.getElementById('submitButton').textContent = '💾 Simpan Pegawai';
+            document.getElementById('resetButton').style.display = 'none';
+            isEditing = false;
+        }
 
         function searchPegawai() {
             const keyword = document.getElementById('searchInput').value.toLowerCase();
-            const tbody = document.getElementById('pegawaiTable');
-            tbody.innerHTML = '';
-
-            const filteredData = customerData.filter(item =>
-                item.nama.toLowerCase().includes(keyword.toLowerCase()) ||
-                item.alamat.toLowerCase().includes(keyword.toLowerCase()) ||
-                item.jabatan.toLowerCase().includes(keyword.toLowerCase())
+            filteredData = pegawaiData.filter(item =>
+                item.nama.toLowerCase().includes(keyword) ||
+                item.alamat.toLowerCase().includes(keyword) ||
+                item.jabatan.toLowerCase().includes(keyword)
             );
+            renderTable();
+        }
 
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
 
-            if (filteredData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px; color:#6b7280;">Pegawai tidak ditemukan.</td></tr>';
-                return;
-            }
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 5000);
+        }
 
-            filteredData.forEach((item, i) => {
-                const statusClass = item.status === 'Aktif' ? 'badge-aktif' : 'badge-tidak-aktif';
-                const row = document.createElement('tr');
-                row.innerHTML = `
-            <td>${i + 1}</td>
-            <td>${item.nama}</td>
-            <td>${item.jabatan}</td>
-            <td>${item.alamat}</td>
-            <td>${item.tanggalLahir}</td>
-            <td>${item.noTelp}</td>
-            <td><span class="badge ${statusClass}">${item.status}</span></td>
-            <td class="action-cell">
-                <button class="btn btn-edit" onclick="editData(${pegawaiData.indexOf(item)})">✏️ Edit</button>
-                <button class="btn btn-delete" onclick="deleteData(${pegawaiData.indexOf(item)})">🗑️ Hapus</button>
-            </td>
-        `;
-                tbody.appendChild(row);
-            });
+        function hideMessage() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+
+        function showLoading() {
+            const tbody = document.getElementById('pegawaiTable');
+            tbody.innerHTML = '<tr><td colspan="8" class="loading">Memuat data...</td></tr>';
         }
     </script>
 </body>
+
 </html>
