@@ -719,6 +719,8 @@
                         <option value="name">Nama A-Z</option>
                         <option value="price-asc">Harga Terendah</option>
                         <option value="price-desc">Harga Tertinggi</option>
+                        <option value="stock-asc">Stok Terendah</option>
+                        <option value="stock-desc">Stok Tertinggi</option>
                     </select>
                 </div>
             </div>
@@ -1018,6 +1020,10 @@
                         return parseInt(a.harga) - parseInt(b.harga);
                     case 'price-desc':
                         return parseInt(b.harga) - parseInt(a.harga);
+                    case 'stock-asc':
+                        return parseInt(a.stok) - parseInt(b.stok);
+                    case 'stock-desc':
+                        return parseInt(b.stok) - parseInt(a.stok);
                     default:
                         return a.nama.localeCompare(b.nama);
                 }
