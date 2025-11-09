@@ -39,6 +39,14 @@ Route::get('/homePegawai', function () {
     return view('homePegawai');
 });
 
+Route::get('/entriTransaksiProduk', function () {
+    return view('entriTransaksiProduk');
+});
+
+Route::get('/entriTransaksiLayanan', function () {
+    return view('entriTransaksiLayanan');
+});
+=======
 Route::get('/transaksiPenjualan', function () {
     return view('transaksiPenjualan');
 });
@@ -54,4 +62,3 @@ Route::get('/transaksiProduk', function () {
 Route::get('/transaksiLayanan', function () {
     return view('transaksiLayanan');
 });
-
