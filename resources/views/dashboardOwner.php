@@ -743,7 +743,7 @@
     <!-- Dashboard Page -->
     <div id="dashboard-page" class="products-section hidden" style="background: #f9fafb;">
         <div class="container">
-            <h1 class="section-title">Dashboard Owner</h1>
+            <h1 class="section-title">Dashboard</h1>
             
            
             </div>
@@ -782,6 +782,16 @@
                     <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;">🐾</div>
                     <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Kelola Hewan</h3>
                     <p style="color: #4b5563; font-size: 0.875rem;">Ubah detail Hewan disini</p>
+                </div>
+                <div class="feature-card" style="text-align: left; cursor: pointer;" onclick="window.location.href='/entriTransaksiProduk'">
+                    <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;">🛍️</div>
+                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Entri Transaksi Produk</h3>
+                    <p style="color: #4b5563; font-size: 0.875rem;">Transkasi Produk</p>
+                </div>
+                <div class="feature-card" style="text-align: left; cursor: pointer;" onclick="window.location.href='/entriTransaksiLayanan'">
+                    <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;">🧼</div>
+                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Entri Transaksi Layanan</h3>
+                    <p style="color: #4b5563; font-size: 0.875rem;">Transkasi Layanan</p>
                 </div>
             </div>
         </div>

@@ -338,7 +338,6 @@
                 <label for="jabatan">Jabatan *</label>
                 <select id="jabatan" required>
                     <option value="" disabled selected>Pilih Jabatan</option>
-                    <option value="owner">Owner</option>
                     <option value="cs">Customer Service</option>
                     <option value="kasir">Kasir</option>
                 </select>

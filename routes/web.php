@@ -38,3 +38,11 @@ Route::get('/homeCustomer', function () {
 Route::get('/homePegawai', function () {
     return view('homePegawai');
 });
+
+Route::get('/entriTransaksiProduk', function () {
+    return view('entriTransaksiProduk');
+});
+
+Route::get('/entriTransaksiLayanan', function () {
+    return view('entriTransaksiLayanan');
+});
