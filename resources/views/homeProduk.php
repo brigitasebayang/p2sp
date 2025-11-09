@@ -95,6 +95,7 @@
 
     .btn-primary { background: var(--primary-color); color: white; }
     .btn-primary:hover { background: var(--primary-hover); }
+    .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
     .btn-edit { background: #3b82f6; color: white; }
     .btn-delete { background: var(--danger-color); color: white; }
 
@@ -113,6 +114,17 @@
     tr:hover { background: #fef3c7; }
 
     .actions { display: flex; gap: 10px; }
+
+    .alert {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .alert.show { display: block; }
+    .alert.success { background: #d1fae5; color: #065f46; border: 1px solid var(--primary-color); }
+    .alert.error { background: #fee2e2; color: #991b1b; border: 1px solid var(--danger-color); }
   </style>
 </head>
 <body>
@@ -120,6 +132,8 @@
     <div class="header">
       <h1>Kelola Produk Kouvee Pet Shop</h1>
     </div>
+
+    <div id="alertBox" class="alert"></div>
 
     <div class="search-container">
       <input type="text" id="searchInput" placeholder="Cari nama produk..." onkeyup="filterProducts()">
@@ -150,12 +164,12 @@
 
       <div class="full-width">
         <label for="productImage">Upload Gambar</label>
-        <input type="file" id="productImage" accept="image/*" required>
+        <input type="file" id="productImage" accept="image/*">
         <div class="error-msg" id="errorImage"></div>
       </div>
 
       <div class="full-width" style="text-align:right;">
-        <button type="submit" class="btn btn-primary">💾 Simpan</button>
+        <button type="submit" class="btn btn-primary" id="submitBtn">Simpan</button>
       </div>
     </form>
 
@@ -171,30 +185,47 @@
   </div>
 
   <script>
+    const API_BASE_URL = 'http://localhost:8000/api';
     let products = [];
-    let nextId = 1;
     let filtered = [];
+    let isEditing = false;
+    let currentImageBase64 = "";
 
     const tbody = document.querySelector("#productTable tbody");
+    const alertBox = document.getElementById("alertBox");
+
+    async function loadProducts() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/products`);
+        if (!response.ok) throw new Error('Failed to load products');
+        products = await response.json();
+        filtered = [...products];
+        renderProducts();
+      } catch (error) {
+        showAlert('Error loading products: ' + error.message, 'error');
+        console.error('Error:', error);
+      }
+    }
 
     function renderProducts() {
       tbody.innerHTML = "";
       if (filtered.length === 0) {
-  tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Tidak ada produk ditemukan.</td></tr>`;
-  return;
-}
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Tidak ada produk ditemukan.</td></tr>`;
+        return;
+      }
       filtered.forEach(prod => {
         const row = document.createElement("tr");
+        const imageHtml = prod.gambar ? `<img src="${prod.gambar}" width="60" height="60" style="object-fit:cover;border-radius:6px;">` : 'No Image';
         row.innerHTML = `
-          <td>${prod.id}</td>
-          <td>${prod.name}</td>
-          <td>Rp ${prod.price.toLocaleString("id-ID")}</td>
-          <td>${prod.stock}</td>
-          <td><img src="${prod.image}" width="60" height="60" style="object-fit:cover;border-radius:6px;"></td>
+          <td>${prod.id_produk}</td>
+          <td>${prod.nama}</td>
+          <td>Rp ${parseInt(prod.harga).toLocaleString("id-ID")}</td>
+          <td>${prod.stok}</td>
+          <td>${imageHtml}</td>
           <td>
             <div class="actions">
-              <button class="btn btn-edit" onclick="editProduct(${prod.id})">✏</button>
-              <button class="btn btn-delete" onclick="deleteProduct(${prod.id})">🗑</button>
+              <button class="btn btn-edit" onclick="editProduct(${prod.id_produk})">Edit</button>
+              <button class="btn btn-delete" onclick="deleteProduct(${prod.id_produk})">Hapus</button>
             </div>
           </td>`;
         tbody.appendChild(row);
@@ -203,20 +234,18 @@
 
     function filterProducts() {
       const keyword = document.getElementById("searchInput").value.toLowerCase();
-      filtered = products.filter(p => p.name.toLowerCase().includes(keyword));
+      filtered = products.filter(p => p.nama.toLowerCase().includes(keyword));
       renderProducts();
     }
 
     document.getElementById("productForm").addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      // ambil elemen input
       const nameInput = document.getElementById("productName");
       const priceInput = document.getElementById("productPrice");
       const stockInput = document.getElementById("productStock");
       const imageInput = document.getElementById("productImage");
 
-      // validasi manual
       let valid = true;
       clearErrors();
 
@@ -234,46 +263,63 @@
       }
 
       const id = document.getElementById("productId").value;
-      let imageBase64 = "";
       if (imageInput.files.length === 0 && !id) {
         showError("errorImage", "Silakan unggah gambar produk!");
         valid = false;
       }
 
-      if (!valid) {
-        alert("⚠ Mohon lengkapi semua data dengan benar sebelum menyimpan!");
-        return;
+      if (!valid) return;
+
+      const submitBtn = document.getElementById("submitBtn");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Menyimpan...";
+
+      try {
+        let imageBase64 = currentImageBase64;
+        if (imageInput.files.length > 0) {
+          imageBase64 = await toBase64(imageInput.files[0]);
+        }
+
+        const payload = {
+          nama: nameInput.value.trim(),
+          harga: parseInt(priceInput.value),
+          stok: parseInt(stockInput.value),
+    
+        };
+
+        let response;
+        if (id) {
+          response = await fetch(`${API_BASE_URL}/products/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        } else {
+          response = await fetch(`http://127.0.0.1:8000/api/products`, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json',
+              'Content-Type': 'application/json'
+             },
+            body: JSON.stringify(payload)
+          });
+        }
+
+        if (!response.ok) throw new Error('Failed to save product');
+        
+        const result = await response.json();
+        showAlert(id ? 'Produk berhasil diperbarui!' : 'Produk baru berhasil ditambahkan!', 'success');
+        
+        await loadProducts();
+        e.target.reset();
+        document.getElementById("productId").value = "";
+        currentImageBase64 = "";
+        isEditing = false;
+      } catch (error) {
+        showAlert('Error: ' + error.message, 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Simpan";
       }
-
-      // convert gambar ke base64
-      if (imageInput.files.length > 0) {
-        imageBase64 = await toBase64(imageInput.files[0]);
-      } else if (id) {
-        imageBase64 = products.find(p => p.id == id).image;
-      }
-
-      const product = {
-        id: id ? parseInt(id) : nextId++,
-        name: nameInput.value.trim(),
-        price: parseInt(priceInput.value),
-        stock: parseInt(stockInput.value),
-        image: imageBase64
-      };
-
-      if (id) {
-        const idx = products.findIndex(p => p.id == id);
-        products[idx] = product;
-        alert("✅ Produk berhasil diperbarui!");
-      } else {
-        products.push(product);
-        alert("✅ Produk baru berhasil ditambahkan!");
-      }
-
-      filtered = [...products];
-      renderProducts();
-      e.target.reset();
-      document.getElementById("productId").value = "";
-      clearErrors();
     });
 
     function showError(id, message) {
@@ -282,6 +328,12 @@
 
     function clearErrors() {
       document.querySelectorAll(".error-msg").forEach(el => el.textContent = "");
+    }
+
+    function showAlert(message, type) {
+      alertBox.textContent = message;
+      alertBox.className = `alert show ${type}`;
+      setTimeout(() => alertBox.classList.remove('show'), 3000);
     }
 
     function toBase64(file) {
@@ -294,25 +346,36 @@
     }
 
     function editProduct(id) {
-      const p = products.find(prod => prod.id === id);
+      const p = products.find(prod => prod.id_produk === id);
       if (!p) return;
-      document.getElementById("productId").value = p.id;
-      document.getElementById("productName").value = p.name;
-      document.getElementById("productPrice").value = p.price;
-      document.getElementById("productStock").value = p.stock;
+      document.getElementById("productId").value = p.id_produk;
+      document.getElementById("productName").value = p.nama;
+      document.getElementById("productPrice").value = p.harga;
+      document.getElementById("productStock").value = p.stok;
+      currentImageBase64 = p.gambar || "";
+      isEditing = true;
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    function deleteProduct(id) {
-      const p = products.find(prod => prod.id === id);
-      if (confirm(`Yakin ingin menghapus data produk "${p.name}"?`)) {
-        products = products.filter(prod => prod.id !== id);
-        filtered = [...products];
-        renderProducts();
+    async function deleteProduct(id) {
+      const p = products.find(prod => prod.id_produk === id);
+      if (!p || !confirm(`Yakin ingin menghapus data produk "${p.nama}"?`)) return;
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/products/${id}`, {
+          method: 'DELETE'
+        });
+        if (!response.ok) throw new Error('Failed to delete product');
+        
+        showAlert('Produk berhasil dihapus!', 'success');
+        await loadProducts();
+      } catch (error) {
+        showAlert('Error: ' + error.message, 'error');
       }
     }
 
-    renderProducts();
+    // Load products when page loads
+    loadProducts();
   </script>
 </body>
 </html>
