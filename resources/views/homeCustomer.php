@@ -84,7 +84,6 @@
             box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
         }
 
-
         /* FORM STYLING */
         #customerForm {
             background: var(--bg-dark);
@@ -124,6 +123,7 @@
 
         input[type="text"],
         input[type="number"],
+        input[type="date"],
         select {
             width: 100%;
             padding: 12px;
@@ -144,6 +144,9 @@
         .btn-action-container {
             grid-column: 1 / -1;
             text-align: right;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
         }
 
         .btn {
@@ -163,7 +166,6 @@
         .btn-primary {
             background: var(--primary-color);
             color: white;
-            /* margin-top: 15px; */
         }
 
         .btn-primary:hover {
@@ -171,9 +173,17 @@
             box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);
         }
 
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
         .btn-edit {
             background: #3b82f6;
-            /* Biru */
             color: white;
         }
 
@@ -183,7 +193,6 @@
 
         .btn-delete {
             background: var(--danger-color);
-            /* Merah */
             color: white;
         }
 
@@ -238,24 +247,28 @@
             margin-right: 5px;
         }
 
-        /* Badge Status */
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: capitalize;
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
         }
 
-        .badge-aktif {
-            background-color: #d1fae5;
-            color: var(--success-color);
-        }
-
-        .badge-tidak-aktif {
+        .error-message {
             background-color: #fee2e2;
             color: var(--danger-color);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message {
+            background-color: #d1fae5;
+            color: var(--success-color);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
         }
 
         /* Responsive adjustments */
@@ -278,8 +291,12 @@
 
     <div class="container">
         <div class="header">
-            <h1>🧑‍💻 Kelola Customer Kouvee Pet Shop</h1>
+            <h1>👥 Kelola Customer Kouvee Pet Shop</h1>
         </div>
+
+        <!-- Add success and error message containers -->
+        <div id="successMessage" class="success-message"></div>
+        <div id="errorMessage" class="error-message"></div>
 
         <!-- 🔍 SEARCH BAR -->
         <div class="search-container">
@@ -288,7 +305,7 @@
 
         <form id="customerForm" onsubmit="handleSubmit(event)">
             <h2>Tambah/Edit Data Customer</h2>
-            <input type="hidden" id="index" value="">
+            <input type="hidden" id="customerId" value="">
 
             <div class="form-group">
                 <label for="nama">Nama Customer *</label>
@@ -302,7 +319,7 @@
 
             <div class="form-group">
                 <label for="tanggalLahir">Tanggal Lahir *</label>
-                <input type="date" id="tanggalLahir" required placeholder="Masukan Tanggal Lahir">
+                <input type="date" id="tanggalLahir" required>
             </div>
 
             <div class="form-group">
@@ -311,6 +328,7 @@
             </div>
 
             <div class="btn-action-container">
+                <button type="button" class="btn btn-secondary" id="resetButton" onclick="resetForm()" style="display: none;">↺ Reset</button>
                 <button type="submit" class="btn btn-primary" id="submitButton">💾 Simpan Customer</button>
             </div>
         </form>
@@ -328,137 +346,247 @@
                     </tr>
                 </thead>
                 <tbody id="customerTable">
+                    <tr><td colspan="6" class="loading">Memuat data...</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
+    <!-- Inline API Client untuk menghindari loading issue -->
     <script>
-        // Data awal untuk demonstrasi (Model Customer)
-        let customerData = [];
+        const API_BASE_URL = "http://localhost:8000/api";
 
-        function handleSubmit(event) {
+        class ApiClient {
+            constructor(baseURL = API_BASE_URL) {
+                this.baseURL = baseURL;
+            }
+
+            async request(endpoint, options = {}) {
+                const url = `${this.baseURL}${endpoint}`;
+                const defaultOptions = {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    },
+                };
+
+                const config = { ...defaultOptions, ...options };
+
+                try {
+                    const response = await fetch(url, config);
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || `HTTP Error: ${response.status}`);
+                    }
+
+                    return await response.json();
+                } catch (error) {
+                    console.error("[v0] API Error:", error);
+                    throw error;
+                }
+            }
+
+            async getCustomerList() {
+                return this.request("/customer");
+            }
+
+            async getCustomerById(id) {
+                return this.request(`/customer/${id}`);
+            }
+
+            async createCustomer(data) {
+                return this.request("/customer", {
+                    method: "POST",
+                    body: JSON.stringify(data),
+                });
+            }
+
+            async updateCustomer(id, data) {
+                return this.request(`/customer/${id}`, {
+                    method: "PUT",
+                    body: JSON.stringify(data),
+                });
+            }
+
+            async deleteCustomer(id) {
+                return this.request(`/customer/${id}`, {
+                    method: "DELETE",
+                });
+            }
+        }
+
+        const apiClient = new ApiClient();
+    </script>
+
+    <script>
+        let customerData = [];
+        let filteredData = [];
+        let isEditing = false;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadCustomerData();
+        });
+
+        async function loadCustomerData() {
+            try {
+                showLoading();
+                console.log("[v0] Loading customer data...");
+                const response = await apiClient.getCustomerList();
+                console.log("[v0] Response received:", response);
+                customerData = response.data || response;
+                filteredData = customerData;
+                renderTable();
+                hideMessage();
+            } catch (error) {
+                showError('Gagal memuat data customer: ' + error.message);
+                console.error("[v0] Error loading data:", error);
+            }
+        }
+
+        async function handleSubmit(event) {
             event.preventDefault();
 
-            const index = document.getElementById('index').value;
+            const customerId = document.getElementById('customerId').value;
             const nama = document.getElementById('nama').value.trim();
             const alamat = document.getElementById('alamat').value.trim();
             const tanggalLahir = document.getElementById('tanggalLahir').value.trim();
             const noTelp = document.getElementById('noTelp').value.trim();
 
-            if (nama === '' || alamat === '' || tanggalLahir === '' || noTelp === '') {
-                alert('Semua field wajib diisi!');
+            if (!nama || !alamat || !tanggalLahir || !noTelp) {
+                showError('Semua field wajib diisi!');
                 return;
             }
 
-            const customer = {
+            const customerDataPayload = {
                 nama,
                 alamat,
-                tanggalLahir,
-                noTelp
+                tanggal_lahir: tanggalLahir,
+                no_telp: noTelp
             };
 
-            if (index === '') {
-                // Tambah baru
-                customerData.push(customer);
-            } else {
-                // Edit
-                customerData[index] = customer;
+            try {
+                if (customerId) {
+                    await apiClient.updateCustomer(customerId, customerDataPayload);
+                    showSuccess('Data customer berhasil diperbarui!');
+                } else {
+                    await apiClient.createCustomer(customerDataPayload);
+                    showSuccess('Data customer berhasil ditambahkan!');
+                }
+                resetForm();
+                await loadCustomerData();
+            } catch (error) {
+                showError('Gagal menyimpan data: ' + error.message);
+                console.error("[v0] Error saving data:", error);
             }
-
-            document.getElementById('customerForm').reset();
-            document.getElementById('index').value = '';
-            document.getElementById('submitButton').textContent = '💾 Simpan Customer';
-            renderTable();
         }
 
         function renderTable() {
             const tbody = document.getElementById('customerTable');
             tbody.innerHTML = '';
-            if (customerData.length === 0) {
+
+            if (filteredData.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #6b7280;">Belum ada data customer</td></tr>';
                 return;
             }
 
-            customerData.forEach((item, i) => {
-                const statusClass = item.status === 'Aktif' ? 'badge-aktif' : 'badge-tidak-aktif';
-
+            filteredData.forEach((item, index) => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                <td>${i+1}</td>
-                <td>${item.nama}</td>
-                <td>${item.alamat}</td>
-                <td>${item.tanggalLahir}</td>
-                <td>${item.noTelp}</td>
-                <td><span class="badge ${statusClass}">${item.status}</span></td>
-                <td class="action-cell">
-                    <button class="btn btn-edit" onclick="editData(${i})">✏️ Edit</button>
-                    <button class="btn btn-delete" onclick="deleteData(${i})">🗑️ Hapus</button>
-                </td>
-            `;
+                    <td>${item.id_customer}</td>
+                    <td>${item.nama}</td>
+                    <td>${item.alamat}</td>
+                    <td>${item.tanggal_lahir || item.tanggalLahir}</td>
+                    <td>${item.no_telp || item.noTelp}</td>
+                    <td class="action-cell">
+                        <button class="btn btn-edit" onclick="editData(${item.id_customer})">✏️ Edit</button>
+                        <button class="btn btn-delete" onclick="deleteData(${item.id_customer})">🗑️ Hapus</button>
+                    </td>
+                `;
                 tbody.appendChild(row);
             });
         }
 
-        function editData(i) {
-            document.getElementById('index').value = i;
-            document.getElementById('nama').value = customerData[i].nama;
-            document.getElementById('alamat').value = customerData[i].alamat;
-            document.getElementById('tanggalLahir').value = customerData[i].tanggalLahir;
-            document.getElementById('noTelp').value = customerData[i].noTelp;
-            document.getElementById('status').value = customerData[i].status;
+        async function editData(id) {
+            try {
+                const customer = customerData.find(c => c.id_customer === id);
+                if (!customer) {
+                    showError('Data customer tidak ditemukan');
+                    return;
+                }
 
-            // Ubah teks tombol menjadi "Simpan Perubahan"
-            document.getElementById('submitButton').textContent = '✅ Simpan Perubahan';
+                document.getElementById('customerId').value = customer.id_customer;
+                document.getElementById('nama').value = customer.nama;
+                document.getElementById('alamat').value = customer.alamat;
+                document.getElementById('tanggalLahir').value = customer.tanggal_lahir || customer.tanggalLahir;
+                document.getElementById('noTelp').value = customer.no_telp || customer.noTelp;
 
-            // Scroll ke atas agar form terlihat
-            document.getElementById('customerForm').scrollIntoView({
-                behavior: 'smooth'
-            });
-        }
+                document.getElementById('submitButton').textContent = '✅ Simpan Perubahan';
+                document.getElementById('resetButton').style.display = 'inline-flex';
+                isEditing = true;
 
-        function deleteData(i) {
-            if (confirm(`Yakin ingin menghapus data customer "${customerData[i].nama}"?`)) {
-                customerData.splice(i, 1);
-                renderTable();
+                document.getElementById('customerForm').scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                showError('Gagal memuat data: ' + error.message);
             }
         }
 
-        // Render awal saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', renderTable);
+        async function deleteData(id) {
+            if (confirm('Yakin ingin menghapus data customer ini?')) {
+                try {
+                    await apiClient.deleteCustomer(id);
+                    showSuccess('Data customer berhasil dihapus!');
+                    await loadCustomerData();
+                } catch (error) {
+                    showError('Gagal menghapus data: ' + error.message);
+                    console.error("[v0] Error deleting data:", error);
+                }
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('customerForm').reset();
+            document.getElementById('customerId').value = '';
+            document.getElementById('submitButton').textContent = '💾 Simpan Customer';
+            document.getElementById('resetButton').style.display = 'none';
+            isEditing = false;
+        }
 
         function searchCustomer() {
             const keyword = document.getElementById('searchInput').value.toLowerCase();
-            const tbody = document.getElementById('customerTable');
-            tbody.innerHTML = '';
-
-            const filteredData = customerData.filter(item =>
-                item.nama.toLowerCase().includes(keyword.toLowerCase()) ||
-                item.alamat.toLowerCase().includes(keyword.toLowerCase())
+            filteredData = customerData.filter(item =>
+                item.nama.toLowerCase().includes(keyword) ||
+                item.alamat.toLowerCase().includes(keyword)
             );
+            renderTable();
+        }
 
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
 
-            if (filteredData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px; color:#6b7280;">Customer tidak ditemukan.</td></tr>';
-                return;
-            }
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 5000);
+        }
 
-            filteredData.forEach((item, i) => {
-                const statusClass = item.status === 'Aktif' ? 'badge-aktif' : 'badge-tidak-aktif';
-                const row = document.createElement('tr');
-                row.innerHTML = `
-            <td>${i + 1}</td>
-            <td>${item.nama}</td>
-            <td>${item.alamat}</td>
-            <td>${item.tanggalLahir}</td>
-            <td>${item.noTelp}</td>
-            <td class="action-cell">
-                <button class="btn btn-edit" onclick="editData(${customerData.indexOf(item)})">✏️ Edit</button>
-                <button class="btn btn-delete" onclick="deleteData(${customerData.indexOf(item)})">🗑️ Hapus</button>
-            </td>
-        `;
-                tbody.appendChild(row);
-            });
+        function hideMessage() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+
+        function showLoading() {
+            const tbody = document.getElementById('customerTable');
+            tbody.innerHTML = '<tr><td colspan="6" class="loading">Memuat data...</td></tr>';
         }
     </script>
 </body>

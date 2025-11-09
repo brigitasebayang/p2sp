@@ -743,7 +743,7 @@
     <!-- Dashboard Page -->
     <div id="dashboard-page" class="products-section hidden" style="background: #f9fafb;">
         <div class="container">
-            <h1 class="section-title">Dashboard Owner</h1>
+            <h1 class="section-title">Dashboard</h1>
             
            
             </div>

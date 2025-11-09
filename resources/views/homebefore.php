@@ -642,7 +642,7 @@
             </ul>
 
             <div class="nav-icons">
-                <button onclick="alert('Silakan login terlebih dahulu')">🛒</button>
+
                 <button onclick="window.location.href='/login'">👤</button>
             </div>
         </div>
@@ -719,6 +719,8 @@
                         <option value="name">Nama A-Z</option>
                         <option value="price-asc">Harga Terendah</option>
                         <option value="price-desc">Harga Tertinggi</option>
+                        <option value="stock-asc">Stok Terendah</option>
+                        <option value="stock-desc">Stok Tertinggi</option>
                     </select>
                 </div>
             </div>
@@ -788,8 +790,8 @@
                         <div class="label">Tim Profesional</div>
                     </div>
                     <div class="stat-card">
-                        <div class="number">100+</div>
-                        <div class="label">Produk Tersedia</div>
+                        <div class="number">A+</div>
+                        <div class="label">Pelayanan</div>
                     </div>
                 </div>
             </div>
@@ -827,9 +829,9 @@
                         <p>Harga terjangkau tanpa mengorbankan kualitas</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">🚚</div>
-                        <h3>Pengiriman Cepat</h3>
-                        <p>Layanan pengiriman tersedia untuk area Yogyakarta</p>
+                        <div class="feature-icon">✨</div>
+                        <h3>Layanan Berkualitas</h3>
+                        <p>Anabul tidak akan merasakan kekerasan dan trauma</p>
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon">🏆</div>
@@ -877,27 +879,11 @@
 
     <script>
         // Products Data
-        const products = [
-            { id: 1, name: 'Royal Canin Dog Food', category: 'Makanan', price: 250000, stock: 25, image: '🐕' },
-            { id: 2, name: 'Cat Litter Premium', category: 'Perlengkapan', price: 85000, stock: 40, image: '🐱' },
-            { id: 3, name: 'Pet Carrier Large', category: 'Aksesoris', price: 350000, stock: 15, image: '🎒' },
-            { id: 4, name: 'Vitamin Kucing', category: 'Kesehatan', price: 125000, stock: 30, image: '💊' },
-            { id: 5, name: 'Mainan Anjing', category: 'Aksesoris', price: 75000, stock: 50, image: '🎾' },
-            { id: 6, name: 'Shampoo Anti Kutu', category: 'Perawatan', price: 95000, stock: 35, image: '🧴' },
-        ];
-
-        // Services Data
-        const services = [
-            { id: 1, name: 'Grooming Basic', category: 'Grooming', price: 50000,  image: '✂️', description: 'Mandi, sisir, potong kuku' },
-            { id: 2, name: 'Grooming Premium', category: 'Grooming', price: 100000, image: '💆', description: 'Full grooming + spa treatment' },
-            { id: 3, name: 'Penitipan Harian', category: 'Penitipan', price: 75000,  image: '🏠', description: 'Penitipan hewan per hari' },
-            { id: 4, name: 'Penitipan Mingguan', category: 'Penitipan', price: 450000,  image: '📅', description: 'Paket penitipan seminggu' },
-            { id: 5, name: 'Konsultasi Dokter Hewan', category: 'Kesehatan', price: 150000,  image: '🩺', description: 'Pemeriksaan kesehatan hewan' },
-            { id: 6, name: 'Vaksinasi', category: 'Kesehatan', price: 200000,  image: '💉', description: 'Vaksinasi lengkap untuk hewan' },
-        ];
-
-        let filteredProducts = [...products];
-        let filteredServices = [...services];
+        const API_BASE_URL = 'http://127.0.0.1:8000/api';
+        let products = [];
+        let services = [];
+        let filteredProducts = [];
+        let filteredServices = [];
 
         // Page Navigation
         function showPage(page) {
@@ -914,9 +900,47 @@
             });
             
             if (page === 'products') {
-                renderProducts();
+                loadProducts();
             } else if (page === 'services') {
+                loadServices();
+            }
+        }
+
+        async function loadProducts() {
+            try {
+                console.log("[v0] Loading products from API...");
+                const response = await fetch(`${API_BASE_URL}/products`);
+                
+                if (!response.ok) {
+                    throw new Error('Gagal memuat data produk');
+                }
+                
+                products = await response.json();
+                console.log("[v0] Products loaded:", products);
+                filteredProducts = [...products];
+                renderProducts();
+            } catch (error) {
+                console.error('[v0] Error loading products:', error);
+                document.getElementById('productsGrid').innerHTML = '<p style="text-align:center;color:#ef4444;">Gagal memuat data produk dari database</p>';
+            }
+        }
+
+        async function loadServices() {
+            try {
+                console.log("[v0] Loading services from API...");
+                const response = await fetch(`${API_BASE_URL}/layanan`);
+                
+                if (!response.ok) {
+                    throw new Error('Gagal memuat data layanan');
+                }
+                
+                services = await response.json();
+                console.log("[v0] Services loaded:", services);
+                filteredServices = [...services];
                 renderServices();
+            } catch (error) {
+                console.error('[v0] Error loading services:', error);
+                document.getElementById('servicesGrid').innerHTML = '<p style="text-align:center;color:#ef4444;">Gagal memuat data layanan dari database</p>';
             }
         }
 
@@ -925,16 +949,22 @@
             const grid = document.getElementById('productsGrid');
             grid.innerHTML = '';
             
+            if (filteredProducts.length === 0) {
+                grid.innerHTML = '<p style="text-align:center;color:#6b7280;">Tidak ada produk tersedia</p>';
+                return;
+            }
+            
             filteredProducts.forEach(product => {
+                const productImage = product.gambar ? `<img src="${product.gambar}" style="width:100%;height:100%;object-fit:cover;">` : '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:3rem;">📦</div>';
                 const card = `
                     <div class="product-card">
-                        <div class="product-image">${product.image}</div>
+                        <div class="product-image">${productImage}</div>
                         <div class="product-info">
-                            <div class="product-category">${product.category}</div>
-                            <h3 class="product-name">${product.name}</h3>
+                            <div class="product-category">Produk</div>
+                            <h3 class="product-name">${product.nama}</h3>
                             <div class="product-details">
-                                <span class="product-price">Rp ${product.price.toLocaleString('id-ID')}</span>
-                                  <span class="product-stock">Stok: ${product.stock}</span>
+                                <span class="product-price">Rp ${parseInt(product.harga).toLocaleString('id-ID')}</span>
+                                <span class="product-stock">Stok: ${product.stok}</span>
                             </div>
                         </div>
                     </div>
@@ -948,17 +978,21 @@
             const grid = document.getElementById('servicesGrid');
             grid.innerHTML = '';
             
+            if (filteredServices.length === 0) {
+                grid.innerHTML = '<p style="text-align:center;color:#6b7280;">Tidak ada layanan tersedia</p>';
+                return;
+            }
+            
             filteredServices.forEach(service => {
                 const card = `
                     <div class="product-card">
-                        <div class="product-image">${service.image}</div>
+                        <div class="product-image" style="font-size:3rem;">🛎️</div>
                         <div class="product-info">
-                            <div class="product-category">${service.category}</div>
-                            <h3 class="product-name">${service.name}</h3>
-                            <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 0.5rem;">${service.description}</p>
+                            <div class="product-category">Layanan</div>
+                            <h3 class="product-name">${service.nama}</h3>
+                            <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 0.5rem;">Layanan profesional untuk hewan kesayangan Anda</p>
                             <div class="product-details">
-                                <span class="product-price">Rp ${service.price.toLocaleString('id-ID')}</span>
-                                
+                                <span class="product-price">Rp ${parseInt(service.harga).toLocaleString('id-ID')}</span>
                             </div>
                         </div>
                     </div>
@@ -971,8 +1005,7 @@
         function filterProducts() {
             const searchValue = document.getElementById('searchInput').value.toLowerCase();
             filteredProducts = products.filter(product => 
-                product.name.toLowerCase().includes(searchValue) ||
-                product.category.toLowerCase().includes(searchValue)
+                product.nama.toLowerCase().includes(searchValue)
             );
             sortProducts();
         }
@@ -984,11 +1017,15 @@
             filteredProducts.sort((a, b) => {
                 switch(sortValue) {
                     case 'price-asc':
-                        return a.price - b.price;
+                        return parseInt(a.harga) - parseInt(b.harga);
                     case 'price-desc':
-                        return b.price - a.price;
+                        return parseInt(b.harga) - parseInt(a.harga);
+                    case 'stock-asc':
+                        return parseInt(a.stok) - parseInt(b.stok);
+                    case 'stock-desc':
+                        return parseInt(b.stok) - parseInt(a.stok);
                     default:
-                        return a.name.localeCompare(b.name);
+                        return a.nama.localeCompare(b.nama);
                 }
             });
             
@@ -999,8 +1036,7 @@
         function filterServices() {
             const searchValue = document.getElementById('searchServiceInput').value.toLowerCase();
             filteredServices = services.filter(service => 
-                service.name.toLowerCase().includes(searchValue) ||
-                service.category.toLowerCase().includes(searchValue)
+                service.nama.toLowerCase().includes(searchValue)
             );
             sortServices();
         }
@@ -1012,21 +1048,22 @@
             filteredServices.sort((a, b) => {
                 switch(sortValue) {
                     case 'price-asc':
-                        return a.price - b.price;
+                        return parseInt(a.harga) - parseInt(b.harga);
                     case 'price-desc':
-                        return b.price - a.price;
+                        return parseInt(b.harga) - parseInt(a.harga);
                     default:
-                        return a.name.localeCompare(b.name);
+                        return a.nama.localeCompare(b.nama);
                 }
             });
             
             renderServices();
         }
 
-        // Initialize
+        // Initialize - load data when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            renderProducts();
-            renderServices();
+            console.log("[v0] Page loaded, initializing...");
+            loadProducts();
+            loadServices();
         });
     </script>
 </body>
