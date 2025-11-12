@@ -2,11 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
+Route::get('/owner', function () {
     return view('dashboardOwner');
 });
 
-Route::get('/homebefore', function () {
+Route::get('/', function () {
     return view('homebefore');
 });
 
@@ -37,6 +37,18 @@ Route::get('/homeCustomer', function () {
 
 Route::get('/homePegawai', function () {
     return view('homePegawai');
+});
+
+Route::get('/entriTransaksiProduk', function () {
+    return view('entriTransaksiProduk');
+});
+
+Route::get('/entriTransaksiLayanan', function () {
+    return view('entriTransaksiLayanan');
+});
+=======
+Route::get('/transaksiPenjualan', function () {
+    return view('transaksiPenjualan');
 });
 
 Route::get('/homeTransaksi', function () {
