@@ -35,7 +35,7 @@
     }
 
     .container { 
-      max-width: 1800px; 
+      max-width: 1600px; 
       margin: 0 auto; 
       background: var(--bg-white);
       border-radius: 8px;
@@ -58,38 +58,8 @@
       color: var(--text-primary);
     }
 
-    .debug-toggle {
-      padding: 4px 12px;
-      background: #f3f4f6;
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-      font-size: 0.75rem;
-      cursor: pointer;
-    }
-
-    .debug-panel {
-      display: none;
-      padding: 12px 24px;
-      background: #1f2937;
-      color: #10b981;
-      font-family: 'Courier New', monospace;
-      font-size: 0.75rem;
-      max-height: 200px;
-      overflow-y: auto;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .debug-panel.show {
-      display: block;
-    }
-
-    .debug-line {
-      margin: 2px 0;
-    }
-
     .stats-bar {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      display: flex;
       gap: 16px;
       padding: 16px 24px;
       background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
@@ -97,6 +67,7 @@
     }
 
     .stat-item {
+      flex: 1;
       padding: 12px;
       background: var(--bg-white);
       border-radius: 6px;
@@ -210,7 +181,7 @@
       color: var(--text-secondary);
     }
 
-    select, input {
+    select {
       padding: 6px 12px;
       border: 1px solid var(--border-color);
       border-radius: 6px;
@@ -219,7 +190,7 @@
       cursor: pointer;
     }
 
-    select:focus, input:focus {
+    select:focus {
       outline: none;
       border-color: var(--primary-color);
       box-shadow: 0 0 0 3px rgba(217,119,6,0.1);
@@ -243,45 +214,10 @@
       color: #92400e;
     }
 
-    .status-dropdown {
-      padding: 6px 8px;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-      background: white;
-      min-width: 120px;
-      transition: all 0.2s;
-    }
-
-    .status-dropdown:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(217,119,6,0.1);
-    }
-
-    .status-dropdown:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .status-dropdown.lunas {
-      background: #d1fae5;
-      color: #065f46;
-      border-color: var(--success-color);
-    }
-
-    .status-dropdown.belum-lunas {
-      background: #fef3c7;
-      color: #92400e;
-      border-color: var(--warning-color);
-    }
-
     .table-container {
       overflow-x: auto;
       overflow-y: auto;
-      max-height: calc(100vh - 450px);
+      max-height: calc(100vh - 350px);
     }
 
     table {
@@ -312,6 +248,7 @@
       padding: 12px 16px;
       border-bottom: 1px solid var(--border-color);
       color: var(--text-primary);
+      white-space: nowrap;
     }
 
     tbody tr {
@@ -320,7 +257,6 @@
 
     tbody tr:hover {
       background: #fef3c7;
-      cursor: pointer;
     }
 
     tbody tr:nth-child(even) {
@@ -343,16 +279,6 @@
       color: var(--text-secondary);
     }
 
-    .loading.spinner {
-      font-size: 2rem;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
     .no-data {
       text-align: center;
       padding: 40px;
@@ -365,18 +291,6 @@
       margin: 16px 24px;
       border-radius: 6px;
       display: none;
-      animation: slideDown 0.3s ease-out;
-    }
-
-    @keyframes slideDown {
-      from {
-        transform: translateY(-10px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
     }
 
     .alert.show { display: block; }
@@ -432,14 +346,14 @@
       overflow-y: auto;
     }
 
-    .detail-grid {
+    .detail-grid, .form-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 16px;
       margin-bottom: 24px;
     }
 
-    .detail-item label {
+    .detail-item label, .form-group label {
       display: block;
       font-size: 0.75rem;
       color: var(--text-secondary);
@@ -452,10 +366,31 @@
       font-size: 0.875rem;
       color: var(--text-primary);
       font-weight: 500;
-      word-break: break-word;
-      padding: 8px;
-      background: var(--bg-light);
-      border-radius: 4px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(217,119,6,0.1);
+    }
+
+    .error-msg {
+      color: var(--danger-color);
+      font-size: 0.75rem;
+      margin-top: 4px;
     }
 
     .close {
@@ -479,6 +414,28 @@
       color: var(--text-primary);
     }
 
+    .summary-box {
+      margin-top: 16px;
+      padding: 16px;
+      background: var(--bg-light);
+      border-radius: 6px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.875rem;
+    }
+
+    .summary-row.total {
+      font-size: 1rem;
+      font-weight: 700;
+      padding-top: 8px;
+      border-top: 2px solid var(--border-color);
+      margin-top: 8px;
+    }
+
     .modal-footer {
       padding: 16px 24px;
       border-top: 1px solid var(--border-color);
@@ -487,26 +444,8 @@
       gap: 8px;
     }
 
-    .pagination {
-      display: flex;
-      justify-content: center;
-      gap: 4px;
-      padding: 16px 24px;
-      border-top: 1px solid var(--border-color);
-    }
-
-    .pagination button {
-      padding: 6px 12px;
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.875rem;
-    }
-
-    .pagination button.active {
-      background: var(--primary-color);
-      color: white;
-      border-color: var(--primary-color);
+    .full-width {
+      grid-column: 1 / -1;
     }
 
     .search-box {
@@ -529,17 +468,12 @@
       box-shadow: 0 0 0 3px rgba(217,119,6,0.1);
     }
 
-    .info-box {
-      padding: 12px 16px;
-      background: #dbeafe;
-      border-left: 4px solid var(--info-color);
-      border-radius: 4px;
-      font-size: 0.875rem;
-      margin-bottom: 16px;
-    }
-
-    .info-box strong {
-      color: var(--text-primary);
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
     }
   </style>
 </head>
@@ -547,12 +481,7 @@
   <div class="container">
     <div class="header">
       <h1>🐾 Transaksi Layanan</h1>
-      <button class="debug-toggle" onclick="toggleDebug()">🔍 Debug</button>
     </div>
-
-    <div id="debugPanel" class="debug-panel"></div>
-
-    <div id="alertBox" class="alert"></div>
 
     <div class="stats-bar">
       <div class="stat-item">
@@ -571,55 +500,54 @@
         <label>Total Pendapatan</label>
         <div class="value" id="statPendapatan">Rp 0</div>
       </div>
-      <div class="stat-item">
-        <label>Rata-rata Transaksi</label>
-        <div class="value" id="statAverage">Rp 0</div>
-      </div>
     </div>
+
+    <div id="alertBox" class="alert"></div>
 
     <div class="toolbar">
       <div class="filter-group">
-        <label>🔍 Status:</label>
+        <label>🔍 Filter Status:</label>
         <select id="filterStatus" onchange="applyFilter()">
-          <option value="">Semua</option>
+          <option value="">Semua Status</option>
           <option value="Lunas">Lunas</option>
           <option value="Belum Lunas">Belum Lunas</option>
         </select>
       </div>
 
-      <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Cari..." onkeyup="applyFilter()">
-      </div>
+      
 
-      <button class="btn" onclick="resetFilter()">🔄 Reset</button>
-      <button class="btn btn-primary" onclick="reloadData()">🔃 Reload</button>
+      <div style="flex: 1;"></div>
+
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Cari transaksi..." onkeyup="applyFilter()">
+      </div>
     </div>
 
     <div class="table-container">
       <table id="transactionTable">
         <thead>
           <tr>
-            <th>#</th>
-            <th>No. Transaksi</th>
-            <th>Customer ID</th>
-            <th>CS ID</th>
-            <th>Kasir ID</th>
-            <th>Tanggal</th>
-            <th>Subtotal</th>
-            <th>Diskon</th>
-            <th>Total Bayar</th>
-            <th>Status</th>
+            <th></th>
+            <th>id_transaksi_layanan</th>
+            <th>id_customer</th>
+            <th>id_pegawai_cs</th>
+            <th>id_pegawai_kasir</th>
+            <th>tanggal_transaksi</th>
+            <th>subtotal</th>
+            <th>diskon</th>
+            <th>total_bayar</th>
+            <th>status_pembayaran</th>
+            <th>status_layanan</th>
           </tr>
         </thead>
         <tbody id="tableBody">
           <tr>
-            <td colspan="10" class="loading"><span class="spinner">⏳</span> Memuat data...</td>
+            <td colspan="10" class="loading">Memuat data...</td>
           </tr>
         </tbody>
       </table>
     </div>
-
-    <div class="pagination" id="pagination"></div>
   </div>
 
   <!-- Modal Detail -->
@@ -630,7 +558,64 @@
         <button class="close" onclick="closeModal('detailModal')">×</button>
       </div>
       <div class="modal-body">
-        <div class="detail-grid" id="detailGrid"></div>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>No. Transaksi</label>
+            <div class="value" id="detailNoTransaksi">-</div>
+          </div>
+          <div class="detail-item">
+            <label>Tanggal Transaksi</label>
+            <div class="value" id="detailTanggal">-</div>
+          </div>
+          <div class="detail-item">
+            <label>Customer</label>
+            <div class="value" id="detailCustomer">-</div>
+          </div>
+          <div class="detail-item">
+            <label>Customer Service</label>
+            <div class="value" id="detailCS">-</div>
+          </div>
+          <div class="detail-item">
+            <label>Kasir</label>
+            <div class="value" id="detailKasir">-</div>
+          </div>
+          <div class="detail-item">
+            <label>Status Pembayaran</label>
+            <div class="value" id="detailStatus">-</div>
+          </div>
+        </div>
+
+        <h3 style="margin-bottom: 12px; font-size: 1rem;">Detail Layanan</h3>
+        <div style="overflow-x: auto;">
+          <table style="font-size: 0.875rem;">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama Layanan</th>
+                <th>Hewan</th>
+                <th>Harga</th>
+                <th>Jumlah</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody id="detailServiceTable"></tbody>
+          </table>
+        </div>
+
+        <div class="summary-box">
+          <div class="summary-row">
+            <span>Subtotal:</span>
+            <strong id="detailSubtotal">Rp 0</strong>
+          </div>
+          <div class="summary-row">
+            <span>Diskon:</span>
+            <strong id="detailDiskon" style="color: var(--danger-color);">Rp 0</strong>
+          </div>
+          <div class="summary-row total">
+            <span>TOTAL:</span>
+            <strong id="detailTotal" style="color: var(--primary-color);">Rp 0</strong>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn" onclick="closeModal('detailModal')">Tutup</button>
@@ -639,105 +624,118 @@
     </div>
   </div>
 
+  <!-- Modal Edit -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Edit Transaksi Layanan</h2>
+        <button class="close" onclick="closeModal('editModal')">×</button>
+      </div>
+      <form id="editForm" onsubmit="saveEdit(event)">
+        <div class="modal-body">
+          <input type="hidden" id="editId">
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="editCustomer">Customer ID *</label>
+              <input type="number" id="editCustomer" required>
+              <div class="error-msg" id="errorCustomer"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="editCS">CS (Pegawai ID) *</label>
+              <input type="number" id="editCS" required>
+              <div class="error-msg" id="errorCS"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="editKasir">Kasir (Pegawai ID) *</label>
+              <input type="number" id="editKasir" required>
+              <div class="error-msg" id="errorKasir"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="editTanggal">Tanggal Transaksi *</label>
+              <input type="datetime-local" id="editTanggal" required>
+              <div class="error-msg" id="errorTanggal"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="editSubtotal">Subtotal (Rp) *</label>
+              <input type="number" id="editSubtotal" step="0.01" required>
+              <div class="error-msg" id="errorSubtotal"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="editDiskon">Diskon (Rp)</label>
+              <input type="number" id="editDiskon" step="0.01" value="0">
+              <div class="error-msg" id="errorDiskon"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="editTotalBayar">Total Bayar (Rp) *</label>
+              <input type="number" id="editTotalBayar" step="0.01" required>
+              <div class="error-msg" id="errorTotalBayar"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="editStatus">Status Pembayaran *</label>
+              <select id="editStatus" required>
+                <option value="Lunas">Lunas</option>
+                <option value="Belum Lunas">Belum Lunas</option>
+              </select>
+              <div class="error-msg" id="errorStatus"></div>
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <label>
+              <input type="checkbox" id="autoCalculate" checked onchange="toggleAutoCalculate()">
+              Hitung otomatis Total Bayar (Subtotal - Diskon)
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn" onclick="closeModal('editModal')">Batal</button>
+          <button type="submit" class="btn btn-primary" id="saveBtn">
+            💾 Simpan Perubahan
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
     const API_BASE_URL = 'http://localhost:8000/api';
-    const ITEMS_PER_PAGE = 10;
-    const DEBUG = true;
-
     let allData = [];
     let filteredData = [];
-    let currentPage = 1;
-
-    function debugLog(message, data = null) {
-      const panel = document.getElementById('debugPanel');
-      const timestamp = new Date().toLocaleTimeString();
-      const log = `[${timestamp}] ${message}${data ? ': ' + JSON.stringify(data).substring(0, 100) : ''}`;
-      
-      if (DEBUG) {
-        console.log('[v0]', message, data);
-        const line = document.createElement('div');
-        line.className = 'debug-line';
-        line.textContent = log;
-        panel.appendChild(line);
-        panel.scrollTop = panel.scrollHeight;
-      }
-    }
-
-    function toggleDebug() {
-      const panel = document.getElementById('debugPanel');
-      panel.classList.toggle('show');
-    }
+    let currentFilter = '';
 
     async function loadData() {
       const tableBody = document.getElementById('tableBody');
       
       try {
-        debugLog('Memulai fetch data', API_BASE_URL);
-        
         const response = await fetch(`${API_BASE_URL}/transaksi-layanan`);
         
-        debugLog('Response status', response.status);
-        
         if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          throw new Error('Gagal memuat data dari server');
         }
         
-        const rawData = await response.json();
-        debugLog('Data diterima', { type: typeof rawData, length: rawData.length || 'N/A' });
-        
-        // Validasi format data
-        if (!Array.isArray(rawData)) {
-          if (rawData.data && Array.isArray(rawData.data)) {
-            allData = rawData.data;
-          } else {
-            throw new Error('Data bukan array. Format: ' + typeof rawData);
-          }
-        } else {
-          allData = rawData;
-        }
-        
-        debugLog('Data berhasil diproses', `Total: ${allData.length} items`);
-        
-        // Validasi setiap item
-        allData = allData.map((item, idx) => {
-          if (!item.id_transaksi_layanan) {
-            debugLog(`Warning: Item ${idx} tidak punya id_transaksi_layanan`, item);
-          }
-          return {
-            id: item.id || idx, // Primary key (auto increment)
-            id_transaksi_layanan: item.id_transaksi_layanan || `UNKNOWN_${idx}`,
-            id_customer: item.id_customer || 'N/A',
-            id_pegawai_cs: item.id_pegawai_cs || 'N/A',
-            id_pegawai_kasir: item.id_pegawai_kasir || 'N/A',
-            tanggal_transaksi: item.tanggal_transaksi || new Date().toISOString(),
-            subtotal: parseFloat(item.subtotal) || 0,
-            diskon: parseFloat(item.diskon) || 0,
-            total_bayar: parseFloat(item.total_bayar) || 0,
-            status_pembayaran: item.status_pembayaran || 'Belum Lunas'
-          };
-        });
-        
+        allData = await response.json();
         filteredData = [...allData];
-        currentPage = 1;
         updateStats();
-        renderTable();
-        showAlert(`Berhasil memuat ${allData.length} transaksi`, 'success');
+        renderTable(filteredData);
         
       } catch (error) {
-        debugLog('Error loading data', error.message);
-        console.error('[v0] Full error:', error);
-        
+        console.error('Error:', error);
         tableBody.innerHTML = `
           <tr>
-            <td colspan="10" class="no-data" style="color: var(--danger-color); text-align: left; white-space: normal;">
-              <strong>❌ Error:</strong> ${error.message}<br>
-              <small>API URL: ${API_BASE_URL}<br>
-              Tips: Pastikan server backend berjalan dan CORS diizinkan</small>
+            <td colspan="10" class="no-data" style="color: var(--danger-color);">
+              ⚠️ ${error.message}<br>
+              <small>Pastikan server backend sudah berjalan di ${API_BASE_URL}</small>
             </td>
           </tr>
         `;
-        
-        showAlert(`Error: ${error.message}`, 'error');
       }
     }
 
@@ -747,92 +745,57 @@
       const belumLunas = allData.filter(t => t.status_pembayaran === 'Belum Lunas').length;
       const pendapatan = allData
         .filter(t => t.status_pembayaran === 'Lunas')
-        .reduce((sum, t) => sum + (t.total_bayar || 0), 0);
-      const rata2 = total > 0 ? allData.reduce((sum, t) => sum + (t.total_bayar || 0), 0) / total : 0;
+        .reduce((sum, t) => sum + parseFloat(t.total_bayar || 0), 0);
 
       document.getElementById('statTotal').textContent = total;
       document.getElementById('statLunas').textContent = lunas;
       document.getElementById('statBelumLunas').textContent = belumLunas;
       document.getElementById('statPendapatan').textContent = formatCurrency(pendapatan);
-      document.getElementById('statAverage').textContent = formatCurrency(rata2);
-
-      debugLog('Stats updated', { total, lunas, belumLunas, pendapatan, rata2 });
     }
 
-    function renderTable() {
+    function renderTable(data) {
       const tableBody = document.getElementById('tableBody');
-      const start = (currentPage - 1) * ITEMS_PER_PAGE;
-      const end = start + ITEMS_PER_PAGE;
-      const pageData = filteredData.slice(start, end);
       
-      if (pageData.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="10" class="no-data">Tidak ada data</td></tr>';
-        renderPagination();
+      if (data.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="10" class="no-data">Tidak ada data transaksi</td></tr>';
         return;
       }
 
       tableBody.innerHTML = '';
       
-      pageData.forEach((row, index) => {
+      data.forEach((row, index) => {
         const tr = document.createElement('tr');
-        const statusClass = row.status_pembayaran === 'Lunas' ? 'lunas' : 'belum-lunas';
+        const statusBadge = row.status_pembayaran === 'Lunas' 
+          ? '<span class="badge badge-success">✅ Lunas</span>'
+          : '<span class="badge badge-warning">⏳ Belum Lunas</span>';
         
         tr.innerHTML = `
-          <td>${start + index + 1}</td>
-          <td><strong>${row.id_transaksi_layanan}</strong></td>
-          <td>${row.id_customer}</td>
-          <td>${row.id_pegawai_cs}</td>
-          <td>${row.id_pegawai_kasir}</td>
+          <td>
+            <div class="actions-cell">
+              <button class="btn btn-icon btn-edit" onclick="editRow('${row.id_transaksi_layanan}')" title="Edit">
+                ✏️
+              </button>
+              <button class="btn btn-icon btn-delete" onclick="deleteRow('${row.id_transaksi_layanan}')" title="Delete">
+                🗑️
+              </button>
+            </div>
+          </td>
+          <td><strong>${row.id_transaksi_layanan || '-'}</strong></td>
+          <td>${row.id_customer || '-'}</td>
+          <td>${row.id_pegawai_cs || '-'}</td>
+          <td>${row.id_pegawai_kasir || '-'}</td>
           <td>${formatDateTime(row.tanggal_transaksi)}</td>
           <td>${formatCurrency(row.subtotal)}</td>
           <td>${formatCurrency(row.diskon)}</td>
           <td><strong>${formatCurrency(row.total_bayar)}</strong></td>
-          <td>
-            <select class="status-dropdown ${statusClass}" 
-                    data-id="${row.id}" 
-                    data-transaction-code="${row.id_transaksi_layanan}"
-                    onchange="updateStatus(this, ${row.id}, '${row.id_transaksi_layanan}')"
-                    onclick="event.stopPropagation()">
-              <option value="Lunas" ${row.status_pembayaran === 'Lunas' ? 'selected' : ''}>✅ Lunas</option>
-              <option value="Belum Lunas" ${row.status_pembayaran === 'Belum Lunas' ? 'selected' : ''}>⏳ Belum Lunas</option>
-            </select>
-          </td>
+          <td>${statusBadge}</td>
+          <td>${statusBadge}</td>
         `;
         
-        // Event untuk view detail hanya pada row, bukan dropdown
-        tr.onclick = (e) => {
-          if (!e.target.classList.contains('status-dropdown')) {
-            viewDetail(row);
-          }
-        };
+        tr.ondblclick = () => viewDetail(row.id_transaksi_layanan);
+        
         tableBody.appendChild(tr);
       });
-
-      renderPagination();
-    }
-
-    function renderPagination() {
-      const pagination = document.getElementById('pagination');
-      const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
-      
-      if (totalPages <= 1) {
-        pagination.innerHTML = '';
-        return;
-      }
-
-      pagination.innerHTML = '';
-      
-      for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement('button');
-        btn.textContent = i;
-        btn.className = i === currentPage ? 'active' : '';
-        btn.onclick = () => {
-          currentPage = i;
-          renderTable();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-        pagination.appendChild(btn);
-      }
     }
 
     function applyFilter() {
@@ -842,187 +805,258 @@
       filteredData = allData.filter(row => {
         const matchStatus = !statusFilter || row.status_pembayaran === statusFilter;
         const matchSearch = !searchValue || 
-          [
-            row.id_transaksi_layanan,
-            row.id_customer,
-            row.id_pegawai_cs,
-            row.id_pegawai_kasir
-          ].some(val => String(val).toLowerCase().includes(searchValue));
+          Object.values(row).some(val => 
+            String(val).toLowerCase().includes(searchValue)
+          );
         
         return matchStatus && matchSearch;
       });
       
-      currentPage = 1;
-      renderTable();
-      debugLog('Filter applied', { statusFilter, searchValue, result: filteredData.length });
+      currentFilter = statusFilter;
+      renderTable(filteredData);
+    }
+
+    function filterByStatus(status) {
+      document.getElementById('filterStatus').value = status;
+      applyFilter();
+      showAlert(`Filter: Menampilkan transaksi ${status}`, 'success');
     }
 
     function resetFilter() {
       document.getElementById('filterStatus').value = '';
       document.getElementById('searchInput').value = '';
       filteredData = [...allData];
-      currentPage = 1;
-      renderTable();
+      currentFilter = '';
+      renderTable(filteredData);
       showAlert('Filter direset', 'success');
     }
 
-    function reloadData() {
-      document.getElementById('tableBody').innerHTML = '<tr><td colspan="10" class="loading">Reload data...</td></tr>';
-      loadData();
+    function formatDateTime(dateString) {
+      if (!dateString) return '-';
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      return `${year}-${month}-${day} ${hours}:${minutes}:00`;
     }
 
-    async function updateStatus(selectElement, id, transactionCode) {
-      const newStatus = selectElement.value;
-      const oldStatus = selectElement.className.includes('lunas') ? 'Lunas' : 'Belum Lunas';
-      const oldClass = selectElement.className;
-      
+    function formatCurrency(amount) {
+      if (amount === null || amount === undefined) return 'Rp 0';
+      return 'Rp ' + new Intl.NumberFormat('id-ID', {
+        style: 'decimal',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(amount);
+    }
+
+    function formatDateTimeForInput(dateString) {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+
+    async function viewDetail(id) {
       try {
-        debugLog('Updating status', { id, transactionCode, oldStatus, newStatus });
+        const response = await fetch(`${API_BASE_URL}/transaksi-layanan/${id}`);
+        if (!response.ok) throw new Error('Gagal memuat detail transaksi');
         
-        // Update UI immediately for better UX
-        selectElement.disabled = true;
-        selectElement.className = 'status-dropdown ' + (newStatus === 'Lunas' ? 'lunas' : 'belum-lunas');
+        const data = await response.json();
         
-        // Find the transaction data from allData using ID (primary key)
-        const transaction = allData.find(item => item.id === id);
+        document.getElementById('detailNoTransaksi').textContent = data.id_transaksi_layanan || '-';
+        document.getElementById('detailTanggal').textContent = formatDateTime(data.tanggal_transaksi);
+        document.getElementById('detailCustomer').textContent = data.nama_customer || data.id_customer || '-';
+        document.getElementById('detailCS').textContent = data.nama_cs || data.id_pegawai_cs || '-';
+        document.getElementById('detailKasir').textContent = data.nama_kasir || data.id_pegawai_kasir || '-';
         
-        if (!transaction) {
-          throw new Error('Data transaksi tidak ditemukan di cache lokal');
+        const statusBadge = data.status_pembayaran === 'Lunas' 
+          ? '<span class="badge badge-success">✅ Lunas</span>'
+          : '<span class="badge badge-warning">⏳ Belum Lunas</span>';
+        document.getElementById('detailStatus').innerHTML = statusBadge;
+
+        const detailTable = document.getElementById('detailServiceTable');
+        detailTable.innerHTML = '';
+        
+        if (data.detail_layanan && data.detail_layanan.length > 0) {
+          data.detail_layanan.forEach((item, index) => {
+            const row = `
+              <tr>
+                <td>${index + 1}</td>
+                <td>${item.nama_layanan || '-'}</td>
+                <td>${item.nama_hewan || '-'}</td>
+                <td>${formatCurrency(item.harga)}</td>
+                <td>${item.jumlah || 1}</td>
+                <td>${formatCurrency(item.subtotal)}</td>
+              </tr>
+            `;
+            detailTable.innerHTML += row;
+          });
+        } else {
+          detailTable.innerHTML = '<tr><td colspan="6" style="text-align:center;">Tidak ada detail layanan</td></tr>';
         }
+
+        document.getElementById('detailSubtotal').textContent = formatCurrency(data.subtotal);
+        document.getElementById('detailDiskon').textContent = '- ' + formatCurrency(data.diskon);
+        document.getElementById('detailTotal').textContent = formatCurrency(data.total_bayar);
+
+        document.getElementById('detailModal').style.display = 'block';
         
-        // Prepare full data for PUT request (required by backend)
-        const updateData = {
-          id_customer: parseInt(transaction.id_customer) || 0,
-          id_pegawai_cs: parseInt(transaction.id_pegawai_cs) || 0,
-          id_pegawai_kasir: parseInt(transaction.id_pegawai_kasir) || 0,
-          tanggal_transaksi: transaction.tanggal_transaksi,
-          subtotal: parseFloat(transaction.subtotal) || 0,
-          diskon: parseFloat(transaction.diskon) || 0,
-          total_bayar: parseFloat(transaction.total_bayar) || 0,
-          status_pembayaran: newStatus
-        };
+      } catch (error) {
+        showAlert('Error: ' + error.message, 'error');
+      }
+    }
+
+    async function editRow(id) {
+      try {
+        const transaction = allData.find(t => t.id_transaksi_layanan === id);
+        if (!transaction) {
+          throw new Error('Data transaksi tidak ditemukan');
+        }
+
+        document.getElementById('editId').value = transaction.id_transaksi_layanan;
+        document.getElementById('editCustomer').value = transaction.id_customer;
+        document.getElementById('editCS').value = transaction.id_pegawai_cs;
+        document.getElementById('editKasir').value = transaction.id_pegawai_kasir;
+        document.getElementById('editTanggal').value = formatDateTimeForInput(transaction.tanggal_transaksi);
+        document.getElementById('editSubtotal').value = transaction.subtotal;
+        document.getElementById('editDiskon').value = transaction.diskon || 0;
+        document.getElementById('editTotalBayar').value = transaction.total_bayar;
+        document.getElementById('editStatus').value = transaction.status_pembayaran || 'Lunas';
+        document.getElementById('editStatus').value = transaction.status_layanan || 'Selesai';
+
+        clearFormErrors();
+        document.getElementById('editModal').style.display = 'block';
         
-        debugLog('Sending PUT request', { url: `${API_BASE_URL}/transaksi-layanan/${id}`, data: updateData });
-        
+      } catch (error) {
+        showAlert('Error: ' + error.message, 'error');
+      }
+    }
+
+    async function saveEdit(event) {
+      event.preventDefault();
+      
+      clearFormErrors();
+      
+      const id = document.getElementById('editId').value;
+      const data = {
+        id_customer: parseInt(document.getElementById('editCustomer').value),
+        id_pegawai_cs: parseInt(document.getElementById('editCS').value),
+        id_pegawai_kasir: parseInt(document.getElementById('editKasir').value),
+        tanggal_transaksi: document.getElementById('editTanggal').value,
+        subtotal: parseFloat(document.getElementById('editSubtotal').value),
+        diskon: parseFloat(document.getElementById('editDiskon').value) || 0,
+        total_bayar: parseFloat(document.getElementById('editTotalBayar').value),
+        status_pembayaran: document.getElementById('editStatus').value
+      };
+
+      const saveBtn = document.getElementById('saveBtn');
+      saveBtn.disabled = true;
+      saveBtn.textContent = '⏳ Menyimpan...';
+
+      try {
         const response = await fetch(`${API_BASE_URL}/transaksi-layanan/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json',
+            'Accept': 'application/json'
           },
-          body: JSON.stringify(updateData)
+          body: JSON.stringify(data)
         });
-        
-        debugLog('Response received', { status: response.status, ok: response.ok, statusText: response.statusText });
-        
-        // Check if response is JSON
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          const errorText = await response.text();
-          debugLog('Non-JSON response', { status: response.status, contentType, body: errorText.substring(0, 300) });
-          throw new Error(`Backend mengembalikan HTML, bukan JSON. Status: ${response.status}. Periksa debug panel.`);
-        }
-        
-        const result = await response.json();
-        
+
         if (!response.ok) {
-          debugLog('API error response', result);
-          // Handle validation errors
-          if (result.errors) {
-            const errorMessages = Object.values(result.errors).flat().join(', ');
-            throw new Error(`Validasi gagal: ${errorMessages}`);
-          }
-          throw new Error(result.message || `HTTP ${response.status}`);
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Gagal menyimpan perubahan');
         }
-        
-        debugLog('Status updated successfully', result);
-        
-        // Update data di array lokal
-        const dataIndex = allData.findIndex(item => item.id === id);
-        if (dataIndex !== -1) {
-          allData[dataIndex].status_pembayaran = newStatus;
-          
-          // Update juga di filteredData
-          const filteredIndex = filteredData.findIndex(item => item.id === id);
-          if (filteredIndex !== -1) {
-            filteredData[filteredIndex].status_pembayaran = newStatus;
-          }
-        }
-        
-        // Update statistics
-        updateStats();
-        
-        showAlert(`✅ Status transaksi ${transactionCode} berhasil diubah menjadi "${newStatus}"`, 'success');
+
+        showAlert('✅ Transaksi berhasil diperbarui!', 'success');
+        closeModal('editModal');
+        await loadData();
         
       } catch (error) {
-        debugLog('Error updating status', error.message);
-        console.error('[v0] Update error:', error);
-        
-        // Rollback UI jika gagal
-        selectElement.className = oldClass;
-        selectElement.value = oldStatus;
-        
-        showAlert(`❌ Gagal mengubah status: ${error.message}`, 'error');
+        showAlert('❌ Error: ' + error.message, 'error');
       } finally {
-        selectElement.disabled = false;
+        saveBtn.disabled = false;
+        saveBtn.textContent = '💾 Simpan Perubahan';
       }
     }
 
-    function viewDetail(row) {
-      const grid = document.getElementById('detailGrid');
+    async function deleteRow(id) {
+      const transaction = allData.find(t => t.id_transaksi_layanan === id);
+      if (!transaction) {
+        showAlert('Data transaksi tidak ditemukan', 'error');
+        return;
+      }
+
+      if (!confirm(`⚠️ Yakin ingin menghapus transaksi:\n${id}?\n\nTindakan ini tidak dapat dibatalkan!`)) {
+        return;
+      }
       
-      const fields = [
-        { label: 'No. Transaksi', key: 'id_transaksi_layanan' },
-        { label: 'Tanggal Transaksi', key: 'tanggal_transaksi', format: formatDateTime },
-        { label: 'Customer ID', key: 'id_customer' },
-        { label: 'Pegawai CS ID', key: 'id_pegawai_cs' },
-        { label: 'Pegawai Kasir ID', key: 'id_pegawai_kasir' },
-        { label: 'Subtotal', key: 'subtotal', format: formatCurrency },
-        { label: 'Diskon', key: 'diskon', format: formatCurrency },
-        { label: 'Total Bayar', key: 'total_bayar', format: formatCurrency },
-        { label: 'Status Pembayaran', key: 'status_pembayaran' }
-      ];
+      try {
+        const response = await fetch(`${API_BASE_URL}/transaksi-layanan/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Gagal menghapus transaksi');
+        }
+        
+        showAlert('✅ Transaksi berhasil dihapus!', 'success');
+        await loadData();
+        
+      } catch (error) {
+        showAlert('❌ Error: ' + error.message, 'error');
+      }
+    }
 
-      grid.innerHTML = fields.map(field => {
-        const value = row[field.key];
-        const displayValue = field.format ? field.format(value) : (value || 'N/A');
-        return `
-          <div class="detail-item">
-            <label>${field.label}</label>
-            <div class="value">${displayValue}</div>
-          </div>
-        `;
-      }).join('');
+    function toggleAutoCalculate() {
+      const autoCalc = document.getElementById('autoCalculate').checked;
+      const totalInput = document.getElementById('editTotalBayar');
+      
+      if (autoCalc) {
+        totalInput.readOnly = true;
+        totalInput.style.backgroundColor = '#f3f4f6';
+        calculateTotal();
+      } else {
+        totalInput.readOnly = false;
+        totalInput.style.backgroundColor = '';
+      }
+    }
 
-      document.getElementById('detailModal').style.display = 'block';
+    function calculateTotal() {
+      const autoCalc = document.getElementById('autoCalculate').checked;
+      if (!autoCalc) return;
+
+      const subtotal = parseFloat(document.getElementById('editSubtotal').value) || 0;
+      const diskon = parseFloat(document.getElementById('editDiskon').value) || 0;
+      const total = Math.max(0, subtotal - diskon);
+      
+      document.getElementById('editTotalBayar').value = total.toFixed(2);
+    }
+
+    document.getElementById('editSubtotal').addEventListener('input', calculateTotal);
+    document.getElementById('editDiskon').addEventListener('input', calculateTotal);
+
+    function clearFormErrors() {
+      document.querySelectorAll('.error-msg').forEach(el => el.textContent = '');
+      document.querySelectorAll('.form-group').forEach(el => el.classList.remove('error'));
     }
 
     function closeModal(modalId) {
       document.getElementById(modalId).style.display = 'none';
-    }
-
-    function formatDateTime(dateString) {
-      if (!dateString) return 'N/A';
-      try {
-        const date = new Date(dateString);
-        return date.toLocaleString('id-ID', { 
-          year: 'numeric', 
-          month: '2-digit', 
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit'
-        });
-      } catch (e) {
-        return String(dateString);
+      if (modalId === 'editModal') {
+        document.getElementById('editForm').reset();
+        clearFormErrors();
       }
-    }
-
-    function formatCurrency(amount) {
-      if (amount === null || amount === undefined || isNaN(amount)) return 'Rp 0';
-      return 'Rp ' + new Intl.NumberFormat('id-ID', {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0
-      }).format(amount);
     }
 
     function showAlert(message, type) {
@@ -1034,17 +1068,16 @@
 
     // Close modal when clicking outside
     window.onclick = function(event) {
-      const modals = document.querySelectorAll('.modal');
-      modals.forEach(modal => {
-        if (event.target === modal) {
-          modal.style.display = 'none';
-        }
-      });
-    };
+      if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+      }
+    }
 
-    // Load data pada saat page load
-    debugLog('Page loaded, starting data fetch...');
-    loadData();
+    // Initialize auto calculate on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      toggleAutoCalculate();
+      loadData();
+    });
   </script>
 </body>
 </html>
