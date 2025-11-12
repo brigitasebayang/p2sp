@@ -20,10 +20,10 @@
       --info-color: #3b82f6;
     }
 
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
@@ -34,9 +34,9 @@
       padding: 20px;
     }
 
-    .container { 
-      max-width: 1600px; 
-      margin: 0 auto; 
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
       background: var(--bg-white);
       border-radius: 8px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
@@ -97,9 +97,13 @@
       background: var(--primary-hover);
     }
 
-    .btn-edit { color: var(--primary-color); }
+    .btn-edit {
+      color: var(--primary-color);
+    }
 
-    .btn-delete { color: var(--danger-color); }
+    .btn-delete {
+      color: var(--danger-color);
+    }
 
     .btn-icon {
       width: 32px;
@@ -206,16 +210,20 @@
       display: none;
     }
 
-    .alert.show { display: block; }
-    .alert.success { 
-      background: #d1fae5; 
-      color: #065f46; 
-      border: 1px solid var(--success-color); 
+    .alert.show {
+      display: block;
     }
-    .alert.error { 
-      background: #fee2e2; 
-      color: #991b1b; 
-      border: 1px solid var(--danger-color); 
+
+    .alert.success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid var(--success-color);
+    }
+
+    .alert.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid var(--danger-color);
     }
 
     .search-box {
@@ -246,7 +254,6 @@
       color: var(--text-secondary);
     }
 
-    /* Modal Detail */
     .modal {
       display: none;
       position: fixed;
@@ -308,7 +315,6 @@
       font-weight: 500;
     }
 
-    /* Added form input styles for edit modal */
     .detail-item input,
     .detail-item select,
     .detail-item textarea {
@@ -380,7 +386,6 @@
       gap: 8px;
     }
 
-    /* Added loading state for buttons */
     .btn:disabled {
       opacity: 0.6;
       cursor: not-allowed;
@@ -493,7 +498,7 @@
     </div>
   </div>
 
-  <!-- Added edit modal for updating transactions -->
+  <!-- Modal Edit -->
   <div id="editModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -555,31 +560,51 @@
     let selectedRows = new Set();
     let currentEditId = null;
 
-    async function loadData() {
-      const tableBody = document.getElementById('tableBody');
-      
-      try {
-        const response = await fetch(`${API_BASE_URL}/transaksi-produk`);
-        
-        if (!response.ok) {
-          throw new Error('Gagal memuat data dari server');
-        }
-        
-        allData = await response.json();
-        renderTable(allData);
-        
-      } catch (error) {
-        console.error('Error:', error);
-        tableBody.innerHTML = `
-          <tr>
-            <td colspan="11" class="no-data" style="color: var(--danger-color);">
-              ⚠️ ${error.message}<br>
-              <small>Pastikan server backend sudah berjalan di ${API_BASE_URL}</small>
-            </td>
-          </tr>
-        `;
-      }
+let allDetails = [];
+
+async function loadData() {
+  const tableBody = document.getElementById('tableBody');
+
+  try {
+    const [response1, response2] = await Promise.all([
+      fetch(`${API_BASE_URL}/transaksi-produk`),
+      fetch(`${API_BASE_URL}/detailproducts`)
+    ]);
+
+    if (!response1.ok || !response2.ok) {
+      throw new Error('Gagal memuat data dari server');
     }
+
+    allData = await response1.json();
+    allDetails = await response2.json();
+
+    // 🔗 Gabungkan data transaksi dengan nama produk
+    allData = allData.map(transaksi => {
+  const detail = allDetails.find(d => d.id_transaksi_produk === transaksi.id_transaksi_produk);
+  return {
+    ...transaksi,
+    nama_produk: detail?.product?.nama || 'Tidak diketahui'
+  };
+});
+
+
+    console.log('[v1] Data Transaksi dengan Nama Produk:', allData);
+    renderTable(allData);
+
+  } catch (error) {
+    console.error('Error:', error);
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="11" class="no-data" style="color: var(--danger-color);">
+          ⚠️ ${error.message}<br>
+          <small>Pastikan server backend sudah berjalan di ${API_BASE_URL}</small>
+        </td>
+      </tr>
+    `;
+  }
+}
+
+
 
     function renderTable(data) {
       const tableBody = document.getElementById('tableBody');
@@ -601,14 +626,13 @@
               <button class="btn btn-icon btn-edit" onclick="editRow('${row.id_transaksi_produk}')" title="Edit">
                 ✏️
               </button>
-
               <button class="btn btn-icon btn-delete" onclick="deleteRow('${row.id_transaksi_produk}')" title="Delete">
                 🗑️
               </button>
             </div>
           </td>
           <td><strong>${row.id_transaksi_produk || '-'}</strong></td>
-          <td>${row.id_customer || '-'}</td>
+          <td>${row.nama_produk || '-'}</td>
           <td>${row.id_pegawai_cs || '-'}</td>
           <td>${row.id_pegawai_kasir || '-'}</td>
           <td>${formatDateTime(row.tanggal_transaksi)}</td>
@@ -746,7 +770,6 @@
           }
         }
 
-        // Populate form with current data
         document.getElementById('editCustomer').value = data.id_customer || '';
         document.getElementById('editCS').value = data.id_pegawai_cs || '';
         document.getElementById('editKasir').value = data.id_pegawai_kasir || '';
@@ -766,61 +789,81 @@
     }
 
     async function submitEdit() {
-      if (!currentEditId) {
-        showAlert('Error: ID tidak ditemukan', 'error');
-        return;
-      }
+  if (!currentEditId) {
+    showAlert('Error: ID transaksi tidak ditemukan', 'error');
+    return;
+  }
 
-      const btn = document.getElementById('submitEditBtn');
-      btn.disabled = true;
+  const btn = document.getElementById('submitEditBtn');
+  btn.disabled = true;
 
+  try {
+    console.log("[v0] Submitting edit for ID:", currentEditId);
+
+    // Ambil data dari form
+    const formData = {
+      id_customer: parseInt(document.getElementById('editCustomer').value),
+      id_pegawai_cs: parseInt(document.getElementById('editCS').value),
+      id_pegawai_kasir: parseInt(document.getElementById('editKasir').value),
+      tanggal_transaksi: document.getElementById('editTanggal').value,
+      subtotal: parseFloat(document.getElementById('editSubtotal').value),
+      diskon: parseFloat(document.getElementById('editDiskon').value),
+      total_bayar: parseFloat(document.getElementById('editTotal').value),
+      status_pembayaran: document.getElementById('editStatus').value,
+      details: [] // kalau kamu punya detail produk, tambahkan di sini
+    };
+
+    console.log("[v0] Form data:", formData);
+
+    // Kirim PUT request ke backend
+    const response = await fetch(`${API_BASE_URL}/transaksi-produk/${currentEditId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    });
+
+    console.log("[v0] Response status:", response.status);
+
+    // Tangani error response (misalnya 404, 500, dll)
+    if (!response.ok) {
+      const rawText = await response.text(); // baca body sekali saja
+
+      let errorMessage = 'Gagal menyimpan perubahan';
       try {
-        console.log("[v0] Submitting edit for ID:", currentEditId);
-        
-        const formData = {
-          id_customer: parseInt(document.getElementById('editCustomer').value),
-          id_pegawai_cs: parseInt(document.getElementById('editCS').value),
-          id_pegawai_kasir: parseInt(document.getElementById('editKasir').value),
-          tanggal_transaksi: document.getElementById('editTanggal').value,
-          subtotal: parseFloat(document.getElementById('editSubtotal').value),
-          diskon: parseFloat(document.getElementById('editDiskon').value),
-          total_bayar: parseFloat(document.getElementById('editTotal').value),
-          status_pembayaran: document.getElementById('editStatus').value,
-          details: []
-        };
-
-        console.log("[v0] Form data:", formData);
-
-        const response = await fetch(`${API_BASE_URL}/transaksi-produk/${currentEditId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(formData)
-        });
-
-        console.log("[v0] Response status:", response.status);
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error("[v0] Error response:", errorData);
-          throw new Error(errorData.message || 'Gagal menyimpan perubahan');
-        }
-
-        const result = await response.json();
-        console.log("[v0] Success response:", result);
-
-        showAlert('Transaksi berhasil diupdate', 'success');
-        closeEditModal();
-        loadData();
-        
-      } catch (error) {
-        console.error("[v0] Error saving edit:", error);
-        showAlert('Error: ' + error.message, 'error');
-      } finally {
-        btn.disabled = false;
+        const parsed = JSON.parse(rawText);
+        errorMessage = parsed.message || errorMessage;
+      } catch {
+        console.error("[v0] Error response (non-JSON):", rawText);
+        errorMessage = `HTTP ${response.status}: ${response.statusText}`;
       }
+
+      throw new Error(errorMessage);
     }
+
+    // Jika sukses, coba parse JSON
+    let result;
+    try {
+      result = await response.json();
+      console.log("[v0] Success response:", result);
+    } catch (e) {
+      console.warn("[v0] Response bukan JSON, tapi sukses:", e);
+      result = { success: true };
+    }
+
+    showAlert('Transaksi berhasil diperbarui', 'success');
+    closeEditModal();
+    loadData(); // reload tabel data
+
+  } catch (error) {
+    console.error("[v0] Error saving edit:", error);
+    showAlert('Error: ' + error.message, 'error');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
 
     function closeEditModal() {
       document.getElementById('editModal').style.display = 'none';

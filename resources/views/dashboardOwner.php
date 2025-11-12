@@ -783,6 +783,16 @@
                     <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Kelola Hewan</h3>
                     <p style="color: #4b5563; font-size: 0.875rem;">Ubah detail Hewan disini</p>
                 </div>
+                <div class="feature-card" style="text-align: left; cursor: pointer;" onclick="window.location.href='/transaksiProduk'">
+                    <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;"></div>
+                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Kelola Transaksi Produk</h3>
+                    <p style="color: #4b5563; font-size: 0.875rem;">Ubah detail Transaksi Produk disini</p>
+                </div>
+                <div class="feature-card" style="text-align: left; cursor: pointer;" onclick="window.location.href='/transaksiLayanan'">
+                    <div style="font-size: 2rem; color: #d97706; margin-bottom: 0.5rem;"></div>
+                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Kelola Transaksi Layanan</h3>
+                    <p style="color: #4b5563; font-size: 0.875rem;">Ubah detail Transaksi Layanan disini</p>
+                </div>
             </div>
         </div>
     </div>
