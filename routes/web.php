@@ -23,9 +23,7 @@ Route::get('/homeProduk', function () {
     return view('homeProduk');
 });
 
-Route::get('/dashboardCS', function () {
-    return view('dashboardCS');
-});
+
 
 Route::get('/homeHewan', function () {
     return view('homeHewan');
@@ -46,7 +44,7 @@ Route::get('/entriTransaksiProduk', function () {
 Route::get('/entriTransaksiLayanan', function () {
     return view('entriTransaksiLayanan');
 });
-=======
+
 Route::get('/transaksiPenjualan', function () {
     return view('transaksiPenjualan');
 });

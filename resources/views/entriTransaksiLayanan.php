@@ -449,11 +449,7 @@
 
             <!-- First Row -->
             <div class="form-grid">
-                <div class="form-group">
-                    <label class="form-label">ID Transaksi <span class="required">*</span></label>
-                    <input type="text" class="form-input" id="idTransaksi" placeholder="LY-091225-001" disabled>
-                    <small class="text-muted text-sm">Auto-generate</small>
-                </div>
+                
 
                 <div class="form-group">
                     <label class="form-label">Tanggal Transaksi <span class="required">*</span></label>
@@ -585,7 +581,7 @@
             
             // Load data from API
             await loadDataFromAPI();
-            generateIdTransaksi();
+          
         });
 
         async function loadDataFromAPI() {
@@ -661,17 +657,7 @@
 }
 
 
-        // Generate ID Transaksi dengan format LY-DDMMYY-XX
-        function generateIdTransaksi() {
-            const now = new Date();
-            const dd = String(now.getDate()).padStart(2, '0');
-            const mm = String(now.getMonth() + 1).padStart(2, '0');
-            const yy = String(now.getFullYear()).slice(-2);
-            const xx = String(layananDitambahkan.length + 1).padStart(2, '0');
-            
-            const idTransaksi = `LY-${dd}${mm}${yy}-${xx}`;
-            document.getElementById('idTransaksi').value = idTransaksi;
-        }
+        
 
         // Tambah layanan baru
         function tambahLayanan() {
@@ -783,105 +769,74 @@
         }
 
         async function simpanTransaksi() {
-            // Validasi
-            if (!document.getElementById('idCustomer').value) {
-                tampilkanToast('Pilih customer terlebih dahulu!', 'error');
-                return;
-            }
+    // Validasi form dasar
+    const idCustomer = document.getElementById('idCustomer').value;
+    const idHewan = document.getElementById('idHewan').value;
+    const idPegawaiCs = document.getElementById('idPegawaiCs').value;
+    const idPegawaiKasir = document.getElementById('idPegawaiKasir').value;
+    const statusPembayaran = document.getElementById('statusPembayaran').value;
+    const tanggalTransaksi = document.getElementById('tanggalTransaksi').value;
 
-            if (!document.getElementById('idHewan').value) {
-                tampilkanToast('Pilih hewan terlebih dahulu!', 'error');
-                return;
-            }
+    if (!idCustomer) return tampilkanToast('Pilih customer terlebih dahulu!', 'error');
+    if (!idHewan) return tampilkanToast('Pilih hewan terlebih dahulu!', 'error');
+    if (!idPegawaiCs) return tampilkanToast('Pilih pegawai CS terlebih dahulu!', 'error');
+    if (!idPegawaiKasir) return tampilkanToast('Pilih pegawai kasir terlebih dahulu!', 'error');
+    if (layananDitambahkan.length === 0) return tampilkanToast('Tambahkan minimal 1 layanan!', 'error');
+    if (!statusPembayaran) return tampilkanToast('Pilih status pembayaran!', 'error');
 
-            if (!document.getElementById('idPegawaiCs').value) {
-                tampilkanToast('Pilih pegawai CS terlebih dahulu!', 'error');
-                return;
-            }
+    const simpanBtn = document.getElementById('simpanBtn');
+    simpanBtn.disabled = true;
+    simpanBtn.innerHTML = '<span class="loading"></span> Menyimpan...';
 
-            if (!document.getElementById('idPegawaiKasir').value) {
-                tampilkanToast('Pilih pegawai kasir terlebih dahulu!', 'error');
-                return;
-            }
+    const subtotal = layananDitambahkan.reduce((sum, l) => sum + l.subtotal, 0);
+    const diskon = parseInt(document.getElementById('diskon').value) || 0;
+    const totalBayar = subtotal - diskon;
 
-            if (layananDitambahkan.length === 0) {
-                tampilkanToast('Tambahkan minimal 1 layanan!', 'error');
-                return;
-            }
+    // Format daftar layanan ke bentuk siap kirim
+    const detailLayanan = layananDitambahkan.map(l => ({
+        id_layanan: l.idLayanan,
+        id_hewan: idHewan,
+        subtotal_per_layanan: l.subtotal
+    }));
 
-            if (!document.getElementById('statusPembayaran').value) {
-                tampilkanToast('Pilih status pembayaran!', 'error');
-                return;
-            }
+    try {
+        const response = await fetch(`${API_BASE_URL}/transaksi-layanan`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                id_customer: idCustomer,
+                id_pegawai_cs: idPegawaiCs,
+                id_pegawai_kasir: idPegawaiKasir,
+                tanggal_transaksi: tanggalTransaksi,
+                subtotal: subtotal,
+                diskon: diskon,
+                total_bayar: totalBayar,
+                status_pembayaran: statusPembayaran,
+                detail_layanan: detailLayanan // dikirim sekaligus ke backend
+            })
+        });
 
-            // Prepare data
-            const simpanBtn = document.getElementById('simpanBtn');
-            simpanBtn.disabled = true;
-            simpanBtn.innerHTML = '<span class="loading"></span> Menyimpan...';
-
-            const subtotal = layananDitambahkan.reduce((sum, l) => sum + l.subtotal, 0);
-            const diskon = parseInt(document.getElementById('diskon').value) || 0;
-            const totalBayar = subtotal - diskon;
-
-            try {
-                const transactionRes = await fetch(`${API_BASE_URL}/transaksi-layanan`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        id_customer: document.getElementById('idCustomer').value,
-                        id_pegawai_cs: document.getElementById('idPegawaiCs').value,
-                        id_pegawai_kasir: document.getElementById('idPegawaiKasir').value,
-                        tanggal_transaksi: document.getElementById('tanggalTransaksi').value,
-                        subtotal: subtotal,
-                        diskon: diskon,
-                        total_bayar: totalBayar,
-                        status_pembayaran: document.getElementById('statusPembayaran').value
-                    })
-                });
-
-                if (!transactionRes.ok) {
-                    throw new Error('Gagal menyimpan transaksi');
-                }
-
-                const transactionData = await transactionRes.json();
-                const idTransaksiLayanan = transactionData.data.id_transaksi_layanan || document.getElementById('idTransaksi').value;
-
-                for (const layanan of layananDitambahkan) {
-                    const detailRes = await fetch(`${API_BASE_URL}/detail-transaksi-layanan`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            id_transaksi_layanan: idTransaksiLayanan,
-                            id_layanan: layanan.idLayanan,
-                            id_hewan: document.getElementById('idHewan').value,
-                            subtotal_per_layanan: layanan.subtotal
-                        })
-                    });
-
-                    if (!detailRes.ok) {
-                        throw new Error('Gagal menyimpan detail layanan');
-                    }
-                }
-
-                tampilkanToast('✓ Transaksi berhasil disimpan!', 'success');
-                
-                // Reset form
-                setTimeout(() => {
-                    resetForm();
-                    simpanBtn.disabled = false;
-                    simpanBtn.textContent = '💾 Simpan Transaksi';
-                }, 1500);
-            } catch (error) {
-                console.error('Error saving transaction:', error);
-                tampilkanToast('✗ Error: ' + error.message, 'error');
-                simpanBtn.disabled = false;
-                simpanBtn.textContent = '💾 Simpan Transaksi';
-            }
+        if (!response.ok) {
+            const text = await response.text();
+            throw new Error(`Gagal menyimpan transaksi: ${text}`);
         }
+
+        tampilkanToast('✓ Transaksi berhasil disimpan!', 'success');
+        
+        // Reset form setelah sukses
+        setTimeout(() => {
+            resetForm();
+            simpanBtn.disabled = false;
+            simpanBtn.textContent = '💾 Simpan Transaksi';
+        }, 1500);
+    } catch (error) {
+        console.error('Error saving transaction:', error);
+        tampilkanToast('✗ Error: ' + error.message, 'error');
+        simpanBtn.disabled = false;
+        simpanBtn.textContent = '💾 Simpan Transaksi';
+    }
+}
+
 
         // Reset form
         function resetForm() {
@@ -889,7 +844,7 @@
             layananDitambahkan = [];
             document.getElementById('diskon').value = '0';
             renderTabel();
-            generateIdTransaksi();
+           
             
             // Reset tanggal ke hari ini
             const now = new Date();
