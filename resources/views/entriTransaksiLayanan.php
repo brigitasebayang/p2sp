@@ -546,8 +546,7 @@
             <div class="form-grid">
                 <div class="form-group">
                     <label class="form-label">Diskon (Rp)</label>
-                    <input type="number" class="form-input" id="diskon" min="0" value="0" onchange="hitungTotal()" placeholder="0">
-                    <small class="text-muted text-sm">Masukkan jumlah diskon</small>
+                    <input type="number" class="form-input" id="diskon" min="0" onchange="hitungTotal()" placeholder="Masukkan Diskon">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Total Bayar (Rp)</label>
@@ -679,7 +678,7 @@
             if (layananDitambahkan.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="empty-icon">💇</div>
+                        <div class="empty-icon">🏥</div>
                         <p>Belum ada layanan. Klik tombol "Tambah Layanan" untuk menambahkan.</p>
                     </div>
                 `;

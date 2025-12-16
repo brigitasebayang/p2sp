@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+
 Route::get('/owner', function () {
     return view('dashboardOwner');
 });
@@ -60,3 +61,20 @@ Route::get('/transaksiProduk', function () {
 Route::get('/transaksiLayanan', function () {
     return view('transaksiLayanan');
 });
+
+Route::get('/transaksiLayanan', function () {
+    return view('transaksiLayanan');
+});
+
+Route::get('/laporan-dashboard', function () {
+    return view('laporan-dashboard');
+});
+
+Route::get('/laporan/print', function () {
+    return view('laporan-print');
+});
+
+
+
+
+

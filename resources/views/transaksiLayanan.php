@@ -217,7 +217,7 @@
     .table-container {
       overflow-x: auto;
       overflow-y: auto;
-      max-height: calc(100vh - 350px);
+      max-height: calc(130vh - 350px);
     }
 
     table {
@@ -483,7 +483,7 @@
       <h1>🐾 Transaksi Layanan</h1>
     </div>
 
-    <div class="stats-bar">
+    <!-- <div class="stats-bar">
       <div class="stat-item">
         <label>Total Transaksi</label>
         <div class="value" id="statTotal">0</div>
@@ -502,7 +502,7 @@
       </div>
     </div>
 
-    <div id="alertBox" class="alert"></div>
+    <div id="alertBox" class="alert"></div> -->
 
     <div class="toolbar">
       <div class="filter-group">
@@ -520,7 +520,7 @@
 
       <div class="search-box">
         <span class="search-icon">🔍</span>
-        <input type="text" id="searchInput" placeholder="Cari transaksi..." onkeyup="applyFilter()">
+        <input type="text" id="filterId" placeholder="Cari transaksi..." onkeyup="applySearch()">
       </div>
     </div>
 
@@ -538,7 +538,7 @@
             <th>diskon</th>
             <th>total_bayar</th>
             <th>status_pembayaran</th>
-            <th>status_layanan</th>
+            <!-- <th>status_layanan</th> -->
           </tr>
         </thead>
         <tbody id="tableBody">
@@ -747,10 +747,10 @@
         .filter(t => t.status_pembayaran === 'Lunas')
         .reduce((sum, t) => sum + parseFloat(t.total_bayar || 0), 0);
 
-      document.getElementById('statTotal').textContent = total;
-      document.getElementById('statLunas').textContent = lunas;
-      document.getElementById('statBelumLunas').textContent = belumLunas;
-      document.getElementById('statPendapatan').textContent = formatCurrency(pendapatan);
+      // document.getElementById('statTotal').textContent = total;
+      // document.getElementById('statLunas').textContent = lunas;
+      // document.getElementById('statBelumLunas').textContent = belumLunas;
+      // document.getElementById('statPendapatan').textContent = formatCurrency(pendapatan);
     }
 
     function renderTable(data) {
@@ -789,7 +789,6 @@
           <td>${formatCurrency(row.diskon)}</td>
           <td><strong>${formatCurrency(row.total_bayar)}</strong></td>
           <td>${statusBadge}</td>
-          <td>${statusBadge}</td>
         `;
         
         tr.ondblclick = () => viewDetail(row.id_transaksi_layanan);
@@ -799,22 +798,32 @@
     }
 
     function applyFilter() {
-      const statusFilter = document.getElementById('filterStatus').value;
-      const searchValue = document.getElementById('searchInput').value.toLowerCase();
+  const statusFilter = document.getElementById('filterStatus').value;
+  const idFilter = document.getElementById('filterId').value.toLowerCase();
+
+  filteredData = allData.filter(row => {
+    const matchStatus = !statusFilter || row.status_pembayaran === statusFilter;
+    const matchId = !idFilter || String(row.id_transaksi_layanan).toLowerCase().includes(idFilter);
+
+    return matchStatus && matchId;
+  });
+
+  currentFilter = statusFilter;
+  renderTable(filteredData);
+}
+
+
+    function applySearch() {
+      const idFilter = document.getElementById('filterId').value;
       
       filteredData = allData.filter(row => {
-        const matchStatus = !statusFilter || row.status_pembayaran === statusFilter;
-        const matchSearch = !searchValue || 
-          Object.values(row).some(val => 
-            String(val).toLowerCase().includes(searchValue)
-          );
-        
-        return matchStatus && matchSearch;
+        const matchId = !idFilter || String(row.id_transaksi_layanan).includes(idFilter);
+        return matchId;
       });
       
-      currentFilter = statusFilter;
       renderTable(filteredData);
     }
+
 
     function filterByStatus(status) {
       document.getElementById('filterStatus').value = status;
@@ -824,7 +833,7 @@
 
     function resetFilter() {
       document.getElementById('filterStatus').value = '';
-      document.getElementById('searchInput').value = '';
+      document.getElementById('filterId').value = '';
       filteredData = [...allData];
       currentFilter = '';
       renderTable(filteredData);

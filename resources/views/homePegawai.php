@@ -7,24 +7,19 @@
     <title>Kelola Pegawai - Kouvee Pet Shop</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Variabel CSS (Disesuaikan untuk konsistensi Kouvee) */
         :root {
             --primary-color: #d97706;
-            /* Emas/Jingga */
             --primary-hover: #b45309;
             --secondary-color: #1f2937;
-            /* Biru Gelap/Hitam */
             --bg-light: #fef3c7;
-            /* Latar Belakang sangat terang */
             --bg-dark: #ffffff;
             --border-color: #e5e7eb;
             --success-color: #10b981;
-            /* Hijau untuk Aktif */
             --danger-color: #ef4444;
-            /* Merah untuk Tidak Aktif */
+            --warning-color: #f59e0b;
+            --info-color: #3b82f6;
         }
 
-        /* RESET & Dasar */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -39,14 +34,12 @@
             min-height: 100vh;
         }
 
-        /* CONTAINER UTAMA */
         .container {
             max-width: 1100px;
             margin: 40px auto;
             padding: 0 20px;
         }
 
-        /* HEADER */
         .header {
             display: flex;
             justify-content: space-between;
@@ -62,7 +55,6 @@
             color: var(--primary-color);
         }
 
-        /* SEARCH BAR */
         .search-container {
             margin-bottom: 25px;
             display: flex;
@@ -84,14 +76,12 @@
             box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
         }
 
-        /* FORM STYLING */
         #pegawaiForm {
             background: var(--bg-dark);
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             margin-bottom: 40px;
-            /* Layout Form 2 kolom */
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
@@ -99,16 +89,30 @@
 
         #pegawaiForm h2 {
             grid-column: 1 / -1;
-            /* Judul membentang di semua kolom */
             margin-bottom: 10px;
+        }
+
+        input.error {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
         }
 
         .form-group {
             margin-bottom: 0;
-            /* Jarak sudah diatur oleh gap grid */
+            position: relative;
         }
 
-        /* Input yang harus mencakup 2 kolom */
+        .form-error {
+            color: #ef4444;
+            font-size: 0.8rem;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .form-error.show {
+            display: block;
+        }
+
         .full-width {
             grid-column: 1 / -1;
         }
@@ -140,7 +144,6 @@
             box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
         }
 
-        /* BUTTON STYLING */
         .btn-action-container {
             grid-column: 1 / -1;
             text-align: right;
@@ -168,9 +171,14 @@
             color: white;
         }
 
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             background: var(--primary-hover);
             box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .btn-secondary {
@@ -184,7 +192,6 @@
 
         .btn-edit {
             background: #3b82f6;
-            /* Biru */
             color: white;
         }
 
@@ -194,7 +201,6 @@
 
         .btn-delete {
             background: var(--danger-color);
-            /* Merah */
             color: white;
         }
 
@@ -202,7 +208,6 @@
             background: #dc2626;
         }
 
-        /* TABLE STYLING */
         .table-wrapper {
             background: var(--bg-dark);
             border-radius: 12px;
@@ -249,51 +254,188 @@
             margin-right: 5px;
         }
 
-        /* Badge Status */
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: capitalize;
-        }
-
-        .badge-aktif {
-            background-color: #d1fae5;
-            color: var(--success-color);
-        }
-
-        .badge-tidak-aktif {
-            background-color: #fee2e2;
-            color: var(--danger-color);
-        }
-
         .loading {
             text-align: center;
             padding: 20px;
             color: #6b7280;
         }
 
-        .error-message {
-            background-color: #fee2e2;
-            color: var(--danger-color);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
+        /* TOAST NOTIFICATION */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .success-message {
-            background-color: #d1fae5;
-            color: var(--success-color);
-            padding: 12px;
+        .toast {
+            padding: 16px 20px;
             border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+            animation: slideIn 0.3s ease-out;
+            word-break: break-word;
         }
 
-        /* Responsive adjustments */
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .toast.remove {
+            animation: slideOut 0.3s ease-out forwards;
+        }
+
+        .toast-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .toast-error {
+            background: #fee2e2;
+            color: #7f1d1d;
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .toast-info {
+            background: #dbeafe;
+            color: #1e3a8a;
+            border-left: 4px solid var(--info-color);
+        }
+
+        .toast-warning {
+            background: #fef3c7;
+            color: #78350f;
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .toast-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .toast-message {
+            flex: 1;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0;
+            margin-left: 10px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .toast-close:hover {
+            opacity: 1;
+        }
+
+        /* MODAL CONFIRMATION */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 8000;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 90%;
+            animation: scaleIn 0.2s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-header {
+            margin-bottom: 15px;
+        }
+
+        .modal-header h3 {
+            font-size: 1.25rem;
+            color: var(--secondary-color);
+        }
+
+        .modal-body {
+            margin-bottom: 25px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-footer .btn {
+            flex: 1;
+        }
+
         @media (max-width: 768px) {
             #pegawaiForm {
                 grid-template-columns: 1fr;
@@ -305,33 +447,56 @@
                 margin-bottom: 5px;
                 margin-right: 0;
             }
+
+            .toast-container {
+                left: 10px;
+                right: 10px;
+            }
+
+            .toast {
+                min-width: auto;
+            }
         }
     </style>
 </head>
 
 <body>
-
     <div class="container">
         <div class="header">
             <h1>🧑‍💻 Kelola Pegawai Kouvee Pet Shop</h1>
         </div>
 
-        <!-- Add success and error message containers -->
-        <div id="successMessage" class="success-message"></div>
-        <div id="errorMessage" class="error-message"></div>
+        <!-- TOAST CONTAINER -->
+        <div class="toast-container" id="toastContainer"></div>
 
-        <!-- 🔍 SEARCH BAR -->
+        <!-- CONFIRMATION MODAL -->
+        <div class="modal-overlay" id="confirmationModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalTitle">Konfirmasi</h3>
+                </div>
+                <div class="modal-body" id="modalMessage"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeConfirmation()">Batal</button>
+                    <button type="button" class="btn btn-danger" id="confirmButton">Hapus</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEARCH BAR -->
         <div class="search-container">
             <input type="text" id="searchInput" placeholder="🔍 Cari Pegawai" onkeyup="searchPegawai()">
         </div>
 
+        <!-- FORM -->
         <form id="pegawaiForm" onsubmit="handleSubmit(event)">
             <h2>Tambah/Edit Data Pegawai</h2>
             <input type="hidden" id="pegawaiId" value="">
 
             <div class="form-group">
                 <label for="nama">Nama Pegawai *</label>
-                <input type="text" id="nama" required placeholder="Masukkan Nama">
+                <input type="text" id="nama" required placeholder="Masukkan Nama" onchange="validateNama()">
+                <small id="namaError" class="form-error"></small>
             </div>
 
             <div class="form-group">
@@ -343,30 +508,34 @@
                 </select>
             </div>
 
-
             <div class="form-group">
                 <label for="alamat">Alamat *</label>
                 <input type="text" id="alamat" required placeholder="Masukkan Alamat">
+                <small id="alamatError" class="form-error" style="display:none;"></small>
             </div>
 
             <div class="form-group">
                 <label for="tanggalLahir">Tanggal Lahir *</label>
                 <input type="date" id="tanggalLahir" required>
+                <small id="tanggalLahirError" class="form-error" style="display:none;"></small>
             </div>
 
             <div class="form-group">
                 <label for="noTelp">Nomor Telpon *</label>
-                <input type="text" id="noTelp" required placeholder="Masukkan Nomor Telpon">
+                <input type="text" id="noTelp" required placeholder="Masukkan Nomor Telpon" oninput="this.value = this.value.replace(/[^0-9]/g,''); validatePhone()">
+                <small id="noTelpError" class="form-error"></small>
             </div>
 
             <div class="form-group">
                 <label for="username">Username *</label>
                 <input type="text" id="username" required placeholder="Masukkan Username">
+                <small id="usernameError" class="form-error" style="display:none;"></small>
             </div>
 
             <div class="form-group">
                 <label for="password">Password *</label>
                 <input type="text" id="password" required placeholder="Masukkan Password">
+                <small id="passwordError" class="form-error" style="display:none;"></small>
             </div>
 
             <div class="btn-action-container">
@@ -375,6 +544,7 @@
             </div>
         </form>
 
+        <!-- TABLE -->
         <div class="table-wrapper">
             <table>
                 <thead>
@@ -391,13 +561,14 @@
                     </tr>
                 </thead>
                 <tbody id="pegawaiTable">
-                    <tr><td colspan="8" class="loading">Memuat data...</td></tr>
+                    <tr>
+                        <td colspan="9" class="loading">Memuat data...</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- Inline API Client untuk menghindari loading issue -->
     <script>
         const API_BASE_URL = "http://localhost:8000/api";
 
@@ -414,18 +585,20 @@
                         Accept: "application/json",
                     },
                 };
-
-                const config = { ...defaultOptions, ...options };
+                const config = {
+                    ...defaultOptions,
+                    ...options
+                };
 
                 try {
                     const response = await fetch(url, config);
+                    const data = await response.json();
 
                     if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(errorData.message || `HTTP Error: ${response.status}`);
+                        throw new Error(data.message || `HTTP Error: ${response.status}`);
                     }
 
-                    return await response.json();
+                    return data;
                 } catch (error) {
                     console.error("[v0] API Error:", error);
                     throw error;
@@ -434,10 +607,6 @@
 
             async getPegawaiList() {
                 return this.request("/pegawai");
-            }
-
-            async getPegawaiById(id) {
-                return this.request(`/pegawai/${id}`);
             }
 
             async createPegawai(data) {
@@ -462,13 +631,43 @@
         }
 
         const apiClient = new ApiClient();
-    </script>
-
-    <script>
         let pegawaiData = [];
         let filteredData = [];
         let isEditing = false;
+        let deleteTargetId = null;
 
+        // Toast notification system
+        class Toast {
+            static show(message, type = 'info', duration = 4000) {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+
+                const icons = {
+                    success: '✓',
+                    error: '✕',
+                    info: 'ℹ',
+                    warning: '⚠'
+                };
+
+                toast.innerHTML = `
+                    <span class="toast-icon">${icons[type]}</span>
+                    <span class="toast-message">${message}</span>
+                    <button type="button" class="toast-close" onclick="this.parentElement.remove()">×</button>
+                `;
+
+                container.appendChild(toast);
+
+                if (duration > 0) {
+                    setTimeout(() => {
+                        toast.classList.add('remove');
+                        setTimeout(() => toast.remove(), 300);
+                    }, duration);
+                }
+            }
+        }
+
+        // Initialize
         document.addEventListener('DOMContentLoaded', async () => {
             await loadPegawaiData();
         });
@@ -476,21 +675,88 @@
         async function loadPegawaiData() {
             try {
                 showLoading();
-                console.log("[v0] Loading pegawai data...");
                 const response = await apiClient.getPegawaiList();
-                console.log("[v0] Response received:", response);
                 pegawaiData = response.data || response;
                 filteredData = pegawaiData;
                 renderTable();
-                hideMessage();
             } catch (error) {
-                showError('Gagal memuat data pegawai: ' + error.message);
+                Toast.show(`Gagal memuat data: ${error.message}`, 'error');
                 console.error("[v0] Error loading data:", error);
+            }
+        }
+
+        function validatePhone() {
+            const noTelpInput = document.getElementById('noTelp');
+            const errorField = document.getElementById('noTelpError');
+            const phoneRegex = /^[0-9]{11,13}$/;
+
+            if (noTelpInput.value === '') {
+                errorField.classList.remove("show");
+                noTelpInput.classList.remove("error");
+                return true;
+            }
+
+            const currentId = document.getElementById('pegawaiId').value;
+            const isDuplicate = pegawaiData.some(p =>
+                p.no_telp === noTelpInput.value &&
+                (!currentId || p.id_pegawai != currentId)
+            );
+
+            if (isDuplicate) {
+                errorField.textContent = "Nomor telepon sudah digunakan pegawai lain";
+                errorField.classList.add("show");
+                noTelpInput.classList.add("error");
+                return false;
+            }
+
+            if (!phoneRegex.test(noTelpInput.value)) {
+                errorField.textContent = "Nomor telepon harus 11-13 digit";
+                errorField.classList.add("show");
+                noTelpInput.classList.add("error");
+                return false;
+            } else {
+                errorField.classList.remove("show");
+                noTelpInput.classList.remove("error");
+                return true;
+            }
+        }
+
+        function validateNama() {
+            const namaInput = document.getElementById('nama');
+            const errorField = document.getElementById('namaError');
+            const nama = namaInput.value.trim();
+
+            if (nama === '') {
+                errorField.classList.remove("show");
+                namaInput.classList.remove("error");
+                return true;
+            }
+
+            const currentId = document.getElementById('pegawaiId').value;
+            const isDuplicate = pegawaiData.some(p =>
+                p.nama.toLowerCase() === nama.toLowerCase() &&
+                (!currentId || p.id_pegawai != currentId)
+            );
+
+            if (isDuplicate) {
+                errorField.textContent = "Nama pegawai sudah ada! Gunakan nama lain.";
+                errorField.classList.add("show");
+                namaInput.classList.add("error");
+                return false;
+            } else {
+                errorField.classList.remove("show");
+                namaInput.classList.remove("error");
+                return true;
             }
         }
 
         async function handleSubmit(event) {
             event.preventDefault();
+
+            if (!validateNama() || !validatePhone()) {
+                Toast.show('Terdapat error pada form. Mohon perbaiki!', 'error');
+                return;
+            }
 
             const pegawaiId = document.getElementById('pegawaiId').value;
             const nama = document.getElementById('nama').value.trim();
@@ -501,8 +767,12 @@
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value.trim();
 
+            const namaError = document.getElementById('namaError');
+            const noTelpError = document.getElementById('noTelpError');
+            const usernameError = document.getElementById('usernameError');
+
             if (!nama || !jabatan || !alamat || !tanggalLahir || !noTelp || !username || !password) {
-                showError('Semua field wajib diisi!');
+                Toast.show('Semua field wajib diisi!', 'warning');
                 return;
             }
 
@@ -517,18 +787,27 @@
             };
 
             try {
+                const submitButton = document.getElementById('submitButton');
+                submitButton.disabled = true;
+                submitButton.textContent = '⏳ Menyimpan...';
+
                 if (pegawaiId) {
                     await apiClient.updatePegawai(pegawaiId, pegawaiDataPayload);
-                    showSuccess('Data pegawai berhasil diperbarui!');
+                    Toast.show('Data pegawai berhasil diperbarui!', 'success');
                 } else {
                     await apiClient.createPegawai(pegawaiDataPayload);
-                    showSuccess('Data pegawai berhasil ditambahkan!');
+                    Toast.show('Data pegawai berhasil ditambahkan!', 'success');
                 }
+
                 resetForm();
                 await loadPegawaiData();
             } catch (error) {
-                showError('Gagal menyimpan data: ' + error.message);
+                Toast.show(`Gagal menyimpan data: ${error.message}`, 'error');
                 console.error("[v0] Error saving data:", error);
+            } finally {
+                const submitButton = document.getElementById('submitButton');
+                submitButton.disabled = false;
+                submitButton.textContent = pegawaiId ? '✅ Simpan Perubahan' : '💾 Simpan Pegawai';
             }
         }
 
@@ -537,12 +816,11 @@
             tbody.innerHTML = '';
 
             if (filteredData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px; color: #6b7280;">Belum ada data pegawai</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 20px; color: #6b7280;">Belum ada data pegawai</td></tr>';
                 return;
             }
 
             filteredData.forEach((item, index) => {
-                const statusClass = item.status === 'Aktif' ? 'badge-aktif' : 'badge-tidak-aktif';
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${item.id_pegawai}</td>
@@ -551,11 +829,11 @@
                     <td>${item.alamat}</td>
                     <td>${item.tanggal_lahir || item.tanggalLahir}</td>
                     <td>${item.no_telp || item.noTelp}</td>
-                    <td>${item.username || item.username}</td>
-                    <td>${item.password || item.password}</td>
+                    <td>${item.username}</td>
+                    <td>${item.password}</td>
                     <td class="action-cell">
-                        <button class="btn btn-edit" onclick="editData(${item.id_pegawai})">✏️ Edit</button>
-                        <button class="btn btn-delete" onclick="deleteData(${item.id_pegawai})">🗑️ Hapus</button>
+                        <button type="button" class="btn btn-edit" onclick="editData(${item.id_pegawai})">✏️ Edit</button>
+                        <button type="button" class="btn btn-delete" onclick="confirmDelete(${item.id_pegawai}, '${item.nama}')">🗑️ Hapus</button>
                     </td>
                 `;
                 tbody.appendChild(row);
@@ -566,7 +844,7 @@
             try {
                 const pegawai = pegawaiData.find(p => p.id_pegawai === id);
                 if (!pegawai) {
-                    showError('Data pegawai tidak ditemukan');
+                    Toast.show('Data pegawai tidak ditemukan', 'error');
                     return;
                 }
 
@@ -576,29 +854,48 @@
                 document.getElementById('alamat').value = pegawai.alamat;
                 document.getElementById('tanggalLahir').value = pegawai.tanggal_lahir || pegawai.tanggalLahir;
                 document.getElementById('noTelp').value = pegawai.no_telp || pegawai.noTelp;
-                document.getElementById('username').value = pegawai.username || pegawai.username;
-                document.getElementById('password').value = pegawai.password || pegawai.password;
-
+                document.getElementById('username').value = pegawai.username;
+                document.getElementById('password').value = pegawai.password;
                 document.getElementById('submitButton').textContent = '✅ Simpan Perubahan';
                 document.getElementById('resetButton').style.display = 'inline-flex';
-                isEditing = true;
 
-                document.getElementById('pegawaiForm').scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('pegawaiForm').scrollIntoView({
+                    behavior: 'smooth'
+                });
+                Toast.show('Form siap untuk diubah', 'info');
             } catch (error) {
-                showError('Gagal memuat data: ' + error.message);
+                Toast.show(`Gagal memuat data: ${error.message}`, 'error');
             }
         }
 
-        async function deleteData(id) {
-            if (confirm('Yakin ingin menghapus data pegawai ini?')) {
-                try {
-                    await apiClient.deletePegawai(id);
-                    showSuccess('Data pegawai berhasil dihapus!');
-                    await loadPegawaiData();
-                } catch (error) {
-                    showError('Gagal menghapus data: ' + error.message);
-                    console.error("[v0] Error deleting data:", error);
-                }
+        function confirmDelete(id, name) {
+            deleteTargetId = id;
+            const modal = document.getElementById('confirmationModal');
+            document.getElementById('modalTitle').textContent = 'Konfirmasi Penghapusan';
+            document.getElementById('modalMessage').textContent = `Apakah Anda yakin ingin menghapus data pegawai "${name}"?`;
+            document.getElementById('confirmButton').textContent = '🗑️ Hapus';
+            document.getElementById('confirmButton').className = 'btn btn-delete';
+            document.getElementById('confirmButton').onclick = deleteData;
+            modal.classList.add('active');
+        }
+
+        function closeConfirmation() {
+            const modal = document.getElementById('confirmationModal');
+            modal.classList.remove('active');
+            deleteTargetId = null;
+        }
+
+        async function deleteData() {
+            if (!deleteTargetId) return;
+
+            try {
+                await apiClient.deletePegawai(deleteTargetId);
+                Toast.show('Data pegawai berhasil dihapus!', 'success');
+                closeConfirmation();
+                await loadPegawaiData();
+            } catch (error) {
+                Toast.show(`Gagal menghapus data: ${error.message}`, 'error');
+                console.error("[v0] Error deleting data:", error);
             }
         }
 
@@ -607,7 +904,14 @@
             document.getElementById('pegawaiId').value = '';
             document.getElementById('submitButton').textContent = '💾 Simpan Pegawai';
             document.getElementById('resetButton').style.display = 'none';
-            isEditing = false;
+            document.getElementById('noTelp').classList.remove("error");
+            document.getElementById('noTelpError').classList.remove("show");
+            document.getElementById('nama').classList.remove("error");
+            document.getElementById('namaError').classList.remove("show");
+            document.getElementById('username').classList.remove("error");
+            document.getElementById('usernameError').classList.remove("show");
+            document.getElementById('password').classList.remove("error");
+            document.getElementById('passwordError').classList.remove("show");
         }
 
         function searchPegawai() {
@@ -615,37 +919,15 @@
             filteredData = pegawaiData.filter(item =>
                 item.nama.toLowerCase().includes(keyword) ||
                 item.alamat.toLowerCase().includes(keyword) ||
-                item.jabatan.toLowerCase().includes(keyword)
+                item.jabatan.toLowerCase().includes(keyword) ||
+                (item.no_telp || item.noTelp).includes(keyword)
             );
             renderTable();
         }
 
-        function showError(message) {
-            const errorDiv = document.getElementById('errorMessage');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-            setTimeout(() => {
-                errorDiv.style.display = 'none';
-            }, 5000);
-        }
-
-        function showSuccess(message) {
-            const successDiv = document.getElementById('successMessage');
-            successDiv.textContent = message;
-            successDiv.style.display = 'block';
-            setTimeout(() => {
-                successDiv.style.display = 'none';
-            }, 5000);
-        }
-
-        function hideMessage() {
-            document.getElementById('errorMessage').style.display = 'none';
-            document.getElementById('successMessage').style.display = 'none';
-        }
-
         function showLoading() {
             const tbody = document.getElementById('pegawaiTable');
-            tbody.innerHTML = '<tr><td colspan="8" class="loading">Memuat data...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="9" class="loading">⏳ Memuat data...</td></tr>';
         }
     </script>
 </body>

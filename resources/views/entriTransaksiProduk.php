@@ -491,14 +491,14 @@
         <!-- Product Table Section -->
         <div class="product-section">
             <div class="product-header">
-                <div class="section-title" style="margin: 0;">📦 Daftar Produk Penjualan</div>
+                <div class="section-title" style="margin: 0;">📦 Daftar Produk</div>
                 <button type="button" class="btn btn-primary" onclick="tambahProduk()">+ Tambah Produk</button>
             </div>
 
             <div id="tableContainer">
                 <div class="empty-state">
                     <div class="empty-icon">📦</div>
-                    <p>Belum ada produk. Klik tombol "Tambah Produk" untuk memulai.</p>
+                    <p>Belum ada produk. Klik tombol "Tambah Produk" untuk menambahkan</p>
                 </div>
             </div>
         </div>
@@ -529,13 +529,11 @@
             <div class="form-grid">
                 <div class="form-group">
                     <label class="form-label">Diskon (Rp)</label>
-                    <input type="number" class="form-input" id="diskon" min="0" value="0" onchange="hitungTotal()" placeholder="0">
-                    <small class="text-muted text-sm">Masukkan jumlah diskon</small>
+                    <input type="number" class="form-input" id="diskon" min="0" onchange="hitungTotal()" placeholder="Masukkan Diskon">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Total Bayar (Rp)</label>
                     <input type="text" class="form-input" id="totalBayar" disabled placeholder="0">
-                    <small class="text-muted text-sm">Otomatis terhitung</small>
                 </div>
             </div>
         </div>
@@ -673,7 +671,7 @@
             container.innerHTML = `
                 <div class="empty-state">
                     <div class="empty-icon">📦</div>
-                    <p>Belum ada produk. Klik tombol "Tambah Produk" untuk memulai.</p>
+                    <p>Belum ada produk. Klik tombol "Tambah Produk" untuk menambahkan</p>
                 </div>
             `;
             hitungTotal();

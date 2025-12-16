@@ -262,6 +262,14 @@
             display: none;
         }
 
+        .error-text {
+            color: #ef4444;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+
         .success-message {
             background-color: #d1fae5;
             color: var(--success-color);
@@ -284,6 +292,110 @@
                 margin-right: 0;
             }
         }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .toast.remove {
+            animation: slideOut 0.3s ease-out forwards;
+        }
+
+        .toast-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+
+        .toast-error {
+            background: #fee2e2;
+            color: #7f1d1d;
+            border-left: 4px solid #ef4444;
+        }
+
+        .toast-info {
+            background: #dbeafe;
+            color: #1e3a8a;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .toast-warning {
+            background: #fef3c7;
+            color: #78350f;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 8000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+        }
     </style>
 </head>
 
@@ -293,6 +405,24 @@
         <div class="header">
             <h1>👥 Kelola Customer Kouvee Pet Shop</h1>
         </div>
+
+        <!-- TOAST CONTAINER -->
+        <div class="toast-container" id="toastContainer"></div>
+
+        <!-- CONFIRMATION MODAL -->
+        <div class="modal-overlay" id="confirmationModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalTitle">Konfirmasi</h3>
+                </div>
+                <div class="modal-body" id="modalMessage"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeConfirmation()">Batal</button>
+                    <button type="button" class="btn btn-delete" id="confirmButton">Hapus</button>
+                </div>
+            </div>
+        </div>
+
 
         <!-- Add success and error message containers -->
         <div id="successMessage" class="success-message"></div>
@@ -310,22 +440,31 @@
             <div class="form-group">
                 <label for="nama">Nama Customer *</label>
                 <input type="text" id="nama" required placeholder="Masukkan Nama">
+                <small id="error-nama" class="error-text"></small>
             </div>
 
             <div class="form-group">
                 <label for="alamat">Alamat *</label>
                 <input type="text" id="alamat" required placeholder="Masukkan Alamat">
+                <small id="error-alamat" class="error-text"></small>
             </div>
 
             <div class="form-group">
                 <label for="tanggalLahir">Tanggal Lahir *</label>
                 <input type="date" id="tanggalLahir" required>
+                <small id="error-tanggal" class="error-text"></small>
             </div>
 
             <div class="form-group">
                 <label for="noTelp">Nomor Telpon *</label>
-                <input type="text" id="noTelp" required placeholder="Masukkan Nomor Telpon">
+                <input type="text" id="noTelp" required placeholder="Masukkan Nomor Telpon"
+                    oninput="
+        this.value = this.value.replace(/[^0-9]/g,'');
+        if (this.value.length > 13) this.value = this.value.slice(0, 13);
+    ">
+                <small id="error-noTelp" class="error-text"></small>
             </div>
+
 
             <div class="btn-action-container">
                 <button type="button" class="btn btn-secondary" id="resetButton" onclick="resetForm()" style="display: none;">↺ Reset</button>
@@ -346,7 +485,9 @@
                     </tr>
                 </thead>
                 <tbody id="customerTable">
-                    <tr><td colspan="6" class="loading">Memuat data...</td></tr>
+                    <tr>
+                        <td colspan="6" class="loading">Memuat data...</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -370,7 +511,10 @@
                     },
                 };
 
-                const config = { ...defaultOptions, ...options };
+                const config = {
+                    ...defaultOptions,
+                    ...options
+                };
 
                 try {
                     const response = await fetch(url, config);
@@ -423,6 +567,36 @@
         let customerData = [];
         let filteredData = [];
         let isEditing = false;
+        let deleteTargetId = null;
+
+        class Toast {
+            static show(message, type = 'info', duration = 4000) {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+
+                const icons = {
+                    success: '✓',
+                    error: '✕',
+                    info: 'ℹ',
+                    warning: '⚠'
+                };
+
+                toast.innerHTML = `
+            <span>${icons[type]}</span>
+            <span>${message}</span>
+            <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+        `;
+
+                container.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.classList.add('remove');
+                    setTimeout(() => toast.remove(), 300);
+                }, duration);
+            }
+        }
+
 
         document.addEventListener('DOMContentLoaded', async () => {
             await loadCustomerData();
@@ -446,6 +620,7 @@
 
         async function handleSubmit(event) {
             event.preventDefault();
+            clearFieldErrors();
 
             const customerId = document.getElementById('customerId').value;
             const nama = document.getElementById('nama').value.trim();
@@ -453,12 +628,40 @@
             const tanggalLahir = document.getElementById('tanggalLahir').value.trim();
             const noTelp = document.getElementById('noTelp').value.trim();
 
+            let isValid = true;
+
             if (!nama || !alamat || !tanggalLahir || !noTelp) {
-                showError('Semua field wajib diisi!');
+                Toast.show('Semua field wajib diisi!', 'warning');
                 return;
             }
 
-            const customerDataPayload = {
+            if (!/^[0-9]{11,13}$/.test(noTelp)) {
+                showFieldError("error-noTelp", "Nomor telpon harus 11-13 digit!");
+                return;
+            }
+
+            // CEK NAMA DUPLIKAT (SAAT TAMBAH, BUKAN EDIT)
+            if (!customerId) {
+                const isDuplicate = customerData.some(item =>
+                    item.nama.toLowerCase() === nama.toLowerCase()
+                );
+
+                if (isDuplicate) {
+                    showFieldError("error-nama", "Nama customer sudah ada! Gunakan nama lain.");
+                    return;
+                }
+            }
+
+            const isDuplicatePhone = customerData.some(item =>
+                (item.no_telp || item.noTelp) === noTelp &&
+                item.id_customer != customerId
+            );
+
+            if (isDuplicatePhone) {
+                showFieldError("error-noTelp", "Nomor telepon sudah terdaftar!");
+                return;
+            }
+            const payload = {
                 nama,
                 alamat,
                 tanggal_lahir: tanggalLahir,
@@ -467,17 +670,18 @@
 
             try {
                 if (customerId) {
-                    await apiClient.updateCustomer(customerId, customerDataPayload);
-                    showSuccess('Data customer berhasil diperbarui!');
+                    await apiClient.updateCustomer(customerId, payload);
+                    Toast.show('Data customer berhasil diperbarui!', 'success');
                 } else {
-                    await apiClient.createCustomer(customerDataPayload);
-                    showSuccess('Data customer berhasil ditambahkan!');
+                    await apiClient.createCustomer(payload);
+                    Toast.show('Data customer berhasil ditambahkan!', 'success');
                 }
+
                 resetForm();
                 await loadCustomerData();
+
             } catch (error) {
-                showError('Gagal menyimpan data: ' + error.message);
-                console.error("[v0] Error saving data:", error);
+                Toast.show('Gagal menyimpan data!', 'error');
             }
         }
 
@@ -500,12 +704,26 @@
                     <td>${item.no_telp || item.noTelp}</td>
                     <td class="action-cell">
                         <button class="btn btn-edit" onclick="editData(${item.id_customer})">✏️ Edit</button>
-                        <button class="btn btn-delete" onclick="deleteData(${item.id_customer})">🗑️ Hapus</button>
+                        <button class="btn btn-delete" onclick="confirmDelete(${item.id_customer}, '${item.nama}')">🗑️ Hapus</button>
                     </td>
                 `;
                 tbody.appendChild(row);
             });
         }
+
+        function showFieldError(id, message) {
+            const elem = document.getElementById(id);
+            elem.textContent = message;
+            elem.style.display = "block";
+        }
+
+        function clearFieldErrors() {
+            document.querySelectorAll('.error-text').forEach(e => {
+                e.style.display = "none";
+                e.textContent = "";
+            });
+        }
+
 
         async function editData(id) {
             try {
@@ -525,24 +743,27 @@
                 document.getElementById('resetButton').style.display = 'inline-flex';
                 isEditing = true;
 
-                document.getElementById('customerForm').scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('customerForm').scrollIntoView({
+                    behavior: 'smooth'
+                });
             } catch (error) {
                 showError('Gagal memuat data: ' + error.message);
             }
         }
 
-        async function deleteData(id) {
-            if (confirm('Yakin ingin menghapus data customer ini?')) {
-                try {
-                    await apiClient.deleteCustomer(id);
-                    showSuccess('Data customer berhasil dihapus!');
-                    await loadCustomerData();
-                } catch (error) {
-                    showError('Gagal menghapus data: ' + error.message);
-                    console.error("[v0] Error deleting data:", error);
-                }
+        async function deleteData() {
+            if (!deleteTargetId) return;
+
+            try {
+                await apiClient.deleteCustomer(deleteTargetId);
+                Toast.show('Customer berhasil dihapus!', 'success');
+                closeConfirmation();
+                await loadCustomerData();
+            } catch (error) {
+                Toast.show('Gagal menghapus data customer!', 'error');
             }
         }
+
 
         function resetForm() {
             document.getElementById('customerForm').reset();
@@ -570,6 +791,31 @@
             }, 5000);
         }
 
+        function confirmDelete(id, name) {
+            deleteTargetId = id;
+            document.getElementById('modalTitle').textContent = 'Konfirmasi Penghapusan';
+            document.getElementById('modalMessage').textContent = `Hapus customer "${name}"?`;
+            document.getElementById('confirmButton').onclick = deleteData;
+            document.getElementById('confirmationModal').classList.add('active');
+        }
+
+        function closeConfirmation() {
+            document.getElementById('confirmationModal').classList.remove('active');
+            deleteTargetId = null;
+        }
+
+        async function deleteData() {
+            try {
+                await apiClient.deleteCustomer(deleteTargetId);
+                Toast.show('Customer berhasil dihapus!', 'success');
+                closeConfirmation();
+                await loadCustomerData();
+            } catch (error) {
+                Toast.show('Gagal menghapus data!', 'error');
+            }
+        }
+
+
         function showSuccess(message) {
             const successDiv = document.getElementById('successMessage');
             successDiv.textContent = message;
@@ -589,5 +835,7 @@
             tbody.innerHTML = '<tr><td colspan="6" class="loading">Memuat data...</td></tr>';
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
+
 </html>
